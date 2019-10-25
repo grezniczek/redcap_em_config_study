@@ -23,7 +23,7 @@ Then, head over to the `html` folder, and open `config-dialog.html` in a browser
 
 ## Walk-through
 
-1. Load the HTML. The dialog should auto-start. Otherwise click on _Launch demo modal_.
+1. Load the HTML. The dialog should auto-start. Otherwise click on _Open Configuration Modal_.
 1. Explore the dialog tab. Resize the browser window. The modal should adjust.
 1. Footer allows to import/export configurations. _Clear all_ will reset the settings to default states (and remove any repeated items).
 1. Click on _Settings History_. This button toggles the table.
