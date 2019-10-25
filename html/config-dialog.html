@@ -47,7 +47,10 @@
                             Module Configuration: <b>Name of module</b>
                             <div class="project-info">
                                 Project
-                                <span class="badge badge-pill badge-secondary">123</span> &ndash;
+                                <span class="badge badge-pill badge-secondary"
+                                    >123</span
+                                >
+                                &ndash;
                                 <b>Project Name</b>
                             </div>
                         </h5>
@@ -60,10 +63,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" style="min-height: 200px;">
-
+                    <div class="modal-body" id="defaultBody" style="min-height: 200px;">
                         <!-- Tabs for settings -->
-
                         <ul class="nav nav-tabs" id="settings" role="tablist">
                             <li class="nav-item">
                                 <a
@@ -103,9 +104,10 @@
                             </li>
                         </ul>
 
-                        <!-- Tab content -->
+                        <!-- Tabs -->
 
                         <div class="tab-content" id="configTabs">
+                            <!-- Tab: System -->
                             <div
                                 class="tab-pane fade show active"
                                 id="system"
@@ -114,26 +116,44 @@
                             >
                                 <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="reserved-language-project">Language file</label>
+                                        <label for="reserved-language-project"
+                                            >Language file</label
+                                        >
                                     </div>
                                     <div class="settings-description">
-                                        Language file to use for this module in this project (leave blank for system setting to apply).
+                                        Language file to use for this module in
+                                        this project (leave blank for system
+                                        setting to apply).
                                     </div>
                                     <div class="settings-field">
-                                        <select class="form-control form-control-sm" id="reserved-language-project">
+                                        <select
+                                            class="form-control form-control-sm"
+                                            id="reserved-language-project"
+                                        >
                                             <option value=""></option>
-                                            <option value="English">English</option>
-                                            <option selected="" value="Deutsch">Deutsch</option>
+                                            <option value="English"
+                                                >English</option
+                                            >
+                                            <option selected="" value="Deutsch"
+                                                >Deutsch</option
+                                            >
                                         </select>
                                     </div>
                                 </div>
                                 <div class="settings-description">
-                                    Please contact the REDCap Administrator regarding availability of other languages or customization of language files.
+                                    Please contact the REDCap Administrator
+                                    regarding availability of other languages or
+                                    customization of language files.
                                 </div>
                                 <div class="form-group">
-                                    <label class="settings-label" for="reserved-language-project">Some other setting</label>
+                                    <label
+                                        class="settings-label"
+                                        for="reserved-language-project"
+                                        >Some other setting</label
+                                    >
                                     <div class="settings-description">
-                                        This is a checkbox. Turn it on or off. Have fun. This has no real function.
+                                        This is a checkbox. Turn it on or off.
+                                        Have fun. This has no real function.
                                     </div>
                                     <div class="settings-field">
                                         <button
@@ -147,10 +167,9 @@
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- Tab: System -->
 
-
-
+                            <!-- Tab: Module 1 -->
                             <div
                                 class="tab-pane fade"
                                 id="module-1"
@@ -159,155 +178,448 @@
                             >
                                 <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-1">A general project-specific setting</label>
+                                        <label for="general-1"
+                                            >A general project-specific
+                                            setting</label
+                                        >
                                         <div class="settings-help">
-                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></button>
+                                            <button
+                                                class="btn btn-light btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#general-1-help"
+                                            >
+                                                <i
+                                                    class="fas fa-question-circle"
+                                                ></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                        This is the description for this first
+                                        very general setting. Just enter any
+                                        value you want. It won't matter anyway.
                                     </div>
                                     <div class="settings-field">
-                                        <input type="text" class="form-control form-control-sm" id="general-1" />
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="general-1"
+                                        />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-2">A reapeatable setting with subsettings</label>
+                                        <label for="general-2"
+                                            >A reapeatable setting with
+                                            subsettings</label
+                                        >
                                         <div class="settings-help">
-                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-2-help"><i class="fas fa-question-circle"></i></button>
+                                            <button
+                                                class="btn btn-light btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#general-2-help"
+                                            >
+                                                <i
+                                                    class="fas fa-question-circle"
+                                                ></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this second very general setting. It is repeatable. You can add and remove items.
+                                        This is the description for this second
+                                        very general setting. It is repeatable.
+                                        You can add and remove items.
                                     </div>
                                     <div class="repeatable-list">
-                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
-                                        <button class="btn btn-sm btn-light">1</button>
-                                        <button class="btn btn-sm btn-primary">2</button>
-                                        <button class="btn btn-sm btn-light">3</button>
+                                        <button class="btn btn-sm btn-success">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-light">
+                                            1
+                                        </button>
+                                        <button class="btn btn-sm btn-primary">
+                                            2
+                                        </button>
+                                        <button class="btn btn-sm btn-light">
+                                            3
+                                        </button>
                                     </div>
                                     <table class="repeatable-container">
                                         <tr>
-                                            <td class="repeatable-side" rowspan="2">
-                                                <a href="#"><i class="far fa-trash-alt"></i></a>
+                                            <td
+                                                class="repeatable-side"
+                                                rowspan="2"
+                                            >
+                                                <a href="#" class="text-danger"><i class="far fa-trash-alt"></i></a>
                                             </td>
                                             <td class="repeatable-item">
                                                 <div class="form-group">
-                                                    <div class="subsettings-label">
-                                                        <label for="sub-1">The first subsetting</label>    
+                                                    <div
+                                                        class="subsettings-label"
+                                                    >
+                                                        <label for="sub-1"
+                                                            >The first
+                                                            subsetting</label
+                                                        >
                                                     </div>
-                                                    <div class="settings-description">
+                                                    <div
+                                                        class="settings-description"
+                                                    >
                                                         A short description.
                                                     </div>
                                                     <div class="settings-field">
-                                                        <input type="text" class="form-control form-control-sm" id="sub-1" />
+                                                        <input
+                                                            type="text"
+                                                            class="form-control form-control-sm"
+                                                            id="sub-1"
+                                                        />
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
-                                        <td class="repeatable-item">
-                                            <div class="form-group">
-                                                <div class="subsettings-label">
-                                                    <label for="sub-2">The second subsetting</label>    
+                                            <td class="repeatable-item">
+                                                <div class="form-group">
+                                                    <div
+                                                        class="subsettings-label"
+                                                    >
+                                                        <label for="sub-2"
+                                                            >The second
+                                                            subsetting</label
+                                                        >
+                                                    </div>
+                                                    <div
+                                                        class="settings-description"
+                                                    >
+                                                        A short description.
+                                                    </div>
+                                                    <div class="settings-field">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control form-control-sm"
+                                                            id="sub-2"
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div class="settings-description">
-                                                    A short description.
-                                                </div>
-                                                <div class="settings-field">
-                                                    <input type="text" class="form-control form-control-sm" id="sub-2" />
-                                                </div>
-                                            </div>
-                                        </td>
+                                            </td>
                                         </tr>
                                     </table>
-
                                 </div>
 
 
+                                <div class="form-group">
+                                        <div class="settings-label">
+                                            <label for="general-1"
+                                                >Another repeatable setting (without subsettings)</label
+                                            >
+                                        </div>
+                                        <div class="settings-description">
+                                            This is the description for a single repeatable setting. Add/remove rows at will.
+                                        </div>
+                                        <table class="repeatable-container">
+                                            <tr>
+                                                <td class="single-repeatable-side">
+                                                    <a href="#" class="text-danger"><i class="far fa-trash-alt"></i></a>
+                                                </td>
+                                                <td class="repeatable-item">
+                                                    <div class="form-group">
+                                                        <div class="settings-field">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-sm"
+                                                                id="sub-1"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="single-repeatable-side">
+                                                    <a href="#" class="text-danger"><i class="far fa-trash-alt"></i></a>
+                                                </td>
+                                                <td class="repeatable-item">
+                                                    <div class="form-group">
+                                                        <div class="settings-field">
+                                                            <input
+                                                                type="text"
+                                                                class="form-control form-control-sm"
+                                                                id="sub-2"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="single-repeatable-side">
+                                                    <a href="#" class="text-success single-repeatable-add"><i class="fas fa-plus-square"></i></a>
+                                                </td>
+                                                <td class="repeatable-item">
+                                                    <i class="settings-description">Click <i class="fas fa-plus-square"></i> to add more items.</i>
+                                                </td>
+                                            </tr>
+                                            </table>
+        
+                                    </div>
+    
 
-                            <div class="form-group">
+                                <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-1">Another general project-specific setting</label>
+                                        <label for="general-1"
+                                            >Another general project-specific
+                                            setting</label
+                                        >
                                         <div class="settings-help">
-                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-3-help"><i class="fas fa-question-circle"></i></button>
+                                            <button
+                                                class="btn btn-light btn-sm"
+                                                data-toggle="modal"
+                                                data-target="#general-3-help"
+                                            >
+                                                <i
+                                                    class="fas fa-question-circle"
+                                                ></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                        This is the description for this first
+                                        very general setting. Just enter any
+                                        value you want. It won't matter anyway.
                                     </div>
                                     <div class="settings-field">
-                                        <input type="text" class="form-control form-control-sm" id="general-3" />
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="general-3"
+                                        />
                                     </div>
                                 </div>
-                            </div>
+                            </div><!-- Tab: Module 1 -->
 
-
+                            <!-- Tab: Module 2 -->
                             <div
                                 class="tab-pane fade"
                                 id="module-2"
                                 role="tabpanel"
                                 aria-labelledby="module-2-tab"
                             >
-
-                            <div class="form-group">
+                                <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-1">A general project-specific setting <a href="#" class="small" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></a></label>
+                                        <label for="general-1"
+                                            >A general project-specific setting
+                                            <a
+                                                href="#"
+                                                class="small"
+                                                data-toggle="modal"
+                                                data-target="#general-1-help"
+                                                ><i
+                                                    class="fas fa-question-circle"
+                                                ></i></a
+                                        ></label>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                        This is the description for this first
+                                        very general setting. Just enter any
+                                        value you want. It won't matter anyway.
                                     </div>
                                     <div class="settings-field">
-                                        <input type="text" class="form-control form-control-sm" id="general-1" />
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="general-1"
+                                        />
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-2">A reapeatable setting with subsettings <a href="#" class="small" data-toggle="modal" data-target="#general-2-help"><i class="fas fa-question-circle"></i></a></label>
+                                        <label for="general-2"
+                                            >A reapeatable setting with
+                                            subsettings
+                                            <a
+                                                href="#"
+                                                class="small"
+                                                data-toggle="modal"
+                                                data-target="#general-2-help"
+                                                ><i
+                                                    class="fas fa-question-circle"
+                                                ></i></a
+                                        ></label>
                                     </div>
                                     <div class="settings-description">
-                                            This is the description for this second very general setting. It is repeatable. You can add and remove items.
-                                        </div>
+                                        This is the description for this second
+                                        very general setting. It is repeatable.
+                                        You can add and remove items. Try to edit item group <b>2</b>, it's the only one wired up in this demo.
+                                        If you are editing it, click <b>Others</b> to go back one level.
+                                    </div>
                                     <div class="repeatable-list">
-                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
-                                        <button class="btn btn-sm btn-secondary">1</button>
-                                        <button class="btn btn-sm btn-secondary">2</button>
-                                        <button class="btn btn-sm btn-secondary">3</button>
-                                    </div>
-                                        <div class="settings-description">
-                                                <i>Click + to add, or a number to edit a settings group.</i>
-                                            </div>
-                                </div>
-
-
-
-                            <div class="form-group">
-                                    <div class="settings-label">
-                                        <label for="general-1">Another general project-specific setting</label>
+                                        <button class="btn btn-sm btn-success">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary">
+                                            1
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary" onclick="showBody('editGroup2')">
+                                            2
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary">
+                                            3
+                                        </button>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
-                                    </div>
-                                    <div class="settings-field">
-                                        <input type="text" class="form-control form-control-sm" id="general-3" />
+                                        <i
+                                            >Click <i class="fas fa-plus-square"></i> to add, or a number to edit
+                                            a settings group.</i
+                                        >
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <div class="settings-label">
+                                        <label for="general-1"
+                                            >Another repeatable setting (without subsettings)</label
+                                        >
+                                    </div>
+                                    <div class="settings-description">
+                                        This is the description for a single repeatable setting. Add/remove rows at will.
+                                    </div>
+                                    <table class="repeatable-container">
+                                        <tr>
+                                            <td class="single-repeatable-side">
+                                                <a href="#" class="text-danger"><i class="far fa-trash-alt"></i></a>
+                                            </td>
+                                            <td class="repeatable-item">
+                                                <div class="form-group">
+                                                    <div class="settings-field">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control form-control-sm"
+                                                            id="sub-1"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="single-repeatable-side">
+                                                <a href="#" class="text-danger"><i class="far fa-trash-alt"></i></a>
+                                            </td>
+                                            <td class="repeatable-item">
+                                                <div class="form-group">
+                                                    <div class="settings-field">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control form-control-sm"
+                                                            id="sub-2"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="single-repeatable-side">
+                                                <a href="#" class="text-success single-repeatable-add"><i class="fas fa-plus-square"></i></a>
+                                            </td>
+                                            <td class="repeatable-item">
+                                                <i class="settings-description">Click <i class="fas fa-plus-square"></i> to add more items.</i>
+                                            </td>
+                                        </tr>
+                                        </table>
+    
+                                </div>
+                            </div><!-- Tab: Module 2 -->
+                        </div><!-- Tab Content -->
+                    </div><!-- Modal Body -->
 
-
+                    <div class="modal-body" hidden id="editGroup2">
+                        <div class="subsettings-edit-crumbs">
+                            <a href="#" onclick="showBody('defaultBody')">Others</a> &gt; 
+                            <span class="badge badge-primary">2</span> 
+                            <b>A reapeatable setting with subsettings</b>
+                            <a href="#" class="small" data-toggle="modal" data-target="#general-2-help"><i class="fas fa-question-circle"></i></a>
+                            <div class="settings-description">
+                                    This is the description for this second
+                                    very general setting. It is repeatable.
+                                    You can add and remove items. Try to edit item group <b>2</b>, it's the only one wired up in this demo. If you are editing it, click <b>Others</b> to go back one level.
+                            </div>
+                            <div class="repeatable-list">
+                                <button class="btn btn-sm btn-danger">
+                                        <i class="far fa-trash-alt"></i>
+                                </button> &mdash;
+                                <button class="btn btn-sm btn-secondary">
+                                    1
+                                </button>
+                                <button class="btn btn-sm btn-light disabled">
+                                    2
+                                </button>
+                                <button class="btn btn-sm btn-secondary">
+                                    3
+                                </button>
+                                <button class="btn btn-sm btn-success">
+                                    <i class="fas fa-plus"></i>
+                                </button>
                             </div>
                         </div>
+                        <div class="subsettings-edit">
+                            <div class="form-group">
+                                <div
+                                    class="subsettings-label"
+                                >
+                                    <label for="sub-1"
+                                        >The first
+                                        subsetting</label
+                                    >
+                                </div>
+                                <div
+                                    class="settings-description"
+                                >
+                                    A short description.
+                                </div>
+                                <div class="settings-field">
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        id="sub-1"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div
+                                    class="subsettings-label"
+                                >
+                                    <label for="sub-2"
+                                        >The second
+                                        subsetting</label
+                                    >
+                                </div>
+                                <div
+                                    class="settings-description"
+                                >
+                                    A short description.
+                                </div>
+                                <div class="settings-field">
+                                    <input
+                                        type="text"
+                                        class="form-control form-control-sm"
+                                        id="sub-2"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+
                     </div>
+                    <!-- Modal Body #2 -->
+
+                    <!-- Modal Footer -->
+
                     <div class="modal-footer">
                         <div class="import-export">
                             <button type="button" class="btn btn-light btn-sm">
                                 <i class="fas fa-upload"></i> Import
                             </button>
                             <button type="button" class="btn btn-light btn-sm">
-                                    <i class="fas fa-download"></i> Export
+                                <i class="fas fa-download"></i> Export
                             </button>
                         </div>
                         <button
@@ -321,53 +633,140 @@
                             Save Changes
                         </button>
                     </div>
+                    <!-- footer -->
                 </div>
             </div>
         </div>
 
-
         <!-- Help Content -->
-        <div id="general-1-help" class="modal modal-help" tabindex="-1" role="dialog" aria-labelledby="general-1-help-title">
-                <div class="modal-dialog modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="general-1-help-title"><b>Help</b> &ndash; A general project-specific setting</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <div
+            id="general-1-help"
+            class="modal modal-help"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="general-1-help-title"
+        >
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="general-1-help-title"
+                            ><b>Help</b> &ndash; A general project-specific
+                            setting</span
+                        >
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
                             <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                        </div>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Cras mattis consectetur purus sit amet fermentum.
+                            Cras justo odio, dapibus ac facilisis in, egestas
+                            eget quam. Morbi leo risus, porta ac consectetur ac,
+                            vestibulum at eros.
+                        </p>
+                        <p>
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Vivamus sagittis lacus vel augue
+                            laoreet rutrum faucibus dolor auctor.
+                        </p>
+                        <p>
+                            Aenean lacinia bibendum nulla sed consectetur.
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Donec sed odio dui. Donec
+                            ullamcorper nulla non metus auctor fringilla.
+                        </p>
+                        <p>
+                            Cras mattis consectetur purus sit amet fermentum.
+                            Cras justo odio, dapibus ac facilisis in, egestas
+                            eget quam. Morbi leo risus, porta ac consectetur ac,
+                            vestibulum at eros.
+                        </p>
+                        <p>
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Vivamus sagittis lacus vel augue
+                            laoreet rutrum faucibus dolor auctor.
+                        </p>
                     </div>
                 </div>
             </div>
-            <div id="general-2-help" class="modal modal-help" tabindex="-1" role="dialog" aria-labelledby="general-2-help-title">
-                <div class="modal-dialog modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <span class="modal-title" id="general-2-help-title"><b>Help</b> &ndash; A repeatable setting with subsettings</span>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        </div>
+        <div
+            id="general-2-help"
+            class="modal modal-help"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="general-2-help-title"
+        >
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="general-2-help-title"
+                            ><b>Help</b> &ndash; A repeatable setting with
+                            subsettings</span
+                        >
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
                             <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                        </div>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Vivamus sagittis lacus vel augue
+                            laoreet rutrum faucibus dolor auctor.
+                        </p>
+                        <p>
+                            Aenean lacinia bibendum nulla sed consectetur.
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Donec sed odio dui. Donec
+                            ullamcorper nulla non metus auctor fringilla.
+                        </p>
                     </div>
                 </div>
             </div>
-    
-
-
-
-
-
+        </div>
+        <div
+            id="general-3-help"
+            class="modal modal-help"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="general-3-help-title"
+        >
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title" id="general-3-help-title"
+                            ><b>Help</b> &ndash; Another general project-specific setting</span
+                        >
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Aenean lacinia bibendum nulla sed consectetur.
+                            Praesent commodo cursus magna, vel scelerisque nisl
+                            consectetur et. Donec sed odio dui. Donec
+                            ullamcorper nulla non metus auctor fringilla.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <p>
             <button
@@ -381,7 +780,13 @@
             </button>
         </p>
         <div class="settings-help">
-                <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></button>
+            <button
+                class="btn btn-light btn-sm"
+                data-toggle="modal"
+                data-target="#general-1-help"
+            >
+                <i class="fas fa-question-circle"></i>
+            </button>
         </div>
 
         <!-- Optional JavaScript -->
@@ -403,6 +808,11 @@
         ></script>
         <!-- Font Awsome 5 SVG -->
         <script src="../js/fontawsome/all.min.js"></script>
-
+        <script>
+            function showBody(id) {
+                $('#configStudy .modal-body').attr('hidden', true)
+                $('#'+id).removeAttr('hidden')
+            }
+        </script>
     </body>
 </html>
