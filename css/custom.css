@@ -126,3 +126,16 @@ div#configStudy .settings-help {
 .subsettings-edit {
     margin: 0.5rem;
 }
+
+.system-history-container {
+    margin-top: 1.5rem;
+}
+.system-history-container table {
+    margin-bottom: 0;
+}
+
+#system-history-list {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+
