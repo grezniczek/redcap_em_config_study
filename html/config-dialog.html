@@ -12,55 +12,10 @@
         <link rel="stylesheet" href="../css/bootstrap.css" />
         <!-- Toggle Button CSS -->
         <link rel="stylesheet" href="../css/btn-toggle.css" />
+        <link rel="stylesheet" href="../css/custom.css" />
         <title>EM Configuration Demo</title>
     </head>
     <body>
-        <style>
-            body {
-                padding: 10px;
-            }
-
-            @media (min-width: 1200px) {
-                .modal-xxl {
-                    max-width: 1140px;
-                }
-                @media (min-width: 1700px) {
-                    .modal-xl {
-                        max-width: 1140px;
-                    }
-                    .modal-xxl {
-                        max-width: 1680px;
-                    }
-                }
-            }
-
-
-            div#configStudy .settings-label {
-                margin-top: 1em;
-                margin-bottom: 0;
-                font-weight: bold;
-            }
-            div#configStudy .settings-label label {
-                margin: 0;
-            }
-            div#configStudy .settings-description {
-                margin-top: -0.1em;
-                margin-bottom: 0;
-                font-size: 0.8em;
-            }
-            div#configStudy .settings-value {
-                margin-top: 0.6em;
-                margin-bottom: 0.5em;
-            }
-            div#configStudy .settings-help {
-                float: right;
-            }
-
-            .modal-help {
-                background: solid 2px green;
-            }
-
-        </style>
         <!-- Button trigger modal -->
         <button
             type="button"
@@ -90,6 +45,11 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="configStudyTitle">
                             Module Configuration: <b>Name of module</b>
+                            <div class="project-info">
+                                Project
+                                <span class="badge badge-pill badge-secondary">123</span> &ndash;
+                                <b>Project Name</b>
+                            </div>
                         </h5>
                         <button
                             type="button"
@@ -101,39 +61,6 @@
                         </button>
                     </div>
                     <div class="modal-body" style="min-height: 200px;">
-                        <div class="row">
-                            <div class="col-12">
-                                For project
-                                <span class="badge badge-pill badge-secondary">123</span>
-                                <b>Project Name</b>
-                                <div class="dropdown" style="float:right;">
-                                    <a
-                                        class="btn btn-light btn-sm dropdown-toggle"
-                                        href="#"
-                                        role="button"
-                                        id="emConfigOptions"
-                                        data-toggle="dropdown"
-                                        aria-haspopup="true"
-                                        aria-expanded="false"
-                                    >
-                                        Options
-                                    </a>
-                                    <div
-                                        class="dropdown-menu"
-                                        aria-labelledby="emConfigOptions"
-                                    >
-                                        <a class="dropdown-item" href="#"
-                                            ><i class="fas fa-upload"></i>
-                                            Import configuration</a
-                                        >
-                                        <a class="dropdown-item" href="#"
-                                            ><i class="fas fa-download"></i>
-                                            Export configuration</a
-                                        >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Tabs for settings -->
 
@@ -192,11 +119,13 @@
                                     <div class="settings-description">
                                         Language file to use for this module in this project (leave blank for system setting to apply).
                                     </div>
-                                    <select class="form-control form-control-sm settings-value" id="reserved-language-project">
-                                        <option value=""></option>
-                                        <option value="English">English</option>
-                                        <option selected="" value="Deutsch">Deutsch</option>
-                                    </select>
+                                    <div class="settings-field">
+                                        <select class="form-control form-control-sm" id="reserved-language-project">
+                                            <option value=""></option>
+                                            <option value="English">English</option>
+                                            <option selected="" value="Deutsch">Deutsch</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="settings-description">
                                     Please contact the REDCap Administrator regarding availability of other languages or customization of language files.
@@ -206,7 +135,7 @@
                                     <div class="settings-description">
                                         This is a checkbox. Turn it on or off. Have fun. This has no real function.
                                     </div>
-                                    <div class="settings-value">
+                                    <div class="settings-field">
                                         <button
                                             type="button"
                                             class="btn btn-sm btn-primary btn-toggle inactive"
@@ -219,6 +148,9 @@
                                     </div>
                                 </div>
                             </div>
+
+
+
                             <div
                                 class="tab-pane fade"
                                 id="module-1"
@@ -229,48 +161,163 @@
                                     <div class="settings-label">
                                         <label for="general-1">A general project-specific setting</label>
                                         <div class="settings-help">
-                                            <a href="#" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></a>
+                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></button>
                                         </div>
                                     </div>
                                     <div class="settings-description">
                                         This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
                                     </div>
-                                    <input type="text" class="form-control form-control-sm settings-value" id="general-1" />
+                                    <div class="settings-field">
+                                        <input type="text" class="form-control form-control-sm" id="general-1" />
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="settings-label">
-                                        <label for="general-2">Another setting for this module</label>
+                                        <label for="general-2">A reapeatable setting with subsettings</label>
                                         <div class="settings-help">
-                                            <button class="btn btn-light btn-sm" data-toggle="popover" data-placement="left" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?"><i class="fas fa-question-circle"></i></button>
+                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-2-help"><i class="fas fa-question-circle"></i></button>
                                         </div>
                                     </div>
                                     <div class="settings-description">
-                                        This is the description for this second very general setting. Just enter any value you want. It won't matter anyway.
+                                        This is the description for this second very general setting. It is repeatable. You can add and remove items.
                                     </div>
-                                    <input type="text" class="form-control form-control-sm settings-value" id="general-2" />
+                                    <div class="repeatable-list">
+                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-sm btn-light">1</button>
+                                        <button class="btn btn-sm btn-primary">2</button>
+                                        <button class="btn btn-sm btn-light">3</button>
+                                    </div>
+                                    <table class="repeatable-container">
+                                        <tr>
+                                            <td class="repeatable-side" rowspan="2">
+                                                <a href="#"><i class="far fa-trash-alt"></i></a>
+                                            </td>
+                                            <td class="repeatable-item">
+                                                <div class="form-group">
+                                                    <div class="subsettings-label">
+                                                        <label for="sub-1">The first subsetting</label>    
+                                                    </div>
+                                                    <div class="settings-description">
+                                                        A short description.
+                                                    </div>
+                                                    <div class="settings-field">
+                                                        <input type="text" class="form-control form-control-sm" id="sub-1" />
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        <td class="repeatable-item">
+                                            <div class="form-group">
+                                                <div class="subsettings-label">
+                                                    <label for="sub-2">The second subsetting</label>    
+                                                </div>
+                                                <div class="settings-description">
+                                                    A short description.
+                                                </div>
+                                                <div class="settings-field">
+                                                    <input type="text" class="form-control form-control-sm" id="sub-2" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        </tr>
+                                    </table>
+
                                 </div>
-                           
+
+
+
+                            <div class="form-group">
+                                    <div class="settings-label">
+                                        <label for="general-1">Another general project-specific setting</label>
+                                        <div class="settings-help">
+                                            <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-3-help"><i class="fas fa-question-circle"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="settings-description">
+                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                    </div>
+                                    <div class="settings-field">
+                                        <input type="text" class="form-control form-control-sm" id="general-3" />
+                                    </div>
+                                </div>
                             </div>
+
+
                             <div
                                 class="tab-pane fade"
                                 id="module-2"
                                 role="tabpanel"
                                 aria-labelledby="module-2-tab"
                             >
-                                Module settings marked <b>Others</b> go here.
+
+                            <div class="form-group">
+                                    <div class="settings-label">
+                                        <label for="general-1">A general project-specific setting <a href="#" class="small" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></a></label>
+                                    </div>
+                                    <div class="settings-description">
+                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                    </div>
+                                    <div class="settings-field">
+                                        <input type="text" class="form-control form-control-sm" id="general-1" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="settings-label">
+                                        <label for="general-2">A reapeatable setting with subsettings <a href="#" class="small" data-toggle="modal" data-target="#general-2-help"><i class="fas fa-question-circle"></i></a></label>
+                                    </div>
+                                    <div class="settings-description">
+                                            This is the description for this second very general setting. It is repeatable. You can add and remove items.
+                                        </div>
+                                    <div class="repeatable-list">
+                                        <button class="btn btn-sm btn-success"><i class="fas fa-plus"></i></button>
+                                        <button class="btn btn-sm btn-secondary">1</button>
+                                        <button class="btn btn-sm btn-secondary">2</button>
+                                        <button class="btn btn-sm btn-secondary">3</button>
+                                    </div>
+                                        <div class="settings-description">
+                                                <i>Click + to add, or a number to edit a settings group.</i>
+                                            </div>
+                                </div>
+
+
+
+                            <div class="form-group">
+                                    <div class="settings-label">
+                                        <label for="general-1">Another general project-specific setting</label>
+                                    </div>
+                                    <div class="settings-description">
+                                        This is the description for this first very general setting. Just enter any value you want. It won't matter anyway.
+                                    </div>
+                                    <div class="settings-field">
+                                        <input type="text" class="form-control form-control-sm" id="general-3" />
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <div class="import-export">
+                            <button type="button" class="btn btn-light btn-sm">
+                                <i class="fas fa-upload"></i> Import
+                            </button>
+                            <button type="button" class="btn btn-light btn-sm">
+                                    <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
                         <button
                             type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-secondary btn-sm"
                             data-dismiss="modal"
                         >
                             Cancel
                         </button>
-                        <button type="button" class="btn btn-primary">
+                        <button type="button" class="btn btn-primary btn-sm">
                             Save Changes
                         </button>
                     </div>
@@ -280,29 +327,42 @@
 
 
         <!-- Help Content -->
-        <div id="general-1-help" class="modal fade show" tabindex="-1" role="dialog" aria-labelledby="general-1-help-title">
-            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" role="document">
-                <div class="modal-content modal-help">
-                    <div class="modal-header text-primary">
-                        <h5 class="modal-title" id="general-1-help-title">Help</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                        <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
-                        <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-                        <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <div id="general-1-help" class="modal modal-help" tabindex="-1" role="dialog" aria-labelledby="general-1-help-title">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title" id="general-1-help-title"><b>Help</b> &ndash; A general project-specific setting</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                            <p>Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
+            <div id="general-2-help" class="modal modal-help" tabindex="-1" role="dialog" aria-labelledby="general-2-help-title">
+                <div class="modal-dialog modal-dialog-scrollable" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title" id="general-2-help-title"><b>Help</b> &ndash; A repeatable setting with subsettings</span>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.</p>
+                            <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
 
 
 
@@ -320,6 +380,9 @@
                 <div class="handle"></div>
             </button>
         </p>
+        <div class="settings-help">
+                <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#general-1-help"><i class="fas fa-question-circle"></i></button>
+        </div>
 
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -341,10 +404,5 @@
         <!-- Font Awsome 5 SVG -->
         <script src="../js/fontawsome/all.min.js"></script>
 
-        <script>
-            $(function () {
-                $('[data-toggle="popover"]').popover()
-            })
-        </script>
     </body>
 </html>
