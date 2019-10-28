@@ -1,0 +1,303 @@
+{
+    "name": "Configuration Design Study",
+    "namespace": "DE\\RUB\\ConfigurationDesignStudyExternalModule",
+    "description": "This is a preliminary design study to help discussion of how to improve capability and user experience of the REDCap External Module configuration system. See <a href=\"https://github.com/grezniczek/redcap_em_config_study\">GitHub</a> for more details.",
+    "documentation": "README.md",
+    "authors": [
+        {
+            "name": "Günther Rezniczek",
+            "email": "guenther.rezniczek@rub.de",
+            "institution": "Ruhr-Universität Bochum"
+        }
+    ],
+    "framework-version": 3,
+    "permissions": [
+    ],
+    "enable-every-page-hooks-on-system-pages": true,
+    "links": {
+        "project": [],
+        "control-center": [
+            {
+                "name": "Configuration Design Study",
+                "icon": "fas fa-drafting-compass",
+                "url": "html/config-dialog.html",
+                "show-header-and-footer": true
+            }
+        ]
+    },
+    "system-settings": [
+        {
+            "key": "s0_checka",
+            "name": "Checkbox A",
+            "type": "checkbox"
+        },
+        {
+            "key": "s0_desca",
+            "name": "A description that is shown when 'Check A' is true.",
+            "type": "descriptive",
+            "branchingLogic": {
+                "field": "s0_checka", 
+                "value": true
+            }
+        },
+        {
+            "key": "s0_desca_n",
+            "name": "A description that is shown when 'Check A' is false.",
+            "type": "descriptive",
+            "branchingLogic": {
+                "field": "s0_checka", 
+                "value": false
+            }
+        },
+        {
+            "key": "s0r_texta",
+            "name": "A repeatable text box",
+            "type": "text",
+            "repeatable": true
+        },
+        {
+            "key": "s0r_subsetting",
+            "name": "Subsettings (Level 0)",
+            "type": "sub_settings",
+            "repeatable": true,
+            "hidden": true,
+            "sub_settings": [
+                {
+                    "key": "s1_checkb",
+                    "name": "Checkbox B",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "s1_desca",
+                    "name": "A description that is shown when 'Check A' (parent level) is true.",
+                    "type": "descriptive",
+                    "branchingLogic": {
+                        "field": "s0_checka", 
+                        "value": true
+                    }
+                },
+                {
+                    "key": "s1_desca_n",
+                    "name": "A description that is shown when 'Check A' (parent level) is false.",
+                    "type": "descriptive",
+                    "branchingLogic": {
+                        "field": "s0_checka", 
+                        "value": false
+                    }
+                },
+                {
+                    "key": "s1_descb",
+                    "name": "A description that is shown when 'Check B' (same level) is true.",
+                    "type": "descriptive",
+                    "branchingLogic": {
+                        "field": "s1_checkb", 
+                        "value": true
+                    }
+                },
+                {
+                    "key": "s1_file",
+                    "name": "A nested file field (level 1)",
+                    "type": "file"
+                },
+                {
+                    "key": "s1r_subsetting",
+                    "name": "Subsettings (Level 1)",
+                    "type": "sub_settings",
+                    "repeatable": true,
+                    "hidden": true,
+                    "sub_settings": [
+                        {
+                            "key": "s2_checkc",
+                            "name": "Checkbox C",
+                            "type": "checkbox"
+                        },
+                        {
+                            "key": "s2_desca",
+                            "name": "A description that is shown when 'Check A' (root level) is true.",
+                            "type": "descriptive",
+                            "branchingLogic": {
+                                "field": "s0_checka", 
+                                "value": true
+                            }
+                        },
+                        {
+                            "key": "s2_desca_n",
+                            "name": "A description that is shown when 'Check A' (root level) is false.",
+                            "type": "descriptive",
+                            "branchingLogic": {
+                                "field": "s0_checka", 
+                                "value": false
+                            }
+                        },
+                        {
+                            "key": "s2_descb",
+                            "name": "A description that is shown when 'Check B' (parent level) is true.",
+                            "type": "descriptive",
+                            "branchingLogic": {
+                                "field": "s1_checkb", 
+                                "value": true
+                            }
+                        },
+                        {
+                            "key": "s2_descb_n",
+                            "name": "A description that is shown when 'Check B' (parent level) is false.",
+                            "type": "descriptive",
+                            "branchingLogic": {
+                                "field": "s1_checkb", 
+                                "value": false
+                            }
+                        },
+                        {
+                            "key": "s2_descc",
+                            "name": "A description that is shown when 'Check C' (same level) is true.",
+                            "type": "descriptive",
+                            "branchingLogic": {
+                                "field": "s2_checkc", 
+                                "value": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "s0_textarea",
+            "name": "A textarea",
+            "type": "textarea"
+        },
+        {
+            "key": "s0_json",
+            "name": "A JSON field",
+            "type": "json"
+        },
+        {
+            "key": "s0_richtext",
+            "name": "A rich-text field",
+            "type": "rich-text"
+        },
+        {
+            "key": "s0_userlist",
+            "name": "A user-list field (apparently not working as System Settings)",
+            "type": "user-list"
+        },
+        {
+            "key": "s0_dropdown",
+            "name": "A required custom dropdown field with 4 choices, defaulting to 'Choice 1'",
+            "type": "dropdown",
+            "required": true,
+            "default": "1",
+            "choices": [
+                { "value": "", "name": "" },
+                { "value": "1", "name": "Choice 1" },
+                { "value": "2", "name": "Choice 2" },
+                { "value": "3", "name": "Choice 3" },
+                { "value": "4", "name": "Choice 4" }
+            ]
+        },
+        {
+            "key": "s0_radio",
+            "name": "A radio field with 4 choices, defaulting to 'Choice B'",
+            "type": "radio",
+            "default": "b",
+            "choices": [
+                { "value": "", "name": "" },
+                { "value": "a", "name": "Choice A" },
+                { "value": "b", "name": "Choice B" },
+                { "value": "c", "name": "Choice C" },
+                { "value": "d", "name": "Choice D" }
+            ]
+        },
+        {
+            "key": "s0_button",
+            "name": "A button field, which seems to require a url, otherwise we get a JS error ...",
+            "type": "button",
+            "url": "html/config-dialog.html"
+        },
+        {
+            "key": "s0_projectid",
+            "name": "A project-id field",
+            "type": "project-id"
+        },
+        {
+            "key": "s0_colorpicker",
+            "name": "A color-picker field",
+            "type": "color-picker"
+        },
+        {
+            "key": "s0_date",
+            "name": "A date field",
+            "type": "date"
+        },
+        {
+            "key": "s0_email",
+            "name": "A email field",
+            "type": "email"
+        },
+        {
+            "key": "s0_file",
+            "name": "A file field",
+            "type": "file"
+        },
+        {
+            "key": "s0r_file",
+            "name": "A repeatable file field",
+            "type": "file",
+            "repeatable": true
+        },
+        {
+            "key": "s0_custom",
+            "name": "A custom field. This is pretty much undocumented (only in example)",
+            "type": "custom",
+            "source": "js/custom-field.js",
+            "functionName": "CustomField.initialize"
+        }
+    ],
+    "project-settings": [
+        {
+            "key": "p0_desc",
+            "name": "A textfield below should only be visible to superusers",
+            "type": "descriptive"
+        },
+        {
+            "key": "p0_text",
+            "name": "A text field only for super users",
+            "super-users-only": true
+        },
+        {
+            "key": "p0_fieldlist",
+            "name": "A field-list field",
+            "type": "field-list"
+        },
+        {
+            "key": "p0_userrolelist",
+            "name": "A user-role-list field",
+            "type": "user-role-list"
+        },
+        {
+            "key": "p0_userlist",
+            "name": "A user-list field",
+            "type": "user-list"
+        },
+        {
+            "key": "p0_daglist",
+            "name": "A dag-list field",
+            "type": "dag-list"
+        },
+        {
+            "key": "p0_formlist",
+            "name": "A form-list field",
+            "type": "form-list"
+        },
+        {
+            "key": "p0_eventlist",
+            "name": "A event-list field",
+            "type": "event-list"
+        }
+    ],
+    "compatibility": {
+        "php-version-min": "5.6.0",
+        "php-version-max": "",
+        "redcap-version-min": "9.3.6",
+        "redcap-version-max": ""
+     }
+}
