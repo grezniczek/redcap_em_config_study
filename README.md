@@ -1,16 +1,29 @@
 # REDCap EM Configuration Design Study
 
-A REDCap External Module to demo a new EM config system
+This is a _very_ **preliminary** design study to help discussion of how to improve capability and user experience of the REDCap External Module configuration system.
 
 ## How to use
 
-Currently, this is only a static HTML page. So to see the demo, first clone this repo on your local machine.
+Currently, this is only a static HTML page. So to see the demo, there are two options.
 
-Then, head over to the `html` folder, and open `config-dialog.html` in a browser. That's it.
+- Access the HTML directly:
+  1. Clone this repo (anywhere on your local machine).
+  1. Then, head over to the `html` folder, and open `config-dialog.html` in a browser.
+
+- Install as an External Module:
+  1. Clone this repo into your `modules` folder.
+  1. Add a version to the folder's name, so it reads, e.g., `redcap_em_config_study_v0.0.1`.
+  1. Enable the EM in _Command Center &gt; External Modules_.
+  1. There will be a link 'Configuration Design Study' in the 'Control Center &gt; External Modules' section.
+
+The HTML will generate some 404 errors in the browser's console. This is normal, as for it to work both ways, some CSS and JS has to be loaded two ways, only one of which will work depending on whether the HTML is accessed directly or through the EM framework.
+
+The External Module version has some settings defined in `config.json` that illustrate and comment on what is broken in the current config dialog. This is not complete.
+
+**Note:** This is built on Bootstrap 4, so it should ultimately work fine inside of REDCap without loading any dependencies. Currently, however, Bootstrap and dependencies are loaded from CDN, so this demo may not work off the network.
 
 ## Features
 
-- All Bootstrap 4. So this should work fine inside of REDCap without loading any dependencies.
 - For project settings, the project id and name will be shown. For system settings, this will say '_Global System Settings_'.
 - Settings can be organized in tabs.
   - The _System_ tab is always there and hosts the settings provided directly by the EM Framework.
