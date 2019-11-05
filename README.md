@@ -53,3 +53,17 @@ The External Module version has some settings defined in `config.json` that illu
 1. Now click the pen button under the _Another repeatable setting (without subsettings)_ field.
 1. Breadcrumb as before at the top.
 1. Repeated items are shown as a list. Individual items can be removed with the trash-can link, or a new item added with the + button.
+
+## Screenshots
+
+### System-provided settings, including history:
+
+![System-provided settings](./images/system.png)
+
+### A project-settings tab:
+
+![A project settings tab](./images/others.png)
+
+### Editing details of a repeating subsettings block:
+
+![Editing details of repeating subsettings](./images/repeat_subsettings.png)
