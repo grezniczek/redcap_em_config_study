@@ -12,15 +12,24 @@
     ],
     "framework-version": 3,
     "permissions": [
+        "redcap_every_page_top"
     ],
     "enable-every-page-hooks-on-system-pages": true,
     "links": {
         "project": [],
         "control-center": [
             {
-                "name": "Configuration Design Study",
+                "name": "Enhanced Configuration Demo",
+                "key": "demo",
                 "icon": "fas fa-drafting-compass",
                 "url": "html/config-dialog.html",
+                "show-header-and-footer": true
+            },
+            {
+                "name": "Configuration Design Study",
+                "key": "config",
+                "icon": "fas fa-cogs",
+                "url": "/////.php",
                 "show-header-and-footer": true
             }
         ]
