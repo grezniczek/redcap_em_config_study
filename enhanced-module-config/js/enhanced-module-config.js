@@ -29,7 +29,7 @@ $(function() {
         EM.showEnhancedConfig('global_piping', 40)
     }
     else {
-        EM.showEnhancedConfig('redcap_em_config_study')
+        EM.showEnhancedConfig('redcap_em_config_study', null)
     }
 })
 })();
