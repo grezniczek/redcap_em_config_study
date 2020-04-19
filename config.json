@@ -34,42 +34,61 @@
             }
         ]
     },
+    "tabs": [
+        {
+            "name": "Tab A",
+            "key": "a",
+            "help-text": "This is tab A"
+        },
+        {
+            "name": "Tab B",
+            "key": "b",
+            "help-url": "help/tab-b.html",
+            "help-append-key": true
+        }
+    ],
     "system-settings": [
         {
             "key": "s0_checka",
+            "type": "checkbox",
             "name": "Checkbox A",
-            "type": "checkbox"
+            "description": "This is the description for 'Checkbox A'.",
+            "help-text": "This is the help text for 'Checkbox A'",
+            "tab": "a"
         },
         {
             "key": "s0_desca",
-            "name": "A description that is shown when 'Check A' is true.",
             "type": "descriptive",
+            "name": "A description that is shown when 'Check A' is true.",
             "branchingLogic": {
                 "field": "s0_checka", 
                 "value": true
-            }
+            },
+            "tab": "a"
         },
         {
             "key": "s0_desca_n",
-            "name": "A description that is shown when 'Check A' is false.",
             "type": "descriptive",
+            "name": "A description that is shown when 'Check A' is false.",
             "branchingLogic": {
                 "field": "s0_checka", 
                 "value": false
-            }
+            },
+            "tab": "a"
         },
         {
             "key": "s0r_texta",
-            "name": "A repeatable text box",
             "type": "text",
-            "repeatable": true
+            "repeatable": true,
+            "name": "A repeatable text box",
+            "tab": "b"
         },
         {
             "key": "s0r_subsetting",
-            "name": "Subsettings (Level 0)",
             "type": "sub_settings",
             "repeatable": true,
-            "hidden": true,
+            "name": "Subsettings (Level 0)",
+            "tab": "b",
             "sub_settings": [
                 {
                     "key": "s1_checkb",

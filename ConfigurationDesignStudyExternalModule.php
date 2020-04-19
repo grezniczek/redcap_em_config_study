@@ -1,7 +1,9 @@
-<?php
-namespace DE\RUB\ConfigurationDesignStudyExternalModule;
+<?php namespace DE\RUB\ConfigurationDesignStudyExternalModule;
 
 use ExternalModules\AbstractExternalModule;
+use ExternalModules\ExternalModules;
+
+require_once __DIR__ . "/enhanced-module-config/classes/Crypto.php";
 
 /**
  * ExternalModule class for Configuration Design Study.
@@ -80,11 +82,69 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     }
 
 
+    public function getSettingsAjax($prefix, $pid, $type) {
+        // TODO: Checks
+        $settings = $type == "project-settings" ? self::getEnhancedProjectSettings($prefix, $pid) : self::getEnhancedSystemSettings($prefix);
+
+
+        // TODO: REMOVE - This fixes reserved system settings to have "system-reserved-tab" as tab key.
+        foreach (array(
+            ExternalModules::KEY_LANGUAGE_SYSTEM,
+            ExternalModules::KEY_LANGUAGE_PROJECT,
+            ExternalModules::KEY_VERSION,
+            ExternalModules::KEY_ENABLED,
+            ExternalModules::KEY_DISCOVERABLE,
+            ExternalModules::KEY_USER_ACTIVATE_PERMISSION,
+            ExternalModules::KEY_CONFIG_USER_PERMISSION
+        ) as $key) {
+            if (isset($settings[$key]["config"])) {
+                $settings[$key]["config"]["tab"] = "system-reserved-tab";
+            }
+        }
+        // END REMOVE
+
+
+        // Get tabs and mark main tabs (i.e. those of first-level settings).
+        $tabs = self::getConfigTabs($prefix);
+        $mainTabsKeys = array( "system-reserved-tab" => null );
+        foreach ($settings as $_ => $s) {
+            $mainTabsKeys[$s["config"]["tab"]] = null;
+        }
+        foreach ($tabs as $key => &$tab) {
+            $tab["main"] = array_key_exists($key, $mainTabsKeys);
+        }
+        // Return Ajax response.
+        return array(
+            "success" => true,
+            "settings" => $settings,
+            "tabs" => $tabs
+        );
+    }
 
 
 
+    static function getConfigTabs($prefix) {
+        $config = ExternalModules::getConfig($prefix);
+        $tabs = array(
+            "system-reserved-tab" => array (
+                "name" => "System",
+                "key" => "system-reserved-tab"
+            ),
+            "module-reserved-tab" => array (
+                "name" => "Module",
+                "key" => "module-reserved-tab"
+            )
+        );
+        foreach ($config["tabs"] as $tab) {
+            if (!empty($tab["key"])) {
+                $tabs[$tab["key"]] = $tab;
+            }
+        }
+        return $tabs;
+    }
 
 
+//#region Module Settings Generation
 
     /**
      * Recursively builds a data structure representing module settings.
@@ -132,8 +192,13 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
             }
             if ($augment) {
                 unset($c["sub_settings"]);
+                if (!isset($c["tab"])) {
+                    // Supplement tab info.
+                    $c["tab"] = "module-reserved-tab";
+                }
                 $settings[$key]["config"] = $c;
                 $settings[$key]["type"] = $c["type"];
+                
             }
         } 
     }
@@ -170,11 +235,11 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     }
 
     /**
-     * Extracts (valid) fields used in branching logic.
+     * Extracts (valid) fields used in branching logic or scope.
      */
-    private static function moduleSettings_getBranchingLogicFields($branchingLogic, $validFields) {
+    private static function moduleSettings_extractFieldFields($config, $validFields) {
         $fields = array();
-        if ($branchingLogic) {
+        if ($config) {
             $getFields = function($arr) use (&$fields, &$getFields, $validFields) {
                 foreach ($arr as $k => $v) {
                     if ($k == "field" && in_array($v, $validFields, true)) {
@@ -185,7 +250,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
                     }
                 }
             };
-            $getFields($branchingLogic, $fields);
+            $getFields($config, $fields);
         }
         return array_keys($fields);
     }
@@ -200,8 +265,8 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
         foreach ($settings as $key => &$setting) {
             $setting["dependencies"]["valid"] = array_filter($valid, function($v) use ($key) { return $v !== $key; });
             $setting["dependencies"]["path"] = array_merge($path, array($key));
-            $setting["dependencies"]["branchingLogic"] = self::moduleSettings_getBranchingLogicFields($setting["config"]["branchingLogic"], $valid);
-            $setting["dependencies"]["scope"] = self::moduleSettings_array_flatten($setting["config"]["scope"], $valid);
+            $setting["dependencies"]["branchingLogic"] = self::moduleSettings_extractFieldFields($setting["config"]["branchingLogic"], $valid);
+            $setting["dependencies"]["scope"] = self::moduleSettings_extractFieldFields($setting["config"]["scope"], $valid);
         }
         foreach ($settings as $key => &$setting) {
             if (isset($setting["sub"])) {
@@ -285,7 +350,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
         return $mss;
     }
 
-
+//#endregion
 
 
 }

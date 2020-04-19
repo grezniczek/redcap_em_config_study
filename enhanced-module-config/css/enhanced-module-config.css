@@ -12,78 +12,165 @@
     }
 }
 
+#emcModal {
+    --inactive-help-color: gray;
+    --help-color: #007bff;
+    --help-color-hover: red;
+    --init-error-text: darkred;
+}
+
 /* Loading */
 
-#emcModal .emc-overlay {
-    background: rgba(110, 110, 110, 0.25);
+.emc-overlay {
+    background: rgba(128, 128, 128, 0.75);
     position: absolute;
     width: 100%;
     height: 100%;
     z-index: 5;
 }
 
-#emcModal .emc-loading {
+.emc-loading,
+.emc-initerror {
     display: flex;
     justify-content: center;
     align-items: center;
     color: gray;
 }
+.emc-initerror {
+    text-align: center;
+    z-index: 5;
+}
+.emc-initerror p {
+    font-size: 1.5rem;
+    color: val(--init-error-text);
+}
 
-#emcModal .emc-modal-wrapper {
+.emc-modal-wrapper {
     position: relative;
 }
 
 
 /* Modal Title */
 
-#emcModal .emc-module-name,
-#emcModal .emc-project-name {
+.emc-module-name,
+.emc-project-name {
     font-weight: bold;
 }
-#emcModal .emc-project-info {
+.emc-project-info {
     font-size: 1rem;
 }
-
-
-
-
-
-
-
-
-
-
-
-#emcModal .form-group {
-    margin-bottom: 0;
-}
-#emcModal .modal-header {
-    padding-top: 0.7rem;
-    padding-bottom: 0.7rem;
+.emc-module-version {
+    vertical-align: top;
+    margin-left: 5px;
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: normal;
 }
 
-#emcModal .modal-body {
+
+/* Modal Body */
+
+.emc-modal-body {
+    min-height: 200px;
     padding-top: 0.5rem;
 }
 
+/* Modal Footer */
 
 
-#emcModal .settings-label {
+
+
+/* Tabs and Tab Panels */
+.nav-tabs.emc-tabs {
+    border-bottom: none;
+}
+.emc-tab-help {
+    color: var(--inactive-help-color);
+    padding-left: 2px;
+}
+a.active .emc-tab-help {
+    color: var(--help-color);
+}
+a.active .emc-tab-help:hover {
+    color: var(--help-color-hover);
+}
+a.emc-tab-link {
+    color: var(--blue);
+}
+a.active.emc-tab-link {
+    font-weight: bolder;
+    color: var(--gray-dark);
+}
+a.emc-tab-link:hover {
+    color: var(--red);
+}
+.tab-content.emc-tab-container {
+    border: none;
+    border-top: 1px solid #ddd;
+    min-height: 200px;
+}
+
+.emc-nosettings {
+    display: flex;
+    margin-top: 3rem;
+    justify-content: center;
+    align-items: center;
+    color: var(--init-error-text);
+    font-style: italic;
+    font-size: 1.2rem;
+}
+
+
+
+
+/* Settings - General */
+
+.emc-from-group.form-group {
+    margin-bottom: 0;
+}
+.emc-modal-header.modal-header {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+.emc-setting-label {
     margin-top: 0.5rem;
     margin-bottom: 0;
     font-weight: bold;
 }
-#emcModal .settings-label label {
-    margin: 0;
-}
-#emcModal .settings-description {
+.emc-setting-description {
     margin-top: -0.1rem;
     margin-bottom: 0;
     font-size: 0.8rem;
 }
-#emcModal .settings-field {
+a.emc-setting-help {
+    color: var(--help-color);
+}
+a.emc-setting-help:hover {
+    color: var(--help-color-hover);
+}
+.emc-setting-field {
     margin-top: 0.5rem;
     margin-bottom: 0.3rem;
+}
+
+
+
+
+/* Settings - Specific Controls */
+
+/* Switch */
+.emc-switch-control {
+    margin-top: -0.75rem;
+}
+
+
+
+
+
+
+
+#emcModal .settings-label label {
+    margin: 0;
 }
 #emcModal .settings-help {
     float: right;
