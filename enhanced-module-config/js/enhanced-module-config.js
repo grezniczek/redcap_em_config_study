@@ -26,8 +26,14 @@ function initError(msg) {
 
 /**
  * Builds the dialog.
+ * @param {string} prefix
+ * @param {string} guid
  */
-function buildDialog() {
+function buildDialog(prefix, guid) {
+    // Only ever build one dialog!
+    modal = $('#emcModal')
+    if (modal.attr('data-emc-prefix') !== prefix) return;
+    if (modal.attr('data-emc-guid') !== guid) return;
 
     // Tabs.
     Object.keys(settings.tabs).forEach(function(tabKey) {
@@ -142,7 +148,10 @@ function getTemplate(name) {
 
 /** 
  * Callback on success. 
- * @callback onSuccessCallback */
+ * @callback onSuccessCallback 
+ * @param {string} prefix 
+ * @param {string} guid 
+ */
 /**
  * Callback on error.
  * @callback onErrorCallback
@@ -150,14 +159,16 @@ function getTemplate(name) {
  */
 /**
  * Gets settings from server. When done, calls the callback.
+ * @param {string} prefix
+ * @param {string} guid
  * @param {onSuccessCallback} onSuccess 
  * @param {onErrorCallback} onError 
  */
-function getSettings(onSuccess, onError) {
+function getSettings(prefix, guid, onSuccess, onError) {
     $.ajax({
         method: 'POST', 
         url: EM.emcAjax.get,
-        data: 'verification=' + EM.emcAjax.verification + '&action=get-settings&prefix=' + module.prefix,
+        data: 'verification=' + EM.emcAjax.verification + '&action=get-settings&prefix=' + prefix,
         dataType: "json",
         success: function(data) {
             debugLog(data)
@@ -169,7 +180,7 @@ function getSettings(onSuccess, onError) {
                 settings.originalHash = objectHash(settings.original)
                 settings.current = JSON.parse(json)
                 settings.tabs = data.tabs
-                onSuccess()
+                onSuccess(prefix, guid)
             }
             else {
                 onError(data.error)
@@ -181,7 +192,12 @@ function getSettings(onSuccess, onError) {
         }
     })
 }
-
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
+        return v.toString(16)
+    })
+}
 // Shows the enhanced module configuration dialog.
 EM.showEnhancedConfig = function (prefix, pid = null) {
     // Store arguments and get additional data.
@@ -201,6 +217,10 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
     $('#emcModal').remove()
     // Clone the modal template.
     modal = getTemplate('emcModal')
+    var guid = uuidv4()
+    modal.attr('data-emc-guid', guid)
+    modal.attr('data-emc-prefix', prefix)
+    debugLog('Created modal ' + guid)
     $('body').append(modal)
     // Setup the modal for the given module
     modal.find('.emc-module-name').text(module.name)
@@ -208,10 +228,15 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
     modal.find('.modal-body').hide()
     modal.find('.emc-initerror').hide()
     modal.find('.emc-initializing').show()
+    modal.on('hidden.bs.modal', function () {
+        // Destroy on closing. We always rebuild.
+        debugLog('Destroyed modal ' + modal.attr('data-emc-guid'))
+        modal.remove()
+    })
     // Show the modal.
     modal.modal('show')
     // Get settings and build.
-    getSettings(buildDialog, initError)
+    getSettings(prefix, guid, buildDialog, initError)
 }
 
 
