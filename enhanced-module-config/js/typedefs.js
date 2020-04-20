@@ -2,7 +2,8 @@
  * @typedef ExternalModules
  * @type {{
  *  showEnhancedConfig?: function(string, int):void
- *  configsByPrefixJSON?: []
+ *  configsByPrefixJSON?: Object<string, SettingConfig>
+ *  versionsByPrefixJSON?: Object<string, string>
  *  PID:int
  *  emcDebug: boolean
  *  emcAjax: {{
@@ -44,8 +45,8 @@
 /**
  * @typedef Validation
  * @type {{
- * type: string // Any of integer, number, string, letters a-z, chars (of given in pattern), regex, custom (calls validateSetting method/hook); allow comma and dot for decimal; no thousand!
- * pattern: string // for chars, regex
+ * type: string // Any of integer, number, string, date, datetime, json (must be valid) letters a-z, chars (of given in pattern), regex, custom (calls validateSetting method/hook); allow comma and dot for decimal; no thousand!
+ * pattern: string // for chars, regex, displayformat for date (internal will always be y-m-d)
  * min: int // min value or min length
  * max: int // max value or max length
  * 'custom-ajax': bool // on-the-fly custom validation

@@ -212,6 +212,7 @@
         {
             "key": "s0_userlist",
             "name": "A user-list field (apparently not working as System Settings)",
+            "description": "In system context, this is super user, so all users are valid, should support scope (project, admins, suspended, ...)",
             "type": "user-list"
         },
         {
@@ -242,6 +243,18 @@
             ]
         },
         {
+            "key": "s0_checkboxes",
+            "name": "A checkbox field with 4 choices (default is not supported)",
+            "type": "checkboxes",
+            "choices": [
+                { "value": "", "name": "" },
+                { "value": "a", "name": "Choice A" },
+                { "value": "b", "name": "Choice B" },
+                { "value": "c", "name": "Choice C" },
+                { "value": "d", "name": "Choice D" }
+            ]
+        },
+        {
             "key": "s0_button",
             "name": "A button field, which seems to require a url, otherwise we get a JS error ...",
             "type": "button",
@@ -260,11 +273,13 @@
         {
             "key": "s0_date",
             "name": "A date field",
+            "description": "This is nothing more than <b>text</b> with date validation. There could also be a datetime field. For legacy fields, the appropriate validation can be added transparently, and all sent down as <b>text</b>.",
             "type": "date"
         },
         {
             "key": "s0_email",
             "name": "A email field",
+            "description": "This is nothing more than <b>text</b> with email validation",
             "type": "email"
         },
         {
