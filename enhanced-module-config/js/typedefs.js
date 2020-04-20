@@ -42,6 +42,19 @@
  */
 
 /**
+ * @typedef Validation
+ * @type {{
+ * type: string // Any of integer, number, string, letters a-z, chars (of given in pattern), regex, custom (calls validateSetting method/hook); allow comma and dot for decimal; no thousand!
+ * pattern: string // for chars, regex
+ * min: int // min value or min length
+ * max: int // max value or max length
+ * 'custom-ajax': bool // on-the-fly custom validation
+ * }}
+ */
+
+
+
+/**
  * @typedef SettingConfig
  * @type {{
  * key: string
@@ -59,6 +72,8 @@
  * sub_settings: SettingConfig[]
  * choices: SettingChoice[]
  * branchingLogic: BranchingLogic
+ * placeholder: string
+ * validation: Validation
  * }}
  */
 
