@@ -77,11 +77,17 @@
             "tab": "a"
         },
         {
+            "key": "s0_texta",
+            "type": "text",
+            "name": "A standard text box",
+            "placeholder": "Fill me with text"
+        },
+        {
             "key": "s0r_texta",
             "type": "text",
             "repeatable": true,
             "name": "A repeatable text box",
-            "tab": "b"
+            "placeholder": "Fill me repeatedly"
         },
         {
             "key": "s0r_subsetting",
