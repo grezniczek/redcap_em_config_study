@@ -1,7 +1,9 @@
 <?php
 
+$this->includeScript("enhanced-module-config/js/3rd-party/object_hash.js");
+$this->includeScript("enhanced-module-config/js/3rd-party/autosize.js");
+$this->includeScript("enhanced-module-config/js/3rd-party/FileSaver.min.js");
 $this->includeScript("enhanced-module-config/js/enhanced-module-config.js");
-$this->includeScript("enhanced-module-config/js/object_hash.js");
 $this->includeCSS("enhanced-module-config/css/enhanced-module-config.css");
 
 $debug = true;
