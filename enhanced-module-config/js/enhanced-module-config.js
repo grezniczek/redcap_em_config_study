@@ -69,7 +69,7 @@ function buildDialog(prefix, guid) {
         // Get outer template.
         var $f = getTemplate('emcSetting');
         // Add control template.
-        var $control = getSettingTemplate(setting.config.type)
+        var $control = getSettingTemplate(setting.config)
         $control.find('.emc-setting-labeltarget').attr('id', id)
         // Configure.
         $f.find('.emc-setting-field').append($control)
@@ -111,6 +111,20 @@ function buildDialog(prefix, guid) {
         modal.find('.emc-modal-wrapper').children().appendTo(modal.find('.modal-content'))
         modal.find('.emc-initonly').remove()
     })
+    finalize()
+}
+
+function finalize() {
+    // Initialize textarea autosizing
+    // @ts-ignore
+    $('.textarea-autosize').textareaAutoSize();
+    // Hide blocking overlay and remove init-only items.
+    modal.find('.emc-default-body').show()
+    modal.find('.emc-loading').hide()
+    modal.find('.emc-overlay').fadeOut(300, function() {
+        modal.find('.emc-modal-wrapper').children().appendTo(modal.find('.modal-content'))
+        modal.find('.emc-initonly').remove()
+    })
 }
 
 /** @type {JQuery} */
@@ -123,14 +137,20 @@ var module = {}
 
 /**
  * Gets a template by type.
- * @param {string} type The type of the setting (as in config.json).
+ * @param {SettingConfig} config The type of the setting (as in config.json).
  * @returns {JQuery} The jQuery representation of the template's content.
  */
-function getSettingTemplate(type) {
+function getSettingTemplate(config) {
     // Map types to templates
     var name = 'emcNotImplemented'
-    switch (type) {
+    switch (config.type) {
         case 'checkbox': name = 'emcSwitch'; break;
+        case 'text': {
+            name = config.repeatable ? 'emcRepeatableTextbox' : 'emcTextbox'
+            break
+        }
+        case 'textarea': name = 'emcTextarea'; break;
+        case 'json': name = 'emcTextarea'; break;
     }
     return getTemplate(name)
 }

@@ -28,7 +28,6 @@
     height: 100%;
     z-index: 5;
 }
-
 .emc-loading,
 .emc-initerror {
     display: flex;
@@ -154,6 +153,15 @@ a.emc-setting-help:hover {
 }
 
 
+/* Settings - Controls - General */
+
+.emc-vtop {
+    display: flex;
+    align-items: start;
+}
+.emc-clear:hover {
+    color: var(--red);
+}
 
 
 /* Settings - Specific Controls */
