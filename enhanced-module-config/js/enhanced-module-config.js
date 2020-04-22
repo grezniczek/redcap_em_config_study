@@ -135,24 +135,57 @@ var settings = {}
 var module = {}
 
 
+
+
+/**
+     * @param {JQuery<HTMLElement>} $template
+     * @param {string} name
+     */
+function insertPart($template, name) {
+    var $part = getTemplate(name)
+    var $target = $template.find('.' + $part.attr('data-emc-target'))
+    var mode = $part.attr('data-emc-insert')
+    switch (mode) {
+        case 'prepend': $target.prepend($part); break;
+        case 'append': $target.append($part); break;
+        case 'before': $target.before($part); break;
+        case 'after': $target.after($part); break;
+    }
+}
+
 /**
  * Gets a template by type.
  * @param {SettingConfig} config The type of the setting (as in config.json).
  * @returns {JQuery} The jQuery representation of the template's content.
  */
 function getSettingTemplate(config) {
-    // Map types to templates
-    var name = 'emcNotImplemented'
+    // Assemble templates.
     switch (config.type) {
-        case 'checkbox': name = 'emcSwitch'; break;
-        case 'text': {
-            name = config.repeatable ? 'emcRepeatableTextbox' : 'emcTextbox'
-            break
+        case 'checkbox': return getTemplate('emcSwitch')
+        case 'text':
+        case 'email': {
+            var $tpl = getTemplate('emcTextbox')
+            if (config.repeatable) {
+                insertPart($tpl, 'emcTextbox-repeatable')
+            }
+            if (config.type == 'email') {
+                insertPart($tpl, 'emcTextbox-email')
+            }
+            return $tpl
         }
-        case 'textarea': name = 'emcTextarea'; break;
-        case 'json': name = 'emcTextarea'; break;
+        case 'textarea': 
+        case 'json': {
+            var $tpl = getTemplate('emcTextarea')
+            if (config.repeatable) {
+                insertPart($tpl, 'emcTextarea-repeatable')
+            }
+            if (config.type == 'json') {
+                insertPart($tpl, 'emcTextarea-json')
+            }
+            return $tpl
+        }
     }
-    return getTemplate(name)
+    return getTemplate('emcNotImplemented')
 }
 
 

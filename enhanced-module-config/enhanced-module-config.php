@@ -91,13 +91,16 @@ $ajax = array (
                         </div>
                     </div>
                     <!-- Default Modal Body -->
-                    <div class="modal-body emc-modal-body emc-default-body">
+                    <div class="modal-body emc-tabs-body emc-default-body">
                         <!-- Main Tabs (holds emcTabItem) -->
                         <ul class="nav nav-tabs emc-tabs" role="tablist"></ul>
+                        <div class="tab-content emc-tabs"></div>
+                    </div>
+                    <!-- Default Modal Body -->
+                    <div class="modal-body emc-panels-body emc-default-body">
                         <!-- Tab Container (holds emcTabPanel) -->
                         <div class="tab-content emc-tab-container"></div>
                     </div>
-
                     <!-- Modal Footer -->
                     <div class="modal-footer">
                         <div>
@@ -150,9 +153,9 @@ $ajax = array (
 
 <template data-emc="emcTextbox">
     <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="" aria-labelledby="" id="">
+        <input type="text" class="form-control emc-input" placeholder="" aria-labelledby="" id="">
         <div class="input-group-append">
-            <span class="input-group-text">
+            <span class="input-group-text emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -162,28 +165,27 @@ $ajax = array (
     </div>
 </template>
 
-<template data-emc="emcRepeatableTextbox">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="" aria-labelledby="" id="">
-        <div class="input-group-append">
-            <span class="input-group-text">
-                <button class="btn btn-success btn-xs" type="button"><i class="fas fa-plus"></i></i></button>
-            </span>
-            <span class="input-group-text">
-                <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </span>
-        </div>
-        <!-- TODO: valiation -->
+<template data-emc="emcTextbox-repeatable">
+    <button class="btn btn-success btn-xs emc-text-repeat-button" 
+        type="button" 
+        data-emc-action="add-repeat" 
+        data-emc-insert="prepend" 
+        data-emc-target="emc-group-end">
+        <i class="fas fa-plus"></i></i>
+    </button>
+</template>
+
+<template data-emc="emcTextbox-email">
+    <div class="input-group-prepend" data-emc-insert="before" data-emc-target="emc-input">
+        <span class="input-group-text emc-prepend-text">@</span>
     </div>
 </template>
 
 <template data-emc="emcTextarea">
     <div class="input-group emc-textarea-control">
-        <textarea rows="1" class="form-control textarea-autosize emc-setting-labeltarget" aria-labelledby="" id=""></textarea>
-        <div class="input-group-prepend">
-            <span class="input-group-text emc-vtop">
+        <textarea rows="1" class="form-control textarea-autosize emc-textarea emc-setting-labeltarget" aria-labelledby="" id=""></textarea>
+        <div class="input-group-append">
+            <span class="input-group-text emc-vtop emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -191,5 +193,21 @@ $ajax = array (
         </div>
         <!-- TODO: valiation -->
     </div>
+</template>
+
+<template data-emc="emcTextarea-json">
+    <div class="input-group-prepend" data-emc-insert="before" data-emc-target="emc-textarea">
+        <span class="input-group-text emc-prepend-text emc-vtop emc-prepend-json">JSON</span>
+    </div>
+</template>
+
+<template data-emc="emcTextarea-repeatable">
+    <button class="btn btn-success btn-xs emc-text-repeat-button" 
+        type="button" 
+        data-emc-action="add-repeat" 
+        data-emc-insert="prepend" 
+        data-emc-target="emc-group-end">
+        <i class="fas fa-plus"></i></i>
+    </button>
 </template>
 

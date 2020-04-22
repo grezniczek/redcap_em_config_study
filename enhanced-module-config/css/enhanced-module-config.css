@@ -66,12 +66,31 @@
     font-weight: normal;
 }
 
+/* Main Tabs */
 
-/* Modal Body */
+.modal-body.emc-tabs-body {
+    overflow: hidden;
+    padding-bottom: 0;
+    min-height: 52px;
+}
+.tab-content.emc-tabs {
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+    padding: 0;
+    margin-left: -2em;
+    margin-right: -2em;
+}
+
+.emc-panels-body {
+    border: none;
+    margin: 1rem 0;
+    padding: 0 1rem;
+    margin-right: 5px;
+}
 
 .emc-modal-body {
     min-height: 200px;
-    padding-top: 0.5rem;
 }
 
 /* Modal Footer */
@@ -80,6 +99,8 @@
 
 
 /* Tabs and Tab Panels */
+
+
 .nav-tabs.emc-tabs {
     border-bottom: none;
 }
@@ -105,8 +126,9 @@ a.emc-tab-link:hover {
 }
 .tab-content.emc-tab-container {
     border: none;
-    border-top: 1px solid #ddd;
+    /* border-top: 1px solid #ddd; */
     min-height: 200px;
+    padding-top: 0;
 }
 
 .emc-nosettings {
@@ -162,7 +184,15 @@ a.emc-setting-help:hover {
 .emc-clear:hover {
     color: var(--red);
 }
-
+.emc-textarea {
+    min-height: 38px;
+}
+.emc-prepend-text {
+    justify-content: center;
+}
+.emc-text-repeat-button {
+    margin-right: 1em;
+}
 
 /* Settings - Specific Controls */
 
@@ -171,7 +201,11 @@ a.emc-setting-help:hover {
     margin-top: -0.75rem;
 }
 
-
+.emc-prepend-json {
+    font-size: 0.8em;
+    line-height: 1em;
+    padding-top: 1.25em;
+}
 
 
 
