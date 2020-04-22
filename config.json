@@ -59,7 +59,8 @@
         {
             "key": "s0_desca",
             "type": "descriptive",
-            "name": "A description that is shown when 'Check A' is true.",
+            "name": "Checkbox A is checked.",
+            "description": "A description that is shown when 'Check A' is true.",
             "branchingLogic": {
                 "field": "s0_checka", 
                 "value": true
@@ -69,12 +70,14 @@
         {
             "key": "s0_desca_n",
             "type": "descriptive",
-            "name": "A description that is shown when 'Check A' is false.",
+            "name": "Checkbox A is NOT checked.",
+            "description": "A description that is shown when 'Check A' is false.",
             "branchingLogic": {
                 "field": "s0_checka", 
                 "value": false
             },
-            "tab": "a"
+            "tab": "a",
+            "border": "both"
         },
         {
             "key": "s0_texta",
