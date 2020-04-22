@@ -141,7 +141,7 @@ $ajax = array (
 </template>
 
 <template data-emc="emcNotImplemented">
-    <div>Not implemented.</div>
+    <div style="color:red;">Not implemented.</div>
 </template>
 
 <template data-emc="emcSwitch">
