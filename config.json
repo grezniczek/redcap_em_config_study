@@ -200,6 +200,12 @@
             "type": "textarea"
         },
         {
+            "key": "s0r_textarea",
+            "name": "A repeatable textarea",
+            "type": "textarea",
+            "repeatable": true
+        },
+        {
             "key": "s0_json",
             "name": "A JSON field",
             "type": "json"
@@ -281,6 +287,13 @@
             "name": "A email field",
             "description": "This is nothing more than <b>text</b> with email validation",
             "type": "email"
+        },
+        {
+            "key": "s0r_email",
+            "name": "A repeatable email field",
+            "description": "This is nothing more than <b>text</b> with email validation",
+            "type": "email",
+            "repeatable": true
         },
         {
             "key": "s0_file",
