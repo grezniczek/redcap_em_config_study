@@ -206,7 +206,8 @@
             "key": "s0r_textarea",
             "name": "A repeatable textarea",
             "type": "textarea",
-            "repeatable": true
+            "repeatable": true,
+            "tab": "a"
         },
         {
             "key": "s0_json",

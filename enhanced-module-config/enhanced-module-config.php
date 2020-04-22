@@ -145,15 +145,15 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSwitch">
-    <div class="custom-control custom-switch switch-lg emc-switch-control">
-        <input type="checkbox" class="custom-control-input emc-setting-labeltarget" id="">
+    <div class="custom-control custom-switch switch-lg emc-switch-control emc-control">
+        <input type="checkbox" class="custom-control-input emc-setting-labeltarget emc-value" id="">
         <label class="custom-control-label emc-setting-label" for=""></label>
     </div>
 </template>
 
 <template data-emc="emcTextbox">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control emc-input" placeholder="" aria-labelledby="" id="">
+    <div class="input-group emc-control">
+        <input type="text" class="form-control emc-input emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="">
         <div class="input-group-append">
             <span class="input-group-text emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
@@ -182,8 +182,8 @@ $ajax = array (
 </template>
 
 <template data-emc="emcTextarea">
-    <div class="input-group emc-textarea-control">
-        <textarea rows="1" class="form-control textarea-autosize emc-textarea emc-setting-labeltarget" aria-labelledby="" id=""></textarea>
+    <div class="input-group emc-control">
+        <textarea rows="1" class="form-control emc-textarea emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
         <div class="input-group-append">
             <span class="input-group-text emc-vtop emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">

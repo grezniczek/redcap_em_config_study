@@ -94,6 +94,9 @@
  * value: any
  * config: SettingConfig
  * type: string
+ * count: integer
+ * repeats: boolean
+ * hassubs: boolean
  * dependencies: SettingDependencies
  * }}
  */

@@ -65,31 +65,80 @@ function addMainTabs() {
 }
 
 /**
+ * 
+ * @param {ModuleSetting} setting 
+ * @param {JQuery} $value 
+ * @param {any} value 
+ */
+function setControlValue(setting, $value, value) {
+    switch(setting.type) {
+        case 'checkbox': {
+            $value.prop('checked', value == true)
+        }
+
+        default: {
+            $value.val(value)
+        }
+    }
+}
+
+/**
+ * Builds a field.
+ * @param {ModuleSetting} setting
+ * @param {string} key
+ * @returns {JQuery}
+ */
+function buildField(setting, key) {
+    var baseId = 'emcSetting-' + key
+    // Get outer template.
+    var $f = getTemplate('emcSetting');
+    // Minimum 1, maximum 1 for type 'sub_setting'
+    var count = setting.hassubs ? 0 : parseInt(setting.count)
+    var n = (setting.type == 'sub_setting') ? 1 : Math.max(1, count)
+    // Add control template. 
+    var $sf = $f.find('.emc-setting-field')
+    for (var i = 0; i < n; i++) {
+        var id = baseId + '-' + uuidv4()
+        var $control = getSettingTemplate(setting.config)
+        $control.find('.emc-setting-labeltarget').attr('id', id)
+        // Set value.
+        var $value = $control.find('.emc-value')
+        var value = setting.repeats ?
+            (count == 0 ? "" : setting.value[i]) : setting.value
+        setControlValue(setting, $value, value)
+        $sf.append($control)
+    }
+    if ((setting.repeats && setting.type != 'sub_setting') ||
+        (!setting.repeats && setting.type == 'sub_setting')) {
+        $sf.addClass('emc-setting-field-indent')
+    }
+    // Configure label part.
+    var id = $f.find('.emc-setting-labeltarget').first().attr('id')
+    $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
+    $f.find('.emc-setting-label').attr('for', id)
+    $f.find('.emc-setting-label-text').html(setting.config.name)
+    if (setting.config['help-text'] || setting.config['help-url']) {
+        $f.find('.emc-setting-help').attr('data-emc-setting-help', key)
+    }
+    else {
+        $f.find('.emc-setting-help').remove()
+    }
+    $f.find('.emc-setting-description').html(setting.config.description)
+    return $f
+}
+
+/**
  * Adds the root-level fields.
  */
 function addRootFields() {
     Object.keys(settings.current).forEach(function(key) {
         /** @type {ModuleSetting} Module setting info */
         var setting = settings.current[key]
-        var id = 'emcSetting-' + key
-        // Get outer template.
-        var $f = getTemplate('emcSetting');
-        // Add control template.
-        var $control = getSettingTemplate(setting.config)
-        $control.find('.emc-setting-labeltarget').attr('id', id)
-        // Configure.
-        $f.find('.emc-setting-field').append($control)
-        $f.find('.emc-setting-label').attr('for', id)
-        $f.find('.emc-setting-label-text').html(setting.config.name)
-        if (setting.config['help-text'] || setting.config['help-url']) {
-            $f.find('.emc-setting-help').attr('data-emc-setting-help', key)
-        }
-        else {
-            $f.find('.emc-setting-help').remove()
-        }
-        $f.find('.emc-setting-description').html(setting.config.description)
+
+        var $field = buildField(setting, key)
+
         // Append to the correct tab.
-        $('#emcMainPanel-' + setting.config.tab).append($f)
+        $('#emcMainPanel-' + setting.config.tab).append($field)
     })
 }
 
@@ -128,7 +177,17 @@ function setInitialTab() {
 function finalize() {
     // Initialize textarea autosizing
     // @ts-ignore
-    $('.textarea-autosize').textareaAutoSize();
+    $('.emc-textarea').textareaAutoSize()
+    setTimeout(function() {
+         $('.emc-textarea').trigger('keyup')
+    }, 0)
+
+    // Autosize on tab shown.
+    $('.emc-tab-link').on('shown.bs.tab', function() {
+        $('.emc-textarea').trigger('keyup')
+        debugLog('Autosized after tab switch.')
+    })
+
     // Hide blocking overlay and remove init-only items.
     $modal.find('.emc-default-body').show()
     $modal.find('.emc-loading').hide()
