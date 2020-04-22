@@ -115,7 +115,8 @@
  * original?: ModuleSetting[]
  * originalHash?: string
  * current?: ModuleSetting[]
- * tabs?: TabInfo[]
+ * tabs?: TabInfo[],
+ * guid?: string
  * }}
  */
 
@@ -126,5 +127,6 @@
   * version?: string
   * name?: string
   * pid?: int
+  * guid?: string
   * }}
   */

@@ -28,7 +28,7 @@ class emcGetSettingsAjax { static function process($m) {
     if ($verified) {
         switch ($data["action"]) {
             case "get-settings":
-                $response = $m->getSettingsAjax($data["prefix"], $verification["pid"], $verification["type"]);
+                $response = $m->getSettingsAjax($data["prefix"], $data["guid"], $verification["pid"], $verification["type"]);
             break;
             default:
             break;

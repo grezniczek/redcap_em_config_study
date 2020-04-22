@@ -7,6 +7,15 @@ if (typeof window.ExternalModules == 'undefined') {
     // @ts-ignore
     window.ExternalModules = EM
 }
+
+/** @type {JQuery} */
+var $modal = null
+/** @type {ModuleSettingsInfos} Module Settings */
+var settings = {}
+/** @type {ModuleInfo} Module Info */
+var module = {}
+
+
 function debugLog() {
     if (EM.emcDebug) {
         for (var i = 0; i < arguments.length; i++)
@@ -19,23 +28,16 @@ function debugLog() {
  * @param {string} msg The error message.
  */
 function initError(msg) {
-    modal.find('.emc-loading').hide()
-    modal.find('.emc-initerror').show()
+    $modal.find('.emc-loading').hide()
+    $modal.find('.emc-initerror').show()
     console.warn(msg);
 }
 
-/**
- * Builds the dialog.
- * @param {string} prefix
- * @param {string} guid
- */
-function buildDialog(prefix, guid) {
-    // Only ever build one dialog!
-    modal = $('#emcModal')
-    if (modal.attr('data-emc-prefix') !== prefix) return;
-    if (modal.attr('data-emc-guid') !== guid) return;
 
-    // Tabs.
+/**
+ * Adds the main tabs.
+ */
+function addMainTabs() {
     Object.keys(settings.tabs).forEach(function(tabKey) {
         var tabInfo = settings.tabs[tabKey]
         if (tabInfo.main) {
@@ -60,8 +62,12 @@ function buildDialog(prefix, guid) {
             $('.emc-tab-container').append($panel)
         }
     })
+}
 
-    // Root-level fields.
+/**
+ * Adds the root-level fields.
+ */
+function addRootFields() {
     Object.keys(settings.current).forEach(function(key) {
         /** @type {ModuleSetting} Module setting info */
         var setting = settings.current[key]
@@ -85,73 +91,71 @@ function buildDialog(prefix, guid) {
         // Append to the correct tab.
         $('#emcMainPanel-' + setting.config.tab).append($f)
     })
-
-    // Empty tabs? Show one.
-    var activated = false
-    var $p = $('.emc-tab-panel').first()
-    while ($p.length) {
-        if ($p.children().length) {
-            if (!activated) {
-                $('#' + $p.attr('aria-labelledby')).tab('show')
-                activated = true
-            }
-        }
-        else {
-            $p.append(getTemplate('emcTabEmpty'))
-        }
-        $p = $p.next('.emc-tab-panel')
-    }
-    if (!activated) {
-         $('.emc-tab-link:first').tab('show')
-    }
-    // Hide blocking overlay and remove init-only items.
-    modal.find('.emc-default-body').show()
-    modal.find('.emc-loading').hide()
-    modal.find('.emc-overlay').fadeOut(300, function() {
-        modal.find('.emc-modal-wrapper').children().appendTo(modal.find('.modal-content'))
-        modal.find('.emc-initonly').remove()
-    })
-    finalize()
 }
 
+/**
+ * Activates the initial main tab after the dialog was created.
+ */
+function setInitialTab() {
+    // Empty tabs? Find out (and add empty note while doing so).
+    var notEmpty = $('.emc-tab-panel').toArray().filter(function(panel) {
+        if (!panel.children.length) {
+            $(panel).append(getTemplate('emcTabEmpty'))
+            return false
+        }
+        return true
+    }).map(function(panel) {
+        return panel.getAttribute('aria-labelledby')
+    })
+    // Activate a tab (give priority to module-reserved-tab).
+    var defaultName = 'emcMainTab-a' // 'emcMainTab-module-reserved-tab'
+    var defaultTab = '#' + notEmpty.reduce(function(prev, cur) {
+        if (prev == defaultName || cur == defaultName) 
+            return defaultName
+        return prev.length ? prev : cur
+    },'')
+    if (defaultTab != '#') {
+        $(defaultTab).tab('show')
+    }
+    else {
+        $('.emc-tab-link:first').tab('show')
+    }
+}
+
+/**
+ * Adds final touches and removes the spinner.
+ */
 function finalize() {
     // Initialize textarea autosizing
     // @ts-ignore
     $('.textarea-autosize').textareaAutoSize();
     // Hide blocking overlay and remove init-only items.
-    modal.find('.emc-default-body').show()
-    modal.find('.emc-loading').hide()
-    modal.find('.emc-overlay').fadeOut(300, function() {
-        modal.find('.emc-modal-wrapper').children().appendTo(modal.find('.modal-content'))
-        modal.find('.emc-initonly').remove()
+    $modal.find('.emc-default-body').show()
+    $modal.find('.emc-loading').hide()
+    $modal.find('.emc-overlay').fadeOut(300, function() {
+        $modal.find('.emc-modal-wrapper').children().appendTo($modal.find('.modal-content'))
+        $modal.find('.emc-initonly').remove()
     })
 }
 
-/** @type {JQuery} */
-var modal = null
-/** @type {ModuleSettingsInfos} Module Settings */
-var settings = {}
-/** @type {ModuleInfo} Module Info */
-var module = {}
-
-
-
-
 /**
-     * @param {JQuery<HTMLElement>} $template
-     * @param {string} name
-     */
-function insertPart($template, name) {
-    var $part = getTemplate(name)
-    var $target = $template.find('.' + $part.attr('data-emc-target'))
-    var mode = $part.attr('data-emc-insert')
-    switch (mode) {
-        case 'prepend': $target.prepend($part); break;
-        case 'append': $target.append($part); break;
-        case 'before': $target.before($part); break;
-        case 'after': $target.after($part); break;
-    }
+ * Builds the dialog.
+ */
+function buildDialog() {
+
+    addMainTabs()
+    addRootFields()
+
+
+
+    setInitialTab()
+    finalize()
 }
+
+
+
+
+
 
 /**
  * Gets a template by type.
@@ -161,6 +165,7 @@ function insertPart($template, name) {
 function getSettingTemplate(config) {
     // Assemble templates.
     switch (config.type) {
+        case 'descriptive': return $('<div></div>')
         case 'checkbox': return getTemplate('emcSwitch')
         case 'text':
         case 'email': {
@@ -188,6 +193,21 @@ function getSettingTemplate(config) {
     return getTemplate('emcNotImplemented')
 }
 
+/**
+ * @param {JQuery<HTMLElement>} $template
+ * @param {string} name
+ */
+function insertPart($template, name) {
+    var $part = getTemplate(name)
+    var $target = $template.find('.' + $part.attr('data-emc-target'))
+    var mode = $part.attr('data-emc-insert')
+    switch (mode) {
+        case 'prepend': $target.prepend($part); break;
+        case 'append': $target.append($part); break;
+        case 'before': $target.before($part); break;
+        case 'after': $target.after($part); break;
+    }
+}
 
 /**
  * Gets a template by name.
@@ -199,11 +219,12 @@ function getTemplate(name) {
     return $(document.querySelector('template[data-emc=' + name + ']').content.firstElementChild.cloneNode(true))
 }
 
+
+
+
 /** 
  * Callback on success. 
  * @callback onSuccessCallback 
- * @param {string} prefix 
- * @param {string} guid 
  */
 /**
  * Callback on error.
@@ -221,19 +242,27 @@ function getSettings(prefix, guid, onSuccess, onError) {
     $.ajax({
         method: 'POST', 
         url: EM.emcAjax.get,
-        data: 'verification=' + EM.emcAjax.verification + '&action=get-settings&prefix=' + prefix,
+        data: 'verification=' + EM.emcAjax.verification + '&action=get-settings&prefix=' + prefix + '&guid=' + guid,
         dataType: "json",
         success: function(data) {
-            debugLog(data)
+            $modal = $('#emcModal')
             if (data.success) {
-                EM.emcAjax.verification = data.verification
-                var json = JSON.stringify(data.settings)
-                settings.original = JSON.parse(json)
-                // @ts-ignore
-                settings.originalHash = objectHash(settings.original)
-                settings.current = JSON.parse(json)
-                settings.tabs = data.tabs
-                onSuccess(prefix, guid)
+                // Verify that response matches the current configuration.
+                if (data.guid == $modal.attr('data-emc-guid')) {
+                    debugLog(data)
+                    EM.emcAjax.verification = data.verification
+                    var json = JSON.stringify(data.settings)
+                    settings.original = JSON.parse(json)
+                    // @ts-ignore
+                    settings.originalHash = objectHash(settings.original)
+                    settings.current = JSON.parse(json)
+                    settings.tabs = data.tabs
+                    settings.guid = data.guid
+                    onSuccess()
+                }
+                else {
+                    debugLog('Late or unknown package arrived: ' + data.guid)
+                }
             }
             else {
                 onError(data.error)
@@ -245,49 +274,60 @@ function getSettings(prefix, guid, onSuccess, onError) {
         }
     })
 }
+
+/**
+ * Generates a version 4 unique identifier.
+ * Used to guarantee the identity of objects / elements.
+ */
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8)
         return v.toString(16)
     })
 }
-// Shows the enhanced module configuration dialog.
+
+/**
+ * Shows the enhanced module configuration dialog.
+ * This is exposed in the globale ExternalModules object.
+ */
 EM.showEnhancedConfig = function (prefix, pid = null) {
     // Store arguments and get additional data.
+    var guid = uuidv4()
     settings = {
         original: null,
         originalHash: null,
         current: null,
-        tabs: null
+        tabs: null,
+        guid: guid
     }
     module = {
         prefix: prefix,
         version: EM.versionsByPrefixJSON[prefix],
         name: EM.configsByPrefixJSON[prefix].name,
-        pid: pid
+        pid: pid,
+        guid: guid
     }
     // Remove any previous modals.
     $('#emcModal').remove()
     // Clone the modal template.
-    modal = getTemplate('emcModal')
-    var guid = uuidv4()
-    modal.attr('data-emc-guid', guid)
-    modal.attr('data-emc-prefix', prefix)
+    $modal = getTemplate('emcModal')
+    $modal.attr('data-emc-guid', guid)
+    $modal.attr('data-emc-prefix', prefix)
     debugLog('Created modal ' + guid)
-    $('body').append(modal)
+    $('body').append($modal)
     // Setup the modal for the given module
-    modal.find('.emc-module-name').text(module.name)
-    modal.find('.emc-module-version').text(module.version)
-    modal.find('.modal-body').hide()
-    modal.find('.emc-initerror').hide()
-    modal.find('.emc-initializing').show()
-    modal.on('hidden.bs.modal', function () {
+    $modal.find('.emc-module-name').text(module.name)
+    $modal.find('.emc-module-version').text(module.version)
+    $modal.find('.modal-body').hide()
+    $modal.find('.emc-initerror').hide()
+    $modal.find('.emc-initializing').show()
+    $modal.on('hidden.bs.modal', function () {
         // Destroy on closing. We always rebuild.
-        debugLog('Destroyed modal ' + modal.attr('data-emc-guid'))
-        modal.remove()
+        debugLog('Destroyed modal ' + $modal.attr('data-emc-guid'))
+        $modal.remove()
     })
     // Show the modal.
-    modal.modal('show')
+    $modal.modal('show')
     // Get settings and build.
     getSettings(prefix, guid, buildDialog, initError)
 }

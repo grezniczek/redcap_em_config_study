@@ -82,7 +82,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     }
 
 
-    public function getSettingsAjax($prefix, $pid, $type) {
+    public function getSettingsAjax($prefix, $guid, $pid, $type) {
         // TODO: Checks
         $settings = $type == "project-settings" ? self::getEnhancedProjectSettings($prefix, $pid) : self::getEnhancedSystemSettings($prefix);
 
@@ -117,7 +117,9 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
         return array(
             "success" => true,
             "settings" => $settings,
-            "tabs" => $tabs
+            "tabs" => $tabs,
+            "prefix" => $prefix,
+            "guid" => $guid
         );
     }
 
