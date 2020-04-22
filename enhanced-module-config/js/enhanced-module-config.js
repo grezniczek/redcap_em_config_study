@@ -132,7 +132,7 @@ function finalize() {
     // Hide blocking overlay and remove init-only items.
     $modal.find('.emc-default-body').show()
     $modal.find('.emc-loading').hide()
-    $modal.find('.emc-overlay').fadeOut(300, function() {
+    $modal.find('.emc-overlay').fadeOut(200, function() {
         $modal.find('.emc-modal-wrapper').children().appendTo($modal.find('.modal-content'))
         $modal.find('.emc-initonly').remove()
     })
