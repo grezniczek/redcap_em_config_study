@@ -200,8 +200,20 @@ a.emc-setting-help:hover {
 .emc-prepend-text {
     justify-content: center;
 }
-.emc-text-repeat-button {
-    margin-right: 1em;
+
+
+/* Repeat toolsbar */
+
+.emc-repeat-handle {
+    cursor: ns-resize;
+    padding-top: 0.65rem;
+}
+.emc-add-instance {
+    margin: 0.5rem 1rem 0 0.5rem;
+}
+.emc-repeat-add-label {
+    vertical-align: middle;
+    padding-left: 0.3rem;
 }
 
 /* Settings - Specific Controls */

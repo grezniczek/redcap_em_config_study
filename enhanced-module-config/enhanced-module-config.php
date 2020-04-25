@@ -153,7 +153,7 @@ $ajax = array (
 
 <template data-emc="emcTextbox">
     <div class="input-group emc-control">
-        <input type="text" class="form-control emc-input emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="">
+        <input type="text" class="form-control emc-input emc-repeatable emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="">
         <div class="input-group-append">
             <span class="input-group-text emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
@@ -165,14 +165,21 @@ $ajax = array (
     </div>
 </template>
 
-<template data-emc="emcTextbox-repeatable">
-    <button class="btn btn-success btn-xs emc-text-repeat-button" 
-        type="button" 
-        data-emc-action="add-repeat" 
-        data-emc-insert="prepend" 
-        data-emc-target="emc-group-end">
-        <i class="fas fa-plus"></i></i>
-    </button>
+<template data-emc="emcAddInstance">
+    <div class="emc-add-instance" data-emc-insert="after" data-emc-target="emc-setting-field">
+        <button class="btn btn-success btn-xs emc-repeat-add" type="button" data-emc-action="add-repeat">
+            <i class="fas fa-plus"></i>
+        </button>
+        <span class="emc-repeat-add-label"><?=$this->tt("emc_add_repeatinstance")?></span>
+    </div>
+</template>
+
+<template data-emc="emcRepeatable">
+    <div class="input-group-prepend" data-emc-insert="before" data-emc-target="emc-repeatable">
+        <span draggable="true" class="input-group-text emc-repeat-handle emc-vtop">
+            <i class="fas fa-bars"></i>
+        </span>
+    </div>
 </template>
 
 <template data-emc="emcTextbox-email">
@@ -183,7 +190,7 @@ $ajax = array (
 
 <template data-emc="emcTextarea">
     <div class="input-group emc-control">
-        <textarea rows="1" class="form-control emc-textarea emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
+        <textarea rows="1" class="form-control emc-textarea emc-repeatable emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
         <div class="input-group-append">
             <span class="input-group-text emc-vtop emc-group-end">
                 <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
@@ -201,13 +208,4 @@ $ajax = array (
     </div>
 </template>
 
-<template data-emc="emcTextarea-repeatable">
-    <button class="btn btn-success btn-xs emc-text-repeat-button" 
-        type="button" 
-        data-emc-action="add-repeat" 
-        data-emc-insert="prepend" 
-        data-emc-target="emc-group-end">
-        <i class="fas fa-plus"></i></i>
-    </button>
-</template>
 

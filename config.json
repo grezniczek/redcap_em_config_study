@@ -19,7 +19,7 @@
         "project": [],
         "control-center": [
             {
-                "name": "Enhanced Configuration Demo",
+                "name": "Enhanced Configuration <b>Demo</b>",
                 "key": "demo",
                 "icon": "fas fa-drafting-compass",
                 "url": "html/config-dialog.html",
@@ -213,6 +213,12 @@
             "key": "s0_json",
             "name": "A JSON field",
             "type": "json"
+        },
+        {
+            "key": "s0r_json",
+            "name": "A repeatable JSON field",
+            "type": "json",
+            "repeatable": true
         },
         {
             "key": "s0_richtext",

@@ -108,9 +108,11 @@ function buildField(setting, key) {
         setControlValue(setting, $value, value)
         $sf.append($control)
     }
-    if ((setting.repeats && setting.type != 'sub_setting') ||
-        (!setting.repeats && setting.type == 'sub_setting')) {
+    if (setting.type == 'sub_setting' && !setting.repeats) {
         $sf.addClass('emc-setting-field-indent')
+    }
+    if (setting.type != 'sub_setting' && setting.repeats) {
+        insertPart($f, 'emcAddInstance')
     }
     // Configure label part.
     var id = $f.find('.emc-setting-labeltarget').first().attr('id')
@@ -230,7 +232,7 @@ function getSettingTemplate(config) {
         case 'email': {
             var $tpl = getTemplate('emcTextbox')
             if (config.repeatable) {
-                insertPart($tpl, 'emcTextbox-repeatable')
+                insertPart($tpl, 'emcRepeatable')
             }
             if (config.type == 'email') {
                 insertPart($tpl, 'emcTextbox-email')
@@ -241,7 +243,7 @@ function getSettingTemplate(config) {
         case 'json': {
             var $tpl = getTemplate('emcTextarea')
             if (config.repeatable) {
-                insertPart($tpl, 'emcTextarea-repeatable')
+                insertPart($tpl, 'emcRepeatable')
             }
             if (config.type == 'json') {
                 insertPart($tpl, 'emcTextarea-json')
@@ -258,7 +260,7 @@ function getSettingTemplate(config) {
  */
 function insertPart($template, name) {
     var $part = getTemplate(name)
-    var $target = $template.find('.' + $part.attr('data-emc-target'))
+    var $target = $template.find('.' + $part.attr('data-emc-target')).first()
     var mode = $part.attr('data-emc-insert')
     switch (mode) {
         case 'prepend': $target.prepend($part); break;
