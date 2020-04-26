@@ -25,7 +25,7 @@
 /**
  * @typedef BranchingLogicCondition
  * @type {{
- * value: string
+ * value: any
  * field: string
  * op: string
  * }}
@@ -98,6 +98,10 @@
  * repeats: boolean
  * hassubs: boolean
  * dependencies: SettingDependencies
+ * guid: string
+ * sub: ModuleSetting[]
+ * parent: ModuleSetting
+ * siblings: Object<string, ModuleSetting>
  * }}
  */
 
@@ -113,6 +117,17 @@
  */
 
  /**
+ * @typedef SettingValue
+ * @type {{
+ * guid: string
+ * key: string
+ * value: any
+ * hidden: boolean
+ * }}
+ */
+
+ 
+ /**
  * @typedef ModuleSettingsInfos
  * @type {{
  * original?: ModuleSetting[]
@@ -120,6 +135,7 @@
  * current?: ModuleSetting[]
  * tabs?: TabInfo[],
  * guid?: string
+ * values?: Object<string, SettingValue>
  * }}
  */
 

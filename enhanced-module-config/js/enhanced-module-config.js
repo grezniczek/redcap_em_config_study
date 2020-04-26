@@ -1,5 +1,8 @@
 // @ts-check
 ;(function() {
+
+//#region Init & "global" variables
+
 // @ts-ignore
 if (typeof window.ExternalModules == 'undefined') {
     /** @type {ExternalModules} */
@@ -15,54 +18,154 @@ var settings = {}
 /** @type {ModuleInfo} Module Info */
 var module = {}
 
+//#endregion
 
-function debugLog() {
-    if (EM.emcDebug) {
-        for (var i = 0; i < arguments.length; i++)
-            console.log(arguments[i])
+//#region Branching
+
+/**
+ * Applies branching logic to a setting value (or all settings).
+ * @param {ModuleSetting} setting 
+ */
+function applyBranchingLogic(setting = null) {
+    if (setting == null) {
+        Object.keys(settings.current).forEach(function(key) {
+            var setting = settings.current[key]
+            applyBranchingLogic(setting)
+        })
+    }
+    else {
+        var key = setting.config.key
+        // var instance = $('[data-emc-field="' + key + '"]').attr('data-emc-instance')
+        var instance = 0
+        // var guid = $('[data-emc-field="' + key + '"]').attr('data-emc-guid')
+        var guid = setting.guid
+        if (setting.dependencies.branchingLogic.length) {
+            // Get values for evaluating branching logic
+            var blValues = {}
+            setting.dependencies.branchingLogic.forEach(function(depKey) {
+                blValues[depKey] = getDependencyValue(setting, depKey)
+            })
+            // Evaluate the branching logic expression.
+            var blResult = evaluateBranchingLogic(setting.config.branchingLogic, blValues)
+            settings.values[guid].hidden = !blResult
+            var $setting = $('[data-emc-guid="' + guid + '"]')
+            if (blResult) {
+                $setting.removeClass('emc-branching-hidden')
+            }
+            else {
+                $setting.addClass('emc-branching-hidden')
+            }
+
+            
+
+
+            debugLog('Processed branching for ' + key + ' [' + instance + '] - ' + guid + ' = ' + blResult)
+        }
+        // Process nested - only when not hidden.
+        if (!settings.values[guid].hidden && setting.hassubs) {
+            setting.sub.forEach(function(subsetting) {
+                Object.keys(subsetting).forEach(function(key) {
+                    applyBranchingLogic(subsetting[key])
+                })
+            })
+        }
     }
 }
 
 /**
- * Shows the (static) initialization error and logs more details to the console.
- * @param {string} msg The error message.
+ * Evaluates a branching logic expression.
+ * @param {BranchingLogic} logic 
+ * @param {Object<string,any>} values
+ * @returns {boolean}
  */
-function initError(msg) {
-    $modal.find('.emc-loading').hide()
-    $modal.find('.emc-initerror').show()
-    console.warn(msg);
-}
-
-
-/**
- * Adds the main tabs.
- */
-function addMainTabs() {
-    Object.keys(settings.tabs).forEach(function(tabKey) {
-        var tabInfo = settings.tabs[tabKey]
-        if (tabInfo.main) {
-            // Tab
-            var $tab = getTemplate('emcTabItem')
-            var $a = $tab.find('a')
-            $a.attr('id', 'emcMainTab-' + tabKey)
-            $a.attr('href', '#emcMainPanel-' + tabKey)
-            $a.attr('aria-controls', '#emcMainPanel-' + tabKey)
-            $tab.find('.emc-tab-link-text').html(tabInfo.name)
-            if (tabInfo['help-text'] || tabInfo['help-url']) {
-                $tab.find('.emc-tab-help').attr('data-emc-tab-help', tabKey)
-            }
-            else {
-                $tab.find('.emc-tab-help').remove()
-            }
-            $('ul.emc-tabs').append($tab)
-            // Panel
-            var $panel = getTemplate('emcTabPanel')
-            $panel.attr('id', 'emcMainPanel-' + tabKey)
-            $panel.attr('aria-labelledby', 'emcMainTab-' + tabKey)
-            $('.emc-tab-container').append($panel)
+function evaluateBranchingLogic(logic, values) {
+    /** @type {BranchingLogicCondition[]} conditions */
+    var conditions = []
+    var type = logic.type === undefined ? 'and' : logic.type
+    if (logic['conditions'] === undefined) {
+        conditions.push({
+            field: logic.field,
+            value: logic.value,
+            op: logic.op === undefined ? '=' : logic.op
+        })
+    }
+    else {
+        logic.conditions.forEach(function(condition) {
+            conditions.push({
+                field: condition.field,
+                value: condition.value,
+                op: condition.op === undefined ? '=' : condition.op
+            })
+        })
+    }
+    var conditionResults = []
+    conditions.forEach(function(condition) {
+        var value = values[condition.field]
+        conditionResults.push(evaluateCondition(condition, value))
+    })
+    var result = type == 'and'
+    conditionResults.forEach(function(cr) {
+        if (type == 'and') {
+            result = result && cr
+        } 
+        else {
+            result = result || cr
         }
     })
+    return result
 }
+
+/**
+ * 
+ * @param {BranchingLogicCondition} condition 
+ * @param {any} field 
+ */
+function evaluateCondition(condition, field) {
+    debugLog('Evaluating condition with value \'' + field + '\'', condition)
+    if (typeof field === 'boolean') {
+        return condition.op == '=' ? condition.value === field : condition.value !== field
+    }
+    var value = condition.value
+    var numerical = !isNaN(field) && !isNaN(value)
+    if (numerical) {
+        field = 1 * field
+        value = 1 * value
+        switch (condition.op) {
+            case "=": return field == value
+            case "<>": return field != value
+            case "!=": return field != value
+            case "<": return field < value
+            case "<=": return field <= value
+            case ">": return field > value
+            case ">=": return field >= value
+        }
+    }
+    else {
+        if (condition.op == "=") return field == value
+        if (condition.op == "<>") return field != value
+        if (condition.op == "!=") return field != value
+    }
+    // Default.
+    return false
+}
+
+/**
+ * Gets the value of an upstream/sibling setting.
+ * @param {ModuleSetting} setting 
+ * @param {string} key 
+ */
+function getDependencyValue(setting, key) {
+    if (setting == null) return null
+    if (setting.siblings[key] !== undefined) {
+        return settings.values[setting.siblings[key].guid].value
+    }
+    return getDependencyValue(setting.parent, key)
+}
+
+
+//#endregion
+
+//#region Build Settings
 
 /**
  * 
@@ -86,12 +189,17 @@ function setControlValue(setting, $value, value) {
  * Builds a field.
  * @param {ModuleSetting} setting
  * @param {string} key
+ * @param {number} instance
  * @returns {JQuery}
  */
-function buildField(setting, key) {
+function buildField(setting, key, instance = 0) {
     var baseId = 'emcSetting-' + key
     // Get outer template.
     var $f = getTemplate('emcSetting');
+    // Add field and instance.
+    $f.attr('data-emc-field', key)
+    $f.attr('data-emc-guid', setting.guid)
+    $f.attr('data-emc-instance', instance)
     // Minimum 1, maximum 1 for type 'sub_setting'
     var count = setting.hassubs ? 0 : parseInt(setting.count)
     var n = (setting.type == 'sub_setting') ? 1 : Math.max(1, count)
@@ -143,80 +251,6 @@ function addRootFields() {
         $('#emcMainPanel-' + setting.config.tab).append($field)
     })
 }
-
-/**
- * Activates the initial main tab after the dialog was created.
- */
-function setInitialTab() {
-    // Empty tabs? Find out (and add empty note while doing so).
-    var notEmpty = $('.emc-tab-panel').toArray().filter(function(panel) {
-        if (!panel.children.length) {
-            $(panel).append(getTemplate('emcTabEmpty'))
-            return false
-        }
-        return true
-    }).map(function(panel) {
-        return panel.getAttribute('aria-labelledby')
-    })
-    // Activate a tab (give priority to module-reserved-tab).
-    var defaultName = 'emcMainTab-a' // 'emcMainTab-module-reserved-tab'
-    var defaultTab = '#' + notEmpty.reduce(function(prev, cur) {
-        if (prev == defaultName || cur == defaultName) 
-            return defaultName
-        return prev.length ? prev : cur
-    },'')
-    if (defaultTab != '#') {
-        $(defaultTab).tab('show')
-    }
-    else {
-        $('.emc-tab-link:first').tab('show')
-    }
-}
-
-/**
- * Adds final touches and removes the spinner.
- */
-function finalize() {
-    // Initialize textarea autosizing
-    // @ts-ignore
-    $('.emc-textarea').textareaAutoSize()
-    setTimeout(function() {
-         $('.emc-textarea').trigger('keyup')
-    }, 0)
-
-    // Autosize on tab shown.
-    $('.emc-tab-link').on('shown.bs.tab', function() {
-        $('.emc-textarea').trigger('keyup')
-        debugLog('Autosized after tab switch.')
-    })
-
-    // Hide blocking overlay and remove init-only items.
-    $modal.find('.emc-default-body').show()
-    $modal.find('.emc-loading').hide()
-    $modal.find('.emc-overlay').fadeOut(200, function() {
-        $modal.find('.emc-modal-wrapper').children().appendTo($modal.find('.modal-content'))
-        $modal.find('.emc-initonly').remove()
-    })
-}
-
-/**
- * Builds the dialog.
- */
-function buildDialog() {
-
-    addMainTabs()
-    addRootFields()
-
-
-
-    setInitialTab()
-    finalize()
-}
-
-
-
-
-
 
 /**
  * Gets a template by type.
@@ -280,8 +314,167 @@ function getTemplate(name) {
     return $(document.querySelector('template[data-emc=' + name + ']').content.firstElementChild.cloneNode(true))
 }
 
+//#endregion (Build Settings)
 
+//#region Create Dialog
 
+/**
+ * Shows the (static) initialization error and logs more details to the console.
+ * @param {string} msg The error message.
+ */
+function initError(msg) {
+    $modal.find('.emc-loading').hide()
+    $modal.find('.emc-initerror').show()
+    console.warn(msg);
+}
+
+/**
+ * Adds the main tabs.
+ */
+function addMainTabs() {
+    Object.keys(settings.tabs).forEach(function(tabKey) {
+        var tabInfo = settings.tabs[tabKey]
+        if (tabInfo.main) {
+            // Tab
+            var $tab = getTemplate('emcTabItem')
+            var $a = $tab.find('a')
+            $a.attr('id', 'emcMainTab-' + tabKey)
+            $a.attr('href', '#emcMainPanel-' + tabKey)
+            $a.attr('aria-controls', '#emcMainPanel-' + tabKey)
+            $tab.find('.emc-tab-link-text').html(tabInfo.name)
+            if (tabInfo['help-text'] || tabInfo['help-url']) {
+                $tab.find('.emc-tab-help').attr('data-emc-tab-help', tabKey)
+            }
+            else {
+                $tab.find('.emc-tab-help').remove()
+            }
+            $('ul.emc-tabs').append($tab)
+            // Panel
+            var $panel = getTemplate('emcTabPanel')
+            $panel.attr('id', 'emcMainPanel-' + tabKey)
+            $panel.attr('aria-labelledby', 'emcMainTab-' + tabKey)
+            $('.emc-tab-container').append($panel)
+        }
+    })
+}
+
+/**
+ * Activates the initial main tab after the dialog was created.
+ */
+function setInitialTab() {
+    // Empty tabs? Find out (and add empty note while doing so).
+    var notEmpty = $('.emc-tab-panel').toArray().filter(function(panel) {
+        if (!panel.children.length) {
+            $(panel).append(getTemplate('emcTabEmpty'))
+            return false
+        }
+        return true
+    }).map(function(panel) {
+        return panel.getAttribute('aria-labelledby')
+    })
+    // Activate a tab (give priority to module-reserved-tab).
+    var defaultName = 'emcMainTab-a' // 'emcMainTab-module-reserved-tab'
+    var defaultTab = '#' + notEmpty.reduce(function(prev, cur) {
+        if (prev == defaultName || cur == defaultName) 
+            return defaultName
+        return prev.length ? prev : cur
+    },'')
+    if (defaultTab != '#') {
+        $(defaultTab).tab('show')
+    }
+    else {
+        $('.emc-tab-link:first').tab('show')
+    }
+}
+
+/**
+ * Adds final touches and removes the spinner.
+ */
+function finalize() {
+    // Initialize textarea autosizing
+    // @ts-ignore
+    $('.emc-textarea').textareaAutoSize()
+    setTimeout(function() {
+         $('.emc-textarea').trigger('keyup')
+    }, 0)
+
+    // Autosize on tab shown.
+    $('.emc-tab-link').on('shown.bs.tab', function() {
+        $('.emc-textarea').trigger('keyup')
+        debugLog('Autosized after tab switch.')
+    })
+
+    // Hide blocking overlay and remove init-only items.
+    $modal.find('.emc-default-body').show()
+    $modal.find('.emc-loading').hide()
+    $modal.find('.emc-overlay').fadeOut(200, function() {
+        $modal.find('.emc-modal-wrapper').children().appendTo($modal.find('.modal-content'))
+        $modal.find('.emc-initonly').remove()
+    })
+}
+
+/**
+ * Builds the dialog.
+ */
+function buildDialog() {
+
+    mapGuids()
+    debugLog(settings)
+    addMainTabs()
+    addRootFields()
+    setInitialTab()
+    applyBranchingLogic()
+    finalize()
+}
+
+/**
+ * Maps guids to settings and builds an object of values indexed by guids.
+ * Also sets parents and siblings.
+ * @param {ModuleSetting} setting 
+ * @param {ModuleSetting} parent 
+ * @param {Object<string, ModuleSetting>} siblings
+ */
+function mapGuids(setting = null, parent = null, siblings = null) {
+    if (setting == null) {
+        settings.values = {}
+        Object.keys(settings.current).forEach(function(key) {
+            /** @type {Object<string, ModuleSetting>} siblings */
+            var siblings = {}
+            Object.keys(settings.current).forEach(function(sibKey) {
+                if (key != sibKey) {
+                    siblings[sibKey] = settings.current[sibKey]
+                }
+            })
+            var setting = settings.current[key]
+            mapGuids(setting, null, siblings)
+        })
+    }
+    else {
+        setting.parent = parent
+        setting.siblings = siblings
+        setting.guid = uuidv4()
+        settings.values[setting.guid] = {
+            guid: setting.guid,
+            key: setting.config.key,
+            value: setting.value,
+            hidden: false
+        }
+        if (setting.hassubs) {
+            setting.sub.forEach(function(subsetting) {
+                Object.keys(subsetting).forEach(function(key) {
+                    /** @type {Object<string, ModuleSetting>} siblings */
+                    var siblings = {}
+                    Object.keys(subsetting).forEach(function(sibKey) {
+                        if (key != sibKey) {
+                            siblings[sibKey] = subsetting[sibKey]
+                        }
+                    })
+                    mapGuids(subsetting[key], setting, siblings)
+                })
+            })
+        }
+    }
+}
 
 /** 
  * Callback on success. 
@@ -336,6 +529,10 @@ function getSettings(prefix, guid, onSuccess, onError) {
     })
 }
 
+//#endregion
+
+//#region Helpers
+
 /**
  * Generates a version 4 unique identifier.
  * Used to guarantee the identity of objects / elements.
@@ -346,6 +543,20 @@ function uuidv4() {
         return v.toString(16)
     })
 }
+
+/**
+ * Log to the console when in debug mode.
+ */
+function debugLog() {
+    if (EM.emcDebug) {
+        for (var i = 0; i < arguments.length; i++)
+            console.log(arguments[i])
+    }
+}
+
+//#endregion
+
+//#region Public
 
 /**
  * Shows the enhanced module configuration dialog.
@@ -392,6 +603,8 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
     // Get settings and build.
     getSettings(prefix, guid, buildDialog, initError)
 }
+
+//#endregion
 
 
 // TODO: Remove - this is for development only!

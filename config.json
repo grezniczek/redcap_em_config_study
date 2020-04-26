@@ -93,10 +93,35 @@
             "placeholder": "Fill me repeatedly"
         },
         {
+            "key": "s0_subsetting",
+            "type": "sub_settings",
+            "repeatable": false,
+            "name": "Non-repeatable subsettings (Level 0)",
+            "tab": "b",
+            "sub_settings": [
+                {
+                    "key": "s0_ss1",
+                    "name": "A non-repeatable subsetting (1)",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "s0_ss2",
+                    "name": "A non-repeatable subsetting (2)",
+                    "description": "This has branching logic and will only show when the checkbox is checked.",
+                    "type": "text",
+                    "branchingLogic": {
+                        "field": "s0_ss1", 
+                        "value": true
+                    }
+                }
+            ]
+
+        },
+        {
             "key": "s0r_subsetting",
             "type": "sub_settings",
             "repeatable": true,
-            "name": "Subsettings (Level 0)",
+            "name": "Reapeatable subsettings (Level 0)",
             "tab": "b",
             "sub_settings": [
                 {

@@ -184,9 +184,9 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
                 }
             } 
             else if ($sub) {
-                $settings[$key]["sub"] = array();
+                $settings[$key]["sub"][0] = array();
                 array_push($instance, 0);
-                self::moduleSettings_build($settings[$key]["sub"], $instance, $c["sub_settings"], $values, $augment);
+                self::moduleSettings_build($settings[$key]["sub"][0], $instance, $c["sub_settings"], $values, $augment);
                 array_pop($instance);
             }
             else {
@@ -211,7 +211,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     private static function moduleSettings_getRootFields($settings) {
         $rootFields = array ();
         foreach ($settings as $key => $setting) {
-            if (!isset($setting["repeats"]) && !isset($setting["sub"])) {
+            if (!$setting["repeats"] && !$setting["hassubs"]) {
                 $rootFields[] = $key;
             }
         }
@@ -271,7 +271,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
             $setting["dependencies"]["scope"] = self::moduleSettings_extractFieldFields($setting["config"]["scope"], $valid);
         }
         foreach ($settings as $key => &$setting) {
-            if (isset($setting["sub"])) {
+            if ($setting["hassubs"]) {
                 array_push($path, $key);
                 if ($setting["repeats"] == true) {
                     foreach ($setting["sub"] as $_ => &$sub_setting) {
@@ -279,7 +279,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
                     }
                 }
                 else {
-                    self::moduleSettings_augmentDependencies($setting["sub"], $path, $validDependencies);
+                    self::moduleSettings_augmentDependencies($setting["sub"][0], $path, $validDependencies);
                 }
                 array_pop($path);
             }

@@ -146,6 +146,11 @@ a.emc-tab-link:hover {
 
 /* Settings - General */
 
+.emc-branching-hidden {
+    background-color: red;
+    /* display: none; */
+}
+
 .emc-from-group.form-group {
     margin-bottom: 0;
 }

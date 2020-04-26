@@ -130,7 +130,7 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSetting">
-    <div class="form-group emc-form-group">
+    <div class="form-group emc-setting" data-emc-field data-emc-instance data-emc-guid>
         <label class="emc-setting-label" for="">
             <span class="emc-setting-label-text"></span>
             <a href="javascript:;" class="small emc-setting-help" data-emc-setting-help><i class="fas fa-question-circle"></i></a>
