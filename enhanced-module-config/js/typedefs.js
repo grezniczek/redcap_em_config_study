@@ -83,7 +83,8 @@
  * @type {{
  * valid: string[]
  * path: string[]
- * branchingLogic: any[]
+ * dependsOn: string[]
+ * depending: string[]
  * scope: string[]
  * }}
  */
@@ -123,6 +124,7 @@
  * key: string
  * value: any
  * hidden: boolean
+ * setting: ModuleSetting
  * }}
  */
 

@@ -23,10 +23,10 @@ var module = {}
 //#region Branching
 
 /**
- * Applies branching logic to a setting value (or all settings).
+ * Applies initial branching logic recursively.
  * @param {ModuleSetting} setting 
  */
-function applyBranchingLogic(setting = null) {
+function initialBranchingLogic(setting = null) {
     if (setting == null) {
         Object.keys(settings.current).forEach(function(key) {
             var setting = settings.current[key]
@@ -34,41 +34,64 @@ function applyBranchingLogic(setting = null) {
         })
     }
     else {
-        var key = setting.config.key
-        // var instance = $('[data-emc-field="' + key + '"]').attr('data-emc-instance')
-        var instance = 0
-        // var guid = $('[data-emc-field="' + key + '"]').attr('data-emc-guid')
-        var guid = setting.guid
-        if (setting.dependencies.branchingLogic.length) {
-            // Get values for evaluating branching logic
-            var blValues = {}
-            setting.dependencies.branchingLogic.forEach(function(depKey) {
-                blValues[depKey] = getDependencyValue(setting, depKey)
-            })
-            // Evaluate the branching logic expression.
-            var blResult = evaluateBranchingLogic(setting.config.branchingLogic, blValues)
-            settings.values[guid].hidden = !blResult
-            var $setting = $('[data-emc-guid="' + guid + '"]')
-            if (blResult) {
-                $setting.removeClass('emc-branching-hidden')
-            }
-            else {
-                $setting.addClass('emc-branching-hidden')
-            }
-
-            
-
-
-            debugLog('Processed branching for ' + key + ' [' + instance + '] - ' + guid + ' = ' + blResult)
-        }
+        applyBranchingLogic(setting);
         // Process nested - only when not hidden.
-        if (!settings.values[guid].hidden && setting.hassubs) {
+        if (!settings.values[setting.guid].hidden && setting.hassubs) {
             setting.sub.forEach(function(subsetting) {
                 Object.keys(subsetting).forEach(function(key) {
                     applyBranchingLogic(subsetting[key])
                 })
             })
         }
+    }
+}
+
+/**
+ * Applies branching logic to a setting value (or all settings).
+ * @param {ModuleSetting} setting 
+ */
+function applyBranchingLogic(setting) {
+    var key = setting.config.key
+    // var instance = $('[data-emc-field="' + key + '"]').attr('data-emc-instance')
+    var instance = 0
+    // var guid = $('[data-emc-field="' + key + '"]').attr('data-emc-guid')
+    var guid = setting.guid
+    if (setting.dependencies.dependsOn.length) {
+        // Get values for evaluating branching logic
+        var blValues = {}
+        setting.dependencies.dependsOn.forEach(function(depKey) {
+            blValues[depKey] = getDependencyValue(setting, depKey)
+        })
+        // Evaluate the branching logic expression.
+        var blResult = evaluateBranchingLogic(setting.config.branchingLogic, blValues)
+        settings.values[guid].hidden = !blResult
+        var $setting = $('[data-emc-guid="' + guid + '"]')
+        if (blResult) {
+            $setting.removeClass('emc-branching-hidden')
+        }
+        else {
+            $setting.addClass('emc-branching-hidden')
+        }
+        debugLog('Processed branching for ' + key + ' [' + instance + '] - ' + guid + ' = ' + blResult)
+    }
+}
+
+/**
+ * 
+ * @param {ModuleSetting} setting 
+ * @param {string} key
+ */
+function processDependingBranching(setting, key) {
+    if (setting.dependencies.dependsOn.includes(key)) {
+        applyBranchingLogic(setting)
+    }
+    if (setting.hassubs) {
+        setting.sub.forEach(function(subsettings) {
+            Object.keys(subsettings).forEach(function(subKey) {
+                var subsetting = subsettings[subKey]
+                processDependingBranching(subsetting, key)
+            })
+        })
     }
 }
 
@@ -118,32 +141,31 @@ function evaluateBranchingLogic(logic, values) {
 /**
  * 
  * @param {BranchingLogicCondition} condition 
- * @param {any} field 
+ * @param {any} fvalue The field value 
  */
-function evaluateCondition(condition, field) {
-    debugLog('Evaluating condition with value \'' + field + '\'', condition)
-    if (typeof field === 'boolean') {
-        return condition.op == '=' ? condition.value === field : condition.value !== field
+function evaluateCondition(condition, fvalue) {
+    if (typeof fvalue === 'boolean') {
+        return condition.op == '=' ? condition.value === fvalue : condition.value !== fvalue
     }
-    var value = condition.value
-    var numerical = !isNaN(field) && !isNaN(value)
+    var cvalue = condition.value
+    var numerical = !isNaN(fvalue) && !isNaN(cvalue)
     if (numerical) {
-        field = 1 * field
-        value = 1 * value
+        fvalue = 1 * fvalue
+        cvalue = 1 * cvalue
         switch (condition.op) {
-            case "=": return field == value
-            case "<>": return field != value
-            case "!=": return field != value
-            case "<": return field < value
-            case "<=": return field <= value
-            case ">": return field > value
-            case ">=": return field >= value
+            case "=": return fvalue == cvalue
+            case "<>": return fvalue != cvalue
+            case "!=": return fvalue != cvalue
+            case "<": return fvalue < cvalue
+            case "<=": return fvalue <= cvalue
+            case ">": return fvalue > cvalue
+            case ">=": return fvalue >= cvalue
         }
     }
     else {
-        if (condition.op == "=") return field == value
-        if (condition.op == "<>") return field != value
-        if (condition.op == "!=") return field != value
+        if (condition.op == "=") return fvalue == cvalue
+        if (condition.op == "<>") return fvalue != cvalue
+        if (condition.op == "!=") return fvalue != cvalue
     }
     // Default.
     return false
@@ -162,13 +184,39 @@ function getDependencyValue(setting, key) {
     return getDependencyValue(setting.parent, key)
 }
 
-
 //#endregion
 
 //#region Build Settings
 
 /**
- * 
+ * Updates values and initiates branching logic processing.
+ * @param {JQuery} $field 
+ * @param {ModuleSetting} setting 
+ * @param {number} instance 
+ */
+function valueChanged($field, setting, instance) {
+    var value = []
+    $field.find('.emc-value').each(function() {
+        value.push(getControlValue(setting, $(this)))
+    })
+    if (!setting.repeats) {
+        value = value[0]
+    }
+    // Store value in guid lookup.
+    settings.values[setting.guid].value = value
+    // Process branching logic for self and siblings.
+    if (setting.dependencies.depending.length) {
+        processDependingBranching(setting, setting.config.key)
+        Object.keys(setting.siblings).forEach(function(sibKey) {
+            var sibSetting = setting.siblings[sibKey]
+            processDependingBranching(sibSetting, setting.config.key)
+        })
+    }
+}
+
+
+/**
+ * Sets the value of a control.
  * @param {ModuleSetting} setting 
  * @param {JQuery} $value 
  * @param {any} value 
@@ -181,6 +229,23 @@ function setControlValue(setting, $value, value) {
 
         default: {
             $value.val(value)
+        }
+    }
+}
+
+/**
+ * Gets the value of a control.
+ * @param {ModuleSetting} setting 
+ * @param {JQuery} $value 
+ */
+function getControlValue(setting, $value) {
+    switch(setting.type) {
+        case 'checkbox': {
+            return $value.prop('checked') == true
+        }
+
+        default: {
+            return $value.val()
         }
     }
 }
@@ -214,6 +279,11 @@ function buildField(setting, key, instance = 0) {
         var value = setting.repeats ?
             (count == 0 ? "" : setting.value[i]) : setting.value
         setControlValue(setting, $value, value)
+        // Hook up events.
+        $value.on('change', function() {
+            valueChanged($f, setting, instance)
+        })
+        // Append to parent.
         $sf.append($control)
     }
     if (setting.type == 'sub_setting' && !setting.repeats) {
@@ -423,7 +493,7 @@ function buildDialog() {
     addMainTabs()
     addRootFields()
     setInitialTab()
-    applyBranchingLogic()
+    initialBranchingLogic()
     finalize()
 }
 
@@ -457,7 +527,8 @@ function mapGuids(setting = null, parent = null, siblings = null) {
             guid: setting.guid,
             key: setting.config.key,
             value: setting.value,
-            hidden: false
+            hidden: false,
+            setting: setting
         }
         if (setting.hassubs) {
             setting.sub.forEach(function(subsetting) {

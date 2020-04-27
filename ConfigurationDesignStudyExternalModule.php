@@ -267,7 +267,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
         foreach ($settings as $key => &$setting) {
             $setting["dependencies"]["valid"] = array_filter($valid, function($v) use ($key) { return $v !== $key; });
             $setting["dependencies"]["path"] = array_merge($path, array($key));
-            $setting["dependencies"]["branchingLogic"] = self::moduleSettings_extractFieldFields($setting["config"]["branchingLogic"], $valid);
+            $setting["dependencies"]["dependsOn"] = self::moduleSettings_extractFieldFields($setting["config"]["branchingLogic"], $valid);
             $setting["dependencies"]["scope"] = self::moduleSettings_extractFieldFields($setting["config"]["scope"], $valid);
         }
         foreach ($settings as $key => &$setting) {
@@ -330,10 +330,45 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
         // Augment dependencies.
         if ($augment) {
             self::moduleSettings_augmentDependencies($settings);
+            self::moduleSettings_addDepending($settings); // This may not be needed.
         }
         return $settings;
     }
 
+
+    private static function moduleSettings_gatherDepending($setting, &$depending) {
+        foreach($setting["dependencies"]["dependsOn"] as $dependsOn) {
+            $depending[$dependsOn][$setting["config"]["key"]] = true;
+        }
+        if ($setting["hassubs"]) {
+            foreach ($setting["sub"] as $subsettings) {
+                foreach ($subsettings as $_ => $subsetting) {
+                    self::moduleSettings_gatherDepending($subsetting, $depending);
+                }
+            }
+        }
+    }
+
+    private static function moduleSettings_setDepending(&$setting, $depending) {
+        $setting["dependencies"]["depending"] = array_keys($depending[$setting["config"]["key"]]) ?: array();
+        if ($setting["hassubs"]) {
+            foreach ($setting["sub"] as $subsettings) {
+                foreach ($subsettings as $_ => $subsetting) {
+                    self::moduleSettings_setDepending($subsetting, $depending);
+                }
+            }
+        }
+    }
+
+    private static function moduleSettings_addDepending(&$settings) {
+        $depending = array();
+        foreach ($settings as $setting) {
+            self::moduleSettings_gatherDepending($setting, $depending);
+        }
+        foreach ($settings as &$setting) {
+            self::moduleSettings_setDepending($setting, $depending);
+        }
+    }
 
     /**
      * Gets a data structure outlining a module's system and project settings.
