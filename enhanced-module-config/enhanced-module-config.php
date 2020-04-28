@@ -208,4 +208,8 @@ $ajax = array (
     </div>
 </template>
 
-
+<template data-emc="emcSubRepeat">
+    <div>
+        Repeatable subsetting - show summary with buttons that will show the subsetting tab.
+    </div>
+</template>

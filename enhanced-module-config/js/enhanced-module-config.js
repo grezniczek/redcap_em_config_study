@@ -368,6 +368,10 @@ function getSettingTemplate(config) {
             }
             return $tpl
         }
+        case 'sub_settings': {
+            var $tpl = getTemplate('emcSubRepeat')
+            return $tpl
+        }
     }
     return getTemplate('emcNotImplemented')
 }

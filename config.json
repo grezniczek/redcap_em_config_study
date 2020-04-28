@@ -54,6 +54,7 @@
             "repeatable": false,
             "name": "Non-repeatable subsettings (Level 0)",
             "description": "This has two subsettings, the second one being shown depending on the value of the first.",
+            "tab": "b",
             "sub_settings": [
                 {
                     "key": "s0_ss1",
@@ -156,7 +157,6 @@
             "type": "sub_settings",
             "repeatable": true,
             "name": "Reapeatable subsettings (Level 0)",
-            "tab": "b",
             "sub_settings": [
                 {
                     "key": "s1_checkb",
