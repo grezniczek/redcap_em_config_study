@@ -30,16 +30,16 @@ function initialBranchingLogic(setting = null) {
     if (setting == null) {
         Object.keys(settings.current).forEach(function(key) {
             var setting = settings.current[key]
-            applyBranchingLogic(setting)
+            initialBranchingLogic(setting)
         })
     }
     else {
         applyBranchingLogic(setting);
-        // Process nested - only when not hidden.
-        if (!settings.values[setting.guid].hidden && setting.hassubs) {
+        // Process nested.
+        if (setting.hassubs) {
             setting.sub.forEach(function(subsetting) {
                 Object.keys(subsetting).forEach(function(key) {
-                    applyBranchingLogic(subsetting[key])
+                    initialBranchingLogic(subsetting[key])
                 })
             })
         }

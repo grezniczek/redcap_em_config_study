@@ -69,6 +69,38 @@
                         "field": "s0_ss1", 
                         "value": true
                     }
+                },
+                {
+                    "key": "s0_ss3",
+                    "type": "sub_settings",
+                    "repeatable": false,
+                    "name": "Non-repeatable subsettings nested within one",
+                    "description": "This has two subsettings, the second one being shown depending on the value of the first.",
+                    "sub_settings": [
+                        {
+                            "key": "s0_ss3_ss1",
+                            "name": "A non-repeatable subsetting (1-1)",
+                            "type": "checkbox"
+                        },
+                        {
+                            "key": "s0_ss3_ss2",
+                            "name": "A non-repeatable subsetting (1-2)",
+                            "description": "This has branching logic and will only show when the checkboxes here <b>and</b> in the parent are checked.",
+                            "type": "text",
+                            "branchingLogic": {
+                                "conditions": [
+                                    {
+                                        "field": "s0_ss1",
+                                        "value": true
+                                    },
+                                    {
+                                        "field": "s0_ss3_ss1", 
+                                        "value": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
 
