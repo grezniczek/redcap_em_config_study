@@ -1,7 +1,7 @@
 // @ts-check
 ;(function() {
 
-//#region Init & "global" variables
+//#region Init & "global" variables ----------------------------------------------
 
 // @ts-ignore
 if (typeof window.ExternalModules == 'undefined') {
@@ -20,7 +20,7 @@ var module = {}
 
 //#endregion
 
-//#region Branching
+//#region Branching --------------------------------------------------------------
 
 /**
  * Applies initial branching logic recursively.
@@ -186,7 +186,7 @@ function getDependencyValue(setting, key) {
 
 //#endregion
 
-//#region Build Settings
+//#region Build Settings ---------------------------------------------------------
 
 /**
  * Updates values and initiates branching logic processing.
@@ -213,7 +213,6 @@ function valueChanged($field, setting, instance) {
         })
     }
 }
-
 
 /**
  * Sets the value of a control.
@@ -261,41 +260,7 @@ function buildField(setting, key, instance = 0) {
     var baseId = 'emcSetting-' + key
     // Get outer template.
     var $f = getTemplate('emcSetting');
-    // Add field and instance.
-    $f.attr('data-emc-field', key)
-    $f.attr('data-emc-guid', setting.guid)
-    $f.attr('data-emc-instance', instance)
-    // Minimum 1, maximum 1 for type 'sub_setting'
-    var count = setting.hassubs ? 0 : parseInt(setting.count)
-    var n = (setting.type == 'sub_setting') ? 1 : Math.max(1, count)
-    // Add control template. 
-    var $sf = $f.find('.emc-setting-field')
-    for (var i = 0; i < n; i++) {
-        var id = baseId + '-' + uuidv4()
-        var $control = getSettingTemplate(setting.config)
-        $control.find('.emc-setting-labeltarget').attr('id', id)
-        // Set value.
-        var $value = $control.find('.emc-value')
-        var value = setting.repeats ?
-            (count == 0 ? "" : setting.value[i]) : setting.value
-        setControlValue(setting, $value, value)
-        // Hook up events.
-        $value.on('change', function() {
-            valueChanged($f, setting, instance)
-        })
-        // Append to parent.
-        $sf.append($control)
-    }
-    if (setting.type == 'sub_setting' && !setting.repeats) {
-        $sf.addClass('emc-setting-field-indent')
-    }
-    if (setting.type != 'sub_setting' && setting.repeats) {
-        insertPart($f, 'emcAddInstance')
-    }
     // Configure label part.
-    var id = $f.find('.emc-setting-labeltarget').first().attr('id')
-    $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
-    $f.find('.emc-setting-label').attr('for', id)
     $f.find('.emc-setting-label-text').html(setting.config.name)
     if (setting.config['help-text'] || setting.config['help-url']) {
         $f.find('.emc-setting-help').attr('data-emc-setting-help', key)
@@ -304,6 +269,55 @@ function buildField(setting, key, instance = 0) {
         $f.find('.emc-setting-help').remove()
     }
     $f.find('.emc-setting-description').html(setting.config.description)
+    // Add field and instance.
+    $f.attr('data-emc-field', key)
+    $f.attr('data-emc-guid', setting.guid)
+    $f.attr('data-emc-instance', instance)
+    // Minimum 1, maximum 1 for type 'sub_setting'
+    var count = setting.hassubs ? 0 : parseInt(setting.count)
+    var n = (setting.type == 'sub_setting') ? 1 : Math.max(1, count)
+    var $sf = $f.find('.emc-setting-field')
+    // Add control template(s).
+    if (setting.type == 'sub_settings' && !setting.repeats) {
+        // Non-repeating subsettings - recurse buildField
+        Object.keys(setting.sub[0]).forEach(function(ss_key) {
+            var subsetting = setting.sub[0][ss_key]
+            var $ss_field = buildField(subsetting, ss_key, instance)
+            $sf.append($ss_field)
+        })
+        if ($sf.children().length) {
+            $sf.addClass('emc-setting-field-indent')
+        }
+    }
+    else {
+        // "Regular" (repeating) control.
+        for (var i = 0; i < n; i++) {
+            var id = baseId + '-' + uuidv4()
+            var $control = getSettingTemplate(setting.config)
+            $control.find('.emc-setting-labeltarget').attr('id', id)
+            // Placeholder.
+            $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
+            // Set value.
+            var $value = $control.find('.emc-value')
+            var value = setting.repeats ?
+                (count == 0 ? "" : setting.value[i]) : setting.value
+            setControlValue(setting, $value, value)
+            // Hook up events.
+            $value.on('change', function() {
+                valueChanged($f, setting, instance)
+            })
+            // Append to parent.
+            $sf.append($control)
+        }
+        // Marry up label with control.
+        var id = $f.find('.emc-setting-labeltarget').first().attr('id')
+        $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
+        $f.find('.emc-setting-label').attr('for', id)
+    }
+    // Add "add more" stub.
+    if (setting.type != 'sub_setting' && setting.repeats) {
+        insertPart($f, 'emcAddInstance')
+    }
     return $f
 }
 
@@ -386,7 +400,7 @@ function getTemplate(name) {
 
 //#endregion (Build Settings)
 
-//#region Create Dialog
+//#region Create Dialog ----------------------------------------------------------
 
 /**
  * Shows the (static) initialization error and logs more details to the console.
@@ -443,7 +457,7 @@ function setInitialTab() {
         return panel.getAttribute('aria-labelledby')
     })
     // Activate a tab (give priority to module-reserved-tab).
-    var defaultName = 'emcMainTab-a' // 'emcMainTab-module-reserved-tab'
+    var defaultName = 'emcMainTab-module-reserved-tab'
     var defaultTab = '#' + notEmpty.reduce(function(prev, cur) {
         if (prev == defaultName || cur == defaultName) 
             return defaultName
@@ -602,7 +616,7 @@ function getSettings(prefix, guid, onSuccess, onError) {
 
 //#endregion
 
-//#region Helpers
+//#region Helpers ----------------------------------------------------------------
 
 /**
  * Generates a version 4 unique identifier.
@@ -627,7 +641,7 @@ function debugLog() {
 
 //#endregion
 
-//#region Public
+//#region Public -----------------------------------------------------------------
 
 /**
  * Shows the enhanced module configuration dialog.

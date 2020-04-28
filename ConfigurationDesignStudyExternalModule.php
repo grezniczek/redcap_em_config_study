@@ -352,8 +352,8 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     private static function moduleSettings_setDepending(&$setting, $depending) {
         $setting["dependencies"]["depending"] = array_keys($depending[$setting["config"]["key"]]) ?: array();
         if ($setting["hassubs"]) {
-            foreach ($setting["sub"] as $subsettings) {
-                foreach ($subsettings as $_ => $subsetting) {
+            foreach ($setting["sub"] as &$subsettings) {
+                foreach ($subsettings as $_ => &$subsetting) {
                     self::moduleSettings_setDepending($subsetting, $depending);
                 }
             }

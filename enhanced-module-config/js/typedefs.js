@@ -100,7 +100,7 @@
  * hassubs: boolean
  * dependencies: SettingDependencies
  * guid: string
- * sub: ModuleSetting[]
+ * sub: Object<string,ModuleSetting>[]
  * parent: ModuleSetting
  * siblings: Object<string, ModuleSetting>
  * }}

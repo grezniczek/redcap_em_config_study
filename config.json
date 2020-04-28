@@ -49,6 +49,31 @@
     ],
     "system-settings": [
         {
+            "key": "s0_subsetting",
+            "type": "sub_settings",
+            "repeatable": false,
+            "name": "Non-repeatable subsettings (Level 0)",
+            "description": "This has two subsettings, the second one being shown depending on the value of the first.",
+            "sub_settings": [
+                {
+                    "key": "s0_ss1",
+                    "name": "A non-repeatable subsetting (1)",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "s0_ss2",
+                    "name": "A non-repeatable subsetting (2)",
+                    "description": "This has branching logic and will only show when the checkbox is checked.",
+                    "type": "text",
+                    "branchingLogic": {
+                        "field": "s0_ss1", 
+                        "value": true
+                    }
+                }
+            ]
+
+        },
+        {
             "key": "s0_checka",
             "type": "checkbox",
             "name": "Checkbox A",
@@ -83,39 +108,16 @@
             "key": "s0_texta",
             "type": "text",
             "name": "A standard text box",
-            "placeholder": "Fill me with text"
+            "placeholder": "Fill me with text",
+            "tab": "a"
         },
         {
             "key": "s0r_texta",
             "type": "text",
             "repeatable": true,
             "name": "A repeatable text box",
-            "placeholder": "Fill me repeatedly"
-        },
-        {
-            "key": "s0_subsetting",
-            "type": "sub_settings",
-            "repeatable": false,
-            "name": "Non-repeatable subsettings (Level 0)",
-            "tab": "b",
-            "sub_settings": [
-                {
-                    "key": "s0_ss1",
-                    "name": "A non-repeatable subsetting (1)",
-                    "type": "checkbox"
-                },
-                {
-                    "key": "s0_ss2",
-                    "name": "A non-repeatable subsetting (2)",
-                    "description": "This has branching logic and will only show when the checkbox is checked.",
-                    "type": "text",
-                    "branchingLogic": {
-                        "field": "s0_ss1", 
-                        "value": true
-                    }
-                }
-            ]
-
+            "placeholder": "Fill me repeatedly",
+            "tab": "a"
         },
         {
             "key": "s0r_subsetting",
@@ -225,7 +227,8 @@
         {
             "key": "s0_textarea",
             "name": "A textarea",
-            "type": "textarea"
+            "type": "textarea",
+            "tab": "a"
         },
         {
             "key": "s0r_textarea",
@@ -237,13 +240,15 @@
         {
             "key": "s0_json",
             "name": "A JSON field",
-            "type": "json"
+            "type": "json",
+            "tab": "a"
         },
         {
             "key": "s0r_json",
             "name": "A repeatable JSON field",
             "type": "json",
-            "repeatable": true
+            "repeatable": true,
+            "tab": "a"
         },
         {
             "key": "s0_richtext",
@@ -321,14 +326,16 @@
             "key": "s0_email",
             "name": "A email field",
             "description": "This is nothing more than <b>text</b> with email validation",
-            "type": "email"
+            "type": "email",
+            "tab": "a"
         },
         {
             "key": "s0r_email",
             "name": "A repeatable email field",
             "description": "This is nothing more than <b>text</b> with email validation",
             "type": "email",
-            "repeatable": true
+            "repeatable": true,
+            "tab": "a"
         },
         {
             "key": "s0_file",
