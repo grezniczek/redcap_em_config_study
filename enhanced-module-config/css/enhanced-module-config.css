@@ -207,9 +207,23 @@ a.emc-setting-help:hover {
 }
 
 
-/* Repeat toolsbar */
+/* Repeat toolbar */
 
-.emc-repeat-handle {
+.emc-norepeats-text {
+    font-style: italic;
+    font-size: 0.8rem;
+
+}
+.emc-repeat-buttons {
+    opacity: 0.65;
+}
+.emc-repeat-button {
+    margin: 2px;
+}
+.emc-hrepeat-handle {
+    cursor: all-scroll;
+}
+.emc-vrepeat-handle {
     cursor: ns-resize;
     padding-top: 0.65rem;
 }

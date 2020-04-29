@@ -176,7 +176,7 @@ $ajax = array (
 
 <template data-emc="emcRepeatable">
     <div class="input-group-prepend" data-emc-insert="before" data-emc-target="emc-repeatable">
-        <span draggable="true" class="input-group-text emc-repeat-handle emc-vtop">
+        <span draggable="true" class="input-group-text emc-vrepeat-handle emc-vtop">
             <i class="fas fa-bars"></i>
         </span>
     </div>
@@ -209,7 +209,27 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSubRepeat">
-    <div>
-        Repeatable subsetting - show summary with buttons that will show the subsetting tab.
-    </div>
+    <div class="emc-repeat-buttons">
+    <button type="button" class="btn btn-secondary btn-sm"
+    onclick="console.log('Clicked 1');">
+        <i draggable="true" class="fas fa-bars emc-hrepeat-handle"></i>
+        &nbsp;&nbsp;
+        1
+    </button>
+<div class="btn-group btn-group-sm emc-repeat-button" role="group" onclick="console.log('Clicked 2');">
+    <button type="button" disabled class="btn btn-primary emc-hrepeat-handle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <button type="button" class="btn btn-primary">2</button>
+</div>
+<div class="btn-group btn-group-sm" role="group">
+    <button type="button" disabled class="btn btn-secondary emc-hrepeat-handle">
+        <i class="fas fa-bars"></i>
+    </button>
+    <button type="button" class="btn btn-secondary">3</button>
+</div>
+
+<div class="emc-norepeats-text">
+    <?=$this->tt("emc_norepeats")?>
+</div>
 </template>
