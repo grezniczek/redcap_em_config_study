@@ -237,6 +237,21 @@ a.emc-setting-help:hover {
 
 /* Settings - Specific Controls */
 
+/* Repeating Subsettings */
+.emc-subrepeat-button {
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+    min-width: 4.25em;
+}
+.emc-subrepeat-button:hover {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.emc-subrepeat-buttonlabel {
+    padding-left: 0.5em;
+}
+
+
 /* Switch */
 .emc-switch-control {
     margin-top: -0.5rem; 

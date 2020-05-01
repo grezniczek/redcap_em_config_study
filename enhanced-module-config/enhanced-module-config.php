@@ -210,12 +210,27 @@ $ajax = array (
 
 <template data-emc="emcSubRepeat">
     <div class="emc-repeat-buttons">
-    <button type="button" class="btn btn-secondary btn-sm"
+    </div>
+</div>
+
+</template>
+
+<template data-emc="emcSubRepeat-button">
+    <button type="button" class="btn btn-secondary btn-sm emc-subrepeat-button"
     onclick="console.log('Clicked 1');">
-        <i draggable="true" class="fas fa-bars emc-hrepeat-handle"></i>
-        &nbsp;&nbsp;
-        1
+        <i class="fas fa-bars emc-hrepeat-handle"></i>
+        <span class="emc-subrepeat-buttonlabel"></span>
     </button>
+</template>
+
+<template data-emc="emcSubRepeat-empty">
+    <div class="emc-norepeats-text">
+        <?=$this->tt("emc_norepeats")?>
+    </div>
+</template>
+
+
+<template>
 <div class="btn-group btn-group-sm emc-repeat-button" role="group" onclick="console.log('Clicked 2');">
     <button type="button" disabled class="btn btn-primary emc-hrepeat-handle">
         <i class="fas fa-bars"></i>
@@ -227,9 +242,5 @@ $ajax = array (
         <i class="fas fa-bars"></i>
     </button>
     <button type="button" class="btn btn-secondary">3</button>
-</div>
 
-<div class="emc-norepeats-text">
-    <?=$this->tt("emc_norepeats")?>
-</div>
 </template>
