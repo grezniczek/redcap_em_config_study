@@ -49,108 +49,26 @@
     ],
     "system-settings": [
         {
-            "key": "s0_subsetting",
+            "key": "s0r_subsetting2",
             "type": "sub_settings",
-            "repeatable": false,
-            "name": "Non-repeatable subsettings (Level 0)",
-            "description": "This has two subsettings, the second one being shown depending on the value of the first.",
-            "tab": "b",
+            "repeatable": true,
+            "name": "Reapeatable subsetting2s (Level 0)",
             "sub_settings": [
                 {
-                    "key": "s0_ss1",
-                    "name": "A non-repeatable subsetting (1)",
+                    "key": "s1_checkb2",
+                    "name": "Checkbox",
                     "type": "checkbox"
                 },
                 {
-                    "key": "s0_ss2",
-                    "name": "A non-repeatable subsetting (2)",
-                    "description": "This has branching logic and will only show when the checkbox is checked.",
-                    "type": "text",
+                    "key": "s1_desca2",
+                    "name": "A description that is shown when the checkbox is checked.",
+                    "type": "descriptive",
                     "branchingLogic": {
-                        "field": "s0_ss1", 
+                        "field": "s1_checkb2a", 
                         "value": true
                     }
-                },
-                {
-                    "key": "s0_ss3",
-                    "type": "sub_settings",
-                    "repeatable": false,
-                    "name": "Non-repeatable subsettings nested within one",
-                    "description": "This has two subsettings, the second one being shown depending on the value of the first.",
-                    "sub_settings": [
-                        {
-                            "key": "s0_ss3_ss1",
-                            "name": "A non-repeatable subsetting (1-1)",
-                            "type": "checkbox"
-                        },
-                        {
-                            "key": "s0_ss3_ss2",
-                            "name": "A non-repeatable subsetting (1-2)",
-                            "description": "This has branching logic and will only show when the checkboxes here <b>and</b> in the parent are checked.",
-                            "type": "text",
-                            "branchingLogic": {
-                                "conditions": [
-                                    {
-                                        "field": "s0_ss1",
-                                        "value": true
-                                    },
-                                    {
-                                        "field": "s0_ss3_ss1", 
-                                        "value": true
-                                    }
-                                ]
-                            }
-                        }
-                    ]
                 }
             ]
-
-        },
-        {
-            "key": "s0_checka",
-            "type": "checkbox",
-            "name": "Checkbox A",
-            "description": "This is the description for 'Checkbox A'.",
-            "help-text": "This is the help text for 'Checkbox A'",
-            "tab": "a"
-        },
-        {
-            "key": "s0_desca",
-            "type": "descriptive",
-            "name": "Checkbox A is checked.",
-            "description": "A description that is shown when 'Check A' is true.",
-            "branchingLogic": {
-                "field": "s0_checka", 
-                "value": true
-            },
-            "tab": "a"
-        },
-        {
-            "key": "s0_desca_n",
-            "type": "descriptive",
-            "name": "Checkbox A is NOT checked.",
-            "description": "A description that is shown when 'Check A' is false.",
-            "branchingLogic": {
-                "field": "s0_checka", 
-                "value": false
-            },
-            "tab": "a",
-            "border": "both"
-        },
-        {
-            "key": "s0_texta",
-            "type": "text",
-            "name": "A standard text box",
-            "placeholder": "Fill me with text",
-            "tab": "a"
-        },
-        {
-            "key": "s0r_texta",
-            "type": "text",
-            "repeatable": true,
-            "name": "A repeatable text box",
-            "placeholder": "Fill me repeatedly",
-            "tab": "a"
         },
         {
             "key": "s0r_subsetting",
@@ -255,6 +173,110 @@
                     ]
                 }
             ]
+        },
+        {
+            "key": "s0_subsetting",
+            "type": "sub_settings",
+            "repeatable": false,
+            "name": "Non-repeatable subsettings (Level 0)",
+            "description": "This has two subsettings, the second one being shown depending on the value of the first.",
+            "tab": "b",
+            "sub_settings": [
+                {
+                    "key": "s0_ss1",
+                    "name": "A non-repeatable subsetting (1)",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "s0_ss2",
+                    "name": "A non-repeatable subsetting (2)",
+                    "description": "This has branching logic and will only show when the checkbox is checked.",
+                    "type": "text",
+                    "branchingLogic": {
+                        "field": "s0_ss1", 
+                        "value": true
+                    }
+                },
+                {
+                    "key": "s0_ss3",
+                    "type": "sub_settings",
+                    "repeatable": false,
+                    "name": "Non-repeatable subsettings nested within one",
+                    "description": "This has two subsettings, the second one being shown depending on the value of the first.",
+                    "sub_settings": [
+                        {
+                            "key": "s0_ss3_ss1",
+                            "name": "A non-repeatable subsetting (1-1)",
+                            "type": "checkbox"
+                        },
+                        {
+                            "key": "s0_ss3_ss2",
+                            "name": "A non-repeatable subsetting (1-2)",
+                            "description": "This has branching logic and will only show when the checkboxes here <b>and</b> in the parent are checked.",
+                            "type": "text",
+                            "branchingLogic": {
+                                "conditions": [
+                                    {
+                                        "field": "s0_ss1",
+                                        "value": true
+                                    },
+                                    {
+                                        "field": "s0_ss3_ss1", 
+                                        "value": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+
+        },
+        {
+            "key": "s0_checka",
+            "type": "checkbox",
+            "name": "Checkbox A",
+            "description": "This is the description for 'Checkbox A'.",
+            "help-text": "This is the help text for 'Checkbox A'",
+            "tab": "a"
+        },
+        {
+            "key": "s0_desca",
+            "type": "descriptive",
+            "name": "Checkbox A is checked.",
+            "description": "A description that is shown when 'Check A' is true.",
+            "branchingLogic": {
+                "field": "s0_checka", 
+                "value": true
+            },
+            "tab": "a"
+        },
+        {
+            "key": "s0_desca_n",
+            "type": "descriptive",
+            "name": "Checkbox A is NOT checked.",
+            "description": "A description that is shown when 'Check A' is false.",
+            "branchingLogic": {
+                "field": "s0_checka", 
+                "value": false
+            },
+            "tab": "a",
+            "border": "both"
+        },
+        {
+            "key": "s0_texta",
+            "type": "text",
+            "name": "A standard text box",
+            "placeholder": "Fill me with text",
+            "tab": "a"
+        },
+        {
+            "key": "s0r_texta",
+            "type": "text",
+            "repeatable": true,
+            "name": "A repeatable text box",
+            "placeholder": "Fill me repeatedly",
+            "tab": "a"
         },
         {
             "key": "s0_textarea",
