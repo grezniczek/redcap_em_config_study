@@ -1,4 +1,5 @@
 // @ts-check
+// Enhanced Module Configuration
 ;(function() {
 
 //#region Init & "global" variables ----------------------------------------------
@@ -37,10 +38,13 @@ function initialBranchingLogic(setting = null) {
         applyBranchingLogic(setting);
         // Process nested.
         if (setting.hassubs) {
-            setting.sub.forEach(function(subsetting) {
-                Object.keys(subsetting).forEach(function(key) {
-                    initialBranchingLogic(subsetting[key])
-                })
+            Object.keys(setting.sub).forEach(function(ss_key) {
+                if (ss_key != '') {
+                    var subsettings = setting.sub[ss_key]
+                    Object.keys(subsettings).forEach(function(key) {
+                        initialBranchingLogic(subsettings[key])
+                    })
+                }
             })
         }
     }
@@ -86,11 +90,14 @@ function processDependingBranching(setting, key) {
         applyBranchingLogic(setting)
     }
     if (setting.hassubs) {
-        setting.sub.forEach(function(subsettings) {
-            Object.keys(subsettings).forEach(function(subKey) {
-                var subsetting = subsettings[subKey]
-                processDependingBranching(subsetting, key)
-            })
+        Object.keys(setting.sub).forEach(function(ss_key) {
+            if (ss_key != '') {
+                var subsettings = setting.sub[ss_key]
+                Object.keys(subsettings).forEach(function(subKey) {
+                    var subsetting = subsettings[subKey]
+                    processDependingBranching(subsetting, key)
+                })
+            }
         })
     }
 }
@@ -186,7 +193,7 @@ function getDependencyValue(setting, key) {
 
 //#endregion
 
-//#region Build Settings ---------------------------------------------------------
+//#region Getting/Setting Values
 
 /**
  * Updates values and initiates branching logic processing.
@@ -249,6 +256,10 @@ function getControlValue(setting, $value) {
     }
 }
 
+//#endregion
+
+//#region Build Settings ---------------------------------------------------------
+
 /**
  * Builds a field.
  * @param {ModuleSetting} setting
@@ -273,13 +284,13 @@ function buildField(setting, key, instance = 0) {
     $f.attr('data-emc-field', key)
     $f.attr('data-emc-guid', setting.guid)
     $f.attr('data-emc-instance', instance)
-    // Minimum 1, maximum 1 for type 'sub_setting'
-    var count = setting.hassubs ? 0 : parseInt(setting.count)
-    var n = (setting.type == 'sub_setting') ? 1 : Math.max(1, count)
+    // Minimum 1, maximum 1 for type 'sub_settings'.
+    var count = parseInt(setting.count)
+    var n = (setting.type == 'sub_settings') ? 1 : Math.max(1, count)
     var $sf = $f.find('.emc-setting-field')
     // Add control template(s).
     if (setting.type == 'sub_settings' && !setting.repeats) {
-        // Non-repeating subsettings - recurse buildField
+        // Non-repeating subsettings - recurse buildField.
         Object.keys(setting.sub[0]).forEach(function(ss_key) {
             var subsetting = setting.sub[0][ss_key]
             var $ss_field = buildField(subsetting, ss_key, instance)
@@ -290,32 +301,52 @@ function buildField(setting, key, instance = 0) {
         }
     }
     else {
-        // "Regular" (repeating) control.
-        for (var i = 0; i < n; i++) {
-            var id = baseId + '-' + uuidv4()
+        if (setting.type == 'sub_settings' && setting.repeats) {
+            // Repeating subsettings.
             var $control = getSettingTemplate(setting.config)
-            $control.find('.emc-setting-labeltarget').attr('id', id)
-            // Placeholder.
-            $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
-            // Set value.
-            var $value = $control.find('.emc-value')
-            var value = setting.repeats ?
-                (count == 0 ? "" : setting.value[i]) : setting.value
-            setControlValue(setting, $value, value)
-            // Hook up events.
-            $value.on('change', function() {
-                valueChanged($f, setting, instance)
-            })
+            // Add subsetting instance buttons.
+            for (var i = 0; i < count; i++) {
+                var id = baseId + '-' + uuidv4()
+                var $btn = getTemplate('emcSubRepeat-button')
+                $btn.attr('id', id)
+                $btn.attr('data-emc-instance', i)
+                $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
+                $control.append($btn)
+            }
+            if (count == 0) {
+                $control.append(getTemplate('emcSubRepeat-empty'))
+            }
             // Append to parent.
             $sf.append($control)
         }
-        // Marry up label with control.
-        var id = $f.find('.emc-setting-labeltarget').first().attr('id')
-        $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
-        $f.find('.emc-setting-label').attr('for', id)
+        else {
+            // Regular (repeating) control.
+            for (var i = 0; i < n; i++) {
+                var id = baseId + '-' + uuidv4()
+                var $control = getSettingTemplate(setting.config)
+                $control.find('.emc-setting-labeltarget').attr('id', id)
+                // Placeholder.
+                $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
+                // Set value.
+                var $value = $control.find('.emc-value')
+                var value = setting.repeats ?
+                    (count == 0 ? null : setting.value[i]) : setting.value
+                setControlValue(setting, $value, value)
+                // Hook up events.
+                $value.on('change', function() {
+                    valueChanged($f, setting, instance)
+                })
+                // Append to parent.
+                $sf.append($control)
+            }
+            // Marry up label with control.
+            var id = $f.find('.emc-setting-labeltarget').first().attr('id')
+            $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
+            $f.find('.emc-setting-label').attr('for', id)
+        }
     }
-    // Add "add more" stub.
-    if (setting.type != 'sub_setting' && setting.repeats) {
+    // Add "add more" stub for repeating settings (and subsettings).
+    if (setting.repeats) {
         insertPart($f, 'emcAddInstance')
     }
     return $f
@@ -521,8 +552,9 @@ function buildDialog() {
  * @param {ModuleSetting} setting 
  * @param {ModuleSetting} parent 
  * @param {Object<string, ModuleSetting>} siblings
+ * @param {boolean} empty
  */
-function mapGuids(setting = null, parent = null, siblings = null) {
+function mapGuids(setting = null, parent = null, siblings = null, empty = false) {
     if (setting == null) {
         settings.values = {}
         Object.keys(settings.current).forEach(function(key) {
@@ -541,15 +573,18 @@ function mapGuids(setting = null, parent = null, siblings = null) {
         setting.parent = parent
         setting.siblings = siblings
         setting.guid = uuidv4()
-        settings.values[setting.guid] = {
-            guid: setting.guid,
-            key: setting.config.key,
-            value: setting.value,
-            hidden: false,
-            setting: setting
+        if (!empty) {
+            settings.values[setting.guid] = {
+                guid: setting.guid,
+                key: setting.config.key,
+                value: setting.value,
+                hidden: false,
+                setting: setting
+            }
         }
         if (setting.hassubs) {
-            setting.sub.forEach(function(subsetting) {
+            Object.keys(setting.sub).forEach(function(ss_key) {
+                var subsetting = setting.sub[ss_key]
                 Object.keys(subsetting).forEach(function(key) {
                     /** @type {Object<string, ModuleSetting>} siblings */
                     var siblings = {}
@@ -558,7 +593,7 @@ function mapGuids(setting = null, parent = null, siblings = null) {
                             siblings[sibKey] = subsetting[sibKey]
                         }
                     })
-                    mapGuids(subsetting[key], setting, siblings)
+                    mapGuids(subsetting[key], setting, siblings, ss_key == '')
                 })
             })
         }
