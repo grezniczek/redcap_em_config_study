@@ -173,15 +173,14 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
             );
             if ($sub && $repeats) {
                 $settings[$key]["sub"] = array();
-                if ($values === null) {
-                    $val = array (null => null);
-                }
                 foreach (array_keys($val) as $curInstance) {
                     $settings[$key]["sub"][$curInstance] = array();
                     array_push($instance, $curInstance);
                     self::moduleSettings_build($settings[$key]["sub"][$curInstance], $instance, $c["sub_settings"], $values, $augment);
                     array_pop($instance);
                 }
+                // Add structure.
+                self::moduleSettings_build($settings[$key]["sub"][null], $instance, $c["sub_settings"], null, $augment);
             } 
             else if ($sub) {
                 $settings[$key]["sub"][0] = array();
