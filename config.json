@@ -45,41 +45,33 @@
             "key": "b",
             "help-url": "help/tab-b.html",
             "help-append-key": true
+        },
+        {
+            "name": "Tab C",
+            "key": "c"
+        },
+        {
+            "name": "SubTab 1",
+            "key": "sa"
+        },
+        {
+            "name": "SubTab 2",
+            "key": "sb"
         }
     ],
     "system-settings": [
-        {
-            "key": "s0r_subsetting2",
-            "type": "sub_settings",
-            "repeatable": true,
-            "name": "Reapeatable subsetting2s (Level 0)",
-            "sub_settings": [
-                {
-                    "key": "s1_checkb2",
-                    "name": "Checkbox",
-                    "type": "checkbox"
-                },
-                {
-                    "key": "s1_desca2",
-                    "name": "A description that is shown when the checkbox is checked.",
-                    "type": "descriptive",
-                    "branchingLogic": {
-                        "field": "s1_checkb2a", 
-                        "value": true
-                    }
-                }
-            ]
-        },
         {
             "key": "s0r_subsetting",
             "type": "sub_settings",
             "repeatable": true,
             "name": "Reapeatable subsettings (Level 0)",
+            "description": "This is a description for a repeating <i>sub_settings</i> field.",
             "sub_settings": [
                 {
                     "key": "s1_checkb",
                     "name": "Checkbox B",
-                    "type": "checkbox"
+                    "type": "checkbox",
+                    "tab": "sa"
                 },
                 {
                     "key": "s1_desca",
@@ -88,7 +80,8 @@
                     "branchingLogic": {
                         "field": "s0_checka", 
                         "value": true
-                    }
+                    },
+                    "tab": "sa"
                 },
                 {
                     "key": "s1_desca_n",
@@ -111,7 +104,8 @@
                 {
                     "key": "s1_file",
                     "name": "A nested file field (level 1)",
-                    "type": "file"
+                    "type": "file",
+                    "tab": "sb"
                 },
                 {
                     "key": "s1r_subsetting",
@@ -171,6 +165,28 @@
                             }
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "key": "s0r_subsetting2",
+            "type": "sub_settings",
+            "repeatable": true,
+            "name": "Reapeatable subsetting2s (Level 0)",
+            "sub_settings": [
+                {
+                    "key": "s1_checkb2",
+                    "name": "Checkbox",
+                    "type": "checkbox"
+                },
+                {
+                    "key": "s1_desca2",
+                    "name": "A description that is shown when the checkbox is checked.",
+                    "type": "descriptive",
+                    "branchingLogic": {
+                        "field": "s1_checkb2a", 
+                        "value": true
+                    }
                 }
             ]
         },

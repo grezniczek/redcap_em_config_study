@@ -135,6 +135,10 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
             "module-reserved-tab" => array (
                 "name" => "Module",
                 "key" => "module-reserved-tab"
+            ),
+            "module-reserved-sub" => array (
+                "name" => "Default",
+                "key" => "module-reserved-sub"
             )
         );
         foreach ($config["tabs"] as $tab) {

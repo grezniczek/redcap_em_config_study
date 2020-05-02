@@ -261,6 +261,115 @@ function getControlValue(setting, $value) {
 //#region Build Settings ---------------------------------------------------------
 
 /**
+ * Sets name, description and help texts.
+ * @param {ModuleSetting} setting 
+ * @param {JQuery} $el 
+ */
+function setNameDescription(setting, $el) {
+    $el.find('.emc-setting-label-text').html(setting.config.name)
+    if (setting.config['help-text'] || setting.config['help-url']) {
+        $el.find('.emc-setting-help').attr('data-emc-setting-help', setting.config.key)
+    }
+    else {
+        $el.find('.emc-setting-help').remove()
+    }
+    $el.find('.emc-setting-description').html(setting.config.description)
+}
+
+/**
+ * Gets subsetting tabs.
+ * @param {ModuleSetting} setting
+ * @returns {TabInfo[]}
+ */
+function getSubTabs(setting) {
+    var tabKeys = []
+    Object.keys(setting.sub['']).forEach(function(ss_key) {
+        tabKeys.push(setting.sub[''][ss_key].config.tab)
+    })
+    /** @type {TabInfo[]} tabs */
+    var tabs = []
+    Object.keys(settings.tabs).forEach(function(tabKey) {
+        if (tabKeys.includes(tabKey)) {
+            tabs.push(settings.tabs[tabKey])
+        }
+    })
+    return tabs
+}
+
+/**
+ * Builds a modal body for repeating subsettings.
+ * @param {ModuleSetting} setting
+ * @param {number} instance
+ */
+function buildSubsettingBody(setting, instance) {
+    // Body.
+    var $body = getTemplate('emcSubRepeat-body')
+    $body.attr('data-emc-field', setting.config.key)
+    // Header.
+    var $header = getTemplate('emcSubRepeat-header')
+    var $f = getTemplate('emcSetting')
+    setNameDescription(setting, $f)
+    $f.attr('data-emc-field', setting.config.key)
+    $f.attr('data-emc-instance', instance)
+    // Add subsetting instance buttons.
+    var $instanceButtons = getSettingTemplate(setting.config)
+    var count = parseInt(setting.count)
+    for (var i = 0; i < count; i++) {
+        var $btn = getTemplate('emcSubRepeat-button')
+        $btn.attr('data-emc-instance', i)
+        $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
+        $instanceButtons.append($btn)
+    }
+    if (count == 0) {
+        $instanceButtons.append(getTemplate('emcSubRepeat-empty'))
+    }
+    $f.find('.emc-setting-field').append($instanceButtons)
+    insertPart($f, 'emcAddInstance')
+    // Back to parent link.
+    insertPart($f, 'emcSubRepeat-parent')
+    var parentText = setting.parent ? setting.parent.config.name : settings.tabs[setting.config.tab].name
+    $f.find('.emc-subrepeat-parent-text').html(parentText)
+    $header.prepend($f)
+    // Tabs and panels.
+    var tabs = getSubTabs(setting)
+    insertPart($header, 'emcSubRepeat-tabs')
+    tabs.forEach(function(tabInfo) {
+        // Tabs (added to header).
+        var tabId = 'emcSubTab-' + setting.config.key + '-' + tabInfo.key
+        var panelId = 'emcSubPanel-' + setting.config.key + '-' + tabInfo.key
+        var $tab = getTemplate('emcTabItem')
+        var $a = $tab.find('a')
+        $a.attr('id', tabId)
+        $a.attr('href', '#' + panelId)
+        $a.attr('aria-controls', panelId)
+        $tab.find('.emc-tab-link-text').html(tabInfo.name)
+        if (tabInfo['help-text'] || tabInfo['help-url']) {
+            $tab.find('.emc-tab-help').attr('data-emc-tab-help', tabInfo.key)
+        }
+        else {
+            $tab.find('.emc-tab-help').remove()
+        }
+        $header.find('ul.emc-subtabs').append($tab)
+        // Panels (added to body).
+        var $panel = getTemplate('emcSubTabPanel')
+        $panel.attr('id', panelId)
+        $panel.attr('aria-labelledby', tabId)
+        $body.find('.emc-subtab-container').append($panel)
+    })
+    $modal.find('.emc-modal-header').after($body)
+    $modal.find('.emc-modal-header').after($header)
+    // Show default panel.
+    var defaultTabId = '#emcSubTab-' + setting.config.key + '-module-reserved-sub'
+    $(defaultTabId).tab('show')
+    // Only one tab? Remove tabs.
+    if (tabs.length == 1) {
+        $header.find('.emc-subtabs').remove()
+    }
+    // Fields.
+    addFields(setting.sub[''], 'emcSubPanel-' + setting.config.key)
+}
+
+/**
  * Builds a field.
  * @param {ModuleSetting} setting
  * @param {string} key
@@ -270,16 +379,9 @@ function getControlValue(setting, $value) {
 function buildField(setting, key, instance = 0) {
     var baseId = 'emcSetting-' + key
     // Get outer template.
-    var $f = getTemplate('emcSetting');
+    var $f = getTemplate('emcSetting')
     // Configure label part.
-    $f.find('.emc-setting-label-text').html(setting.config.name)
-    if (setting.config['help-text'] || setting.config['help-url']) {
-        $f.find('.emc-setting-help').attr('data-emc-setting-help', key)
-    }
-    else {
-        $f.find('.emc-setting-help').remove()
-    }
-    $f.find('.emc-setting-description').html(setting.config.description)
+    setNameDescription(setting, $f)
     // Add field and instance.
     $f.attr('data-emc-field', key)
     $f.attr('data-emc-guid', setting.guid)
@@ -318,6 +420,8 @@ function buildField(setting, key, instance = 0) {
             }
             // Append to parent.
             $sf.append($control)
+            // Build subsetting body.
+            buildSubsettingBody(setting, instance)
         }
         else {
             // Regular (repeating) control.
@@ -353,17 +457,16 @@ function buildField(setting, key, instance = 0) {
 }
 
 /**
- * Adds the root-level fields.
+ * Builds and adds fields to panels.
+ * @param {Object<string, ModuleSetting>} settings
+ * @param {string} panelPrefix
  */
-function addRootFields() {
-    Object.keys(settings.current).forEach(function(key) {
-        /** @type {ModuleSetting} Module setting info */
-        var setting = settings.current[key]
-
+function addFields(settings, panelPrefix) {
+    Object.keys(settings).forEach(function(key) {
+        var setting = settings[key]
         var $field = buildField(setting, key)
-
         // Append to the correct tab.
-        $('#emcMainPanel-' + setting.config.tab).append($field)
+        $('#' + panelPrefix + '-' + setting.config.tab).append($field)
     })
 }
 
@@ -459,7 +562,7 @@ function addMainTabs() {
             var $a = $tab.find('a')
             $a.attr('id', 'emcMainTab-' + tabKey)
             $a.attr('href', '#emcMainPanel-' + tabKey)
-            $a.attr('aria-controls', '#emcMainPanel-' + tabKey)
+            $a.attr('aria-controls', 'emcMainPanel-' + tabKey)
             $tab.find('.emc-tab-link-text').html(tabInfo.name)
             if (tabInfo['help-text'] || tabInfo['help-url']) {
                 $tab.find('.emc-tab-help').attr('data-emc-tab-help', tabKey)
@@ -540,7 +643,7 @@ function buildDialog() {
     mapGuids()
     debugLog(settings)
     addMainTabs()
-    addRootFields()
+    addFields(settings.current, 'emcMainPanel')
     setInitialTab()
     initialBranchingLogic()
     finalize()
@@ -548,7 +651,7 @@ function buildDialog() {
 
 /**
  * Maps guids to settings and builds an object of values indexed by guids.
- * Also sets parents and siblings.
+ * Also sets parents and siblings, and substitutes default tab for subsettings.
  * @param {ModuleSetting} setting 
  * @param {ModuleSetting} parent 
  * @param {Object<string, ModuleSetting>} siblings
@@ -572,6 +675,9 @@ function mapGuids(setting = null, parent = null, siblings = null, empty = false)
     else {
         setting.parent = parent
         setting.siblings = siblings
+        if (parent != null && setting.config.tab == 'module-reserved-tab') {
+            setting.config.tab = 'module-reserved-sub'
+        }
         setting.guid = uuidv4()
         if (!empty) {
             settings.values[setting.guid] = {

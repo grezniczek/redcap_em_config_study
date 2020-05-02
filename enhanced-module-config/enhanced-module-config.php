@@ -43,6 +43,11 @@ $ajax = array (
     <div class="tab-pane fade emc-tab-panel" role="tabpanel" aria-labelledby=""></div>
 </template>
 
+<template data-emc="emcSubTabPanel">
+    <div class="tab-pane fade emc-subtab-panel" role="tabpanel" aria-labelledby=""></div>
+</template>
+
+
 <template data-emc="emcTabEmpty">
     <div class="emc-nosettings">
         This tab contains no settings.
@@ -74,7 +79,7 @@ $ajax = array (
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="emc-modal-wrapper">
+                <div class="emc-modal-wrapper emc-initonly">
                     <!-- Loading -->
                     <div class="modal-body emc-overlay emc-initializing emc-initonly"></div>
                     <div class="emc-initonly">
@@ -92,13 +97,10 @@ $ajax = array (
                     </div>
                     <!-- Default Modal Body -->
                     <div class="modal-body emc-tabs-body emc-default-body">
-                        <!-- Main Tabs (holds emcTabItem) -->
                         <ul class="nav nav-tabs emc-tabs" role="tablist"></ul>
                         <div class="tab-content emc-tabs"></div>
                     </div>
-                    <!-- Default Modal Body -->
                     <div class="modal-body emc-panels-body emc-default-body">
-                        <!-- Tab Container (holds emcTabPanel) -->
                         <div class="tab-content emc-tab-container"></div>
                     </div>
                     <!-- Modal Footer -->
@@ -123,7 +125,7 @@ $ajax = array (
                             </button>
                         </div>
                     </div>
-                </div><!-- emc-modal-wrapper -->
+                </div>
             </div>
         </div>
     </div>
@@ -228,6 +230,39 @@ $ajax = array (
         <?=$this->tt("emc_norepeats")?>
     </div>
 </template>
+
+
+<template data-emc="emcSubRepeat-header">
+    <div class="modal-body emc-subrepeat-header">
+        <div class="emc-subrepeat-tabs">
+            <div class="tab-content emc-subtabs"></div>
+        </div>
+    </div>
+</template>
+
+<template data-emc="emcSubRepeat-tabs">
+    <ul class="nav nav-tabs emc-subtabs" role="tablist" data-emc-insert="prepend" data-emc-target="emc-subrepeat-tabs"></ul>
+</template>
+
+<template data-emc="emcSubRepeat-parent">
+    <div class="emc-subrepeat-parent" data-emc-insert="before" data-emc-target="emc-setting-label">
+        <a href="javascript:;" class="emc-subrepeat-parent-link">
+            <i class="fas fa-chevron-left"></i>
+            <span class="emc-subrepeat-parent-text">Parent</span>
+        </a>
+    </div>
+</template>
+
+<template data-emc="emcSubRepeat-body">
+    <div class="modal-body emc-panels-body emc-subrepeat-body" data-emc-field>
+        <div class="tab-content emc-subtab-container"></div>
+    </div>
+</template>
+
+
+
+
+
 
 
 <template>

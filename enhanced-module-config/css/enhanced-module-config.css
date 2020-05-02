@@ -73,7 +73,8 @@
     padding-bottom: 0;
     min-height: 52px;
 }
-.tab-content.emc-tabs {
+.tab-content.emc-tabs,
+.tab-content.emc-subtabs {
     border-bottom: none;
     border-left: none;
     border-right: none;
@@ -101,7 +102,8 @@
 /* Tabs and Tab Panels */
 
 
-.nav-tabs.emc-tabs {
+.nav-tabs.emc-tabs,
+.nav-tabs.emc-subtabs {
     border-bottom: none;
 }
 .emc-tab-help {
@@ -124,7 +126,8 @@ a.active.emc-tab-link {
 a.emc-tab-link:hover {
     color: var(--red);
 }
-.tab-content.emc-tab-container {
+.tab-content.emc-tab-container,
+.tab-content.emc-subtab-container {
     border: none;
     /* border-top: 1px solid #ddd; */
     min-height: 200px;
@@ -250,6 +253,9 @@ a.emc-setting-help:hover {
 .emc-subrepeat-buttonlabel {
     padding-left: 0.5em;
 }
+.emc-subrepeat-header {
+    overflow-x: hidden;
+}
 
 
 /* Switch */
@@ -263,6 +269,29 @@ a.emc-setting-help:hover {
     line-height: 1em;
     padding-top: 1.25em;
 }
+
+
+/* Subsetting Header */
+
+.emc-subrepeat-header {
+    height: auto;
+}
+.emc-subrepeat-header .emc-setting {
+    background-color: #eeeeee;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+}
+.emc-subrepeat-header .emc-setting-label {
+    margin-top: 0;
+}
+.emc-subrepeat-parent {
+    margin-left: -0.4em;
+}
+a.emc-subrepeat-parent-link {
+    text-decoration: none;
+}
+
+
 
 
 

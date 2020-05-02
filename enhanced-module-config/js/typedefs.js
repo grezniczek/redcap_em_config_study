@@ -134,8 +134,8 @@
  * @type {{
  * original?: ModuleSetting[]
  * originalHash?: string
- * current?: ModuleSetting[]
- * tabs?: TabInfo[],
+ * current?: Object<string, ModuleSetting>
+ * tabs?: Object<string, TabInfo>,
  * guid?: string
  * values?: Object<string, SettingValue>
  * }}
