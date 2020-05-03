@@ -370,8 +370,7 @@ function buildSubsettingBody(setting, instance) {
     if (tabs.length == 1) {
         $header.find('.emc-subtabs').remove()
     }
-    // Fields.
-    addFields(setting.sub[''], 'emcSubPanel-' + setting.config.key)
+    // Fields are added on the fly when the subsettings are shown
 }
 
 /**
@@ -389,9 +388,8 @@ function showSubRepeat(setting, instance) {
         debugLog('Showing ' + setting.config.key + ', instance ' + instance)
         // Set data.
         settings.updating = true
-        var $header = $modal.find('.emc-subrepeat-header[data-emc-field="' + setting.config.key + '"]')
-        var $fields = $modal.find('.emc-subrepeat-fields[data-emc-field="' + setting.config.key + '"]')
         // Update instance buttons.
+        var $header = $modal.find('.emc-subrepeat-header[data-emc-field="' + setting.config.key + '"]')
         var $instanceButtons = $header.find('.emc-repeat-buttons')
         $instanceButtons.children().remove()
         var count = parseInt(setting.count)
@@ -423,12 +421,11 @@ function showSubRepeat(setting, instance) {
                 deleteSubRepeat(setting, instance)
             })
         }
-        // Update fields.
-
-
-        // TODO - need to set guids
-   
-
+        // Update fields (remove, re-add).
+        var $fields = $modal.find('.emc-subrepeat-fields[data-emc-field="' + setting.config.key + '"]')
+        $fields.find('.emc-subtab-panel').children().remove()
+        addFields(setting.sub[instance], 'emcSubPanel-' + setting.config.key)
+        initialBranchingLogic(setting)
         settings.updating = false
         // Hide/Show modal bodies.
         $modal.find('.emc-default-body').hide()
