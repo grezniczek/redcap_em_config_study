@@ -138,6 +138,7 @@
  * tabs?: Object<string, TabInfo>,
  * guid?: string
  * values?: Object<string, SettingValue>
+ * updating?: boolean
  * }}
  */
 

@@ -241,7 +241,8 @@ a.emc-setting-help:hover {
 /* Settings - Specific Controls */
 
 /* Repeating Subsettings */
-.emc-subrepeat-button {
+.emc-subrepeat-button,
+.emc-subrepeat-delete {
     margin-right: 0.5em;
     margin-bottom: 0.5em;
     min-width: 4.25em;
@@ -256,7 +257,6 @@ a.emc-setting-help:hover {
 .emc-subrepeat-header {
     overflow-x: hidden;
 }
-
 
 /* Switch */
 .emc-switch-control {
@@ -275,6 +275,7 @@ a.emc-setting-help:hover {
 
 .emc-subrepeat-header {
     height: auto;
+    padding-bottom: 0;
 }
 .emc-subrepeat-header .emc-setting {
     background-color: #eeeeee;
@@ -291,9 +292,14 @@ a.emc-subrepeat-parent-link {
     text-decoration: none;
 }
 
+.emc-subrepeat-parent-instance {
+    margin-right: 0.3em;
+    font-size: 0.9em;
+}
 
-
-
+.emc-subrepeat-body {
+    margin-top: 0;
+}
 
 
 

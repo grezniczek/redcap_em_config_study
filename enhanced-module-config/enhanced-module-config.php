@@ -169,7 +169,7 @@ $ajax = array (
 
 <template data-emc="emcAddInstance">
     <div class="emc-add-instance" data-emc-insert="after" data-emc-target="emc-setting-field">
-        <button class="btn btn-success btn-xs emc-repeat-add" type="button" data-emc-action="add-repeat">
+        <button class="btn btn-success btn-xs emc-repeat-add" type="button">
             <i class="fas fa-plus"></i>
         </button>
         <span class="emc-repeat-add-label"><?=$this->tt("emc_add_repeatinstance")?></span>
@@ -211,19 +211,22 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSubRepeat">
-    <div class="emc-repeat-buttons">
-    </div>
-</div>
-
+    <div class="emc-repeat-buttons" data-emc-insert="append" data-emc-target="emc-setting-field"></div>
 </template>
 
 <template data-emc="emcSubRepeat-button">
-    <button type="button" class="btn btn-secondary btn-sm emc-subrepeat-button"
-    onclick="console.log('Clicked 1');">
+    <button type="button" class="btn btn-secondary btn-sm emc-subrepeat-button" data-emc-instance data-emc-field>
         <i class="fas fa-bars emc-hrepeat-handle"></i>
         <span class="emc-subrepeat-buttonlabel"></span>
     </button>
 </template>
+
+<template data-emc="emcSubRepeat-delete">
+    <button type="button" class="btn btn-danger btn-sm emc-subrepeat-delete" data-emc-insert="prepend" data-emc-target="emc-repeat-buttons">
+        <i class="far fa-trash-alt"></i>
+    </button>
+</template>
+
 
 <template data-emc="emcSubRepeat-empty">
     <div class="emc-norepeats-text">
@@ -233,7 +236,7 @@ $ajax = array (
 
 
 <template data-emc="emcSubRepeat-header">
-    <div class="modal-body emc-subrepeat-header">
+    <div class="modal-body emc-subrepeat-body emc-subrepeat-header" data-emc-field>
         <div class="emc-subrepeat-tabs">
             <div class="tab-content emc-subtabs"></div>
         </div>
@@ -248,13 +251,17 @@ $ajax = array (
     <div class="emc-subrepeat-parent" data-emc-insert="before" data-emc-target="emc-setting-label">
         <a href="javascript:;" class="emc-subrepeat-parent-link">
             <i class="fas fa-chevron-left"></i>
-            <span class="emc-subrepeat-parent-text">Parent</span>
+            <span class="emc-subrepeat-parent-text"></span>
         </a>
     </div>
 </template>
 
+<template data-emc="emcSubRepeat-parent-instance">
+    <span class="badge badge-pill badge-primary emc-subrepeat-parent-instance" data-emc-insert="before" data-emc-target="emc-subrepeat-parent-text"></span>
+</template>
+
 <template data-emc="emcSubRepeat-body">
-    <div class="modal-body emc-panels-body emc-subrepeat-body" data-emc-field>
+    <div class="modal-body emc-panels-body emc-subrepeat-body emc-subrepeat-fields" data-emc-field>
         <div class="tab-content emc-subtab-container"></div>
     </div>
 </template>
@@ -265,17 +272,3 @@ $ajax = array (
 
 
 
-<template>
-<div class="btn-group btn-group-sm emc-repeat-button" role="group" onclick="console.log('Clicked 2');">
-    <button type="button" disabled class="btn btn-primary emc-hrepeat-handle">
-        <i class="fas fa-bars"></i>
-    </button>
-    <button type="button" class="btn btn-primary">2</button>
-</div>
-<div class="btn-group btn-group-sm" role="group">
-    <button type="button" disabled class="btn btn-secondary emc-hrepeat-handle">
-        <i class="fas fa-bars"></i>
-    </button>
-    <button type="button" class="btn btn-secondary">3</button>
-
-</template>

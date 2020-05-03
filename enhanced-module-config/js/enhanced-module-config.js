@@ -202,22 +202,24 @@ function getDependencyValue(setting, key) {
  * @param {number} instance 
  */
 function valueChanged($field, setting, instance) {
-    var value = []
-    $field.find('.emc-value').each(function() {
-        value.push(getControlValue(setting, $(this)))
-    })
-    if (!setting.repeats) {
-        value = value[0]
-    }
-    // Store value in guid lookup.
-    settings.values[setting.guid].value = value
-    // Process branching logic for self and siblings.
-    if (setting.dependencies.depending.length) {
-        processDependingBranching(setting, setting.config.key)
-        Object.keys(setting.siblings).forEach(function(sibKey) {
-            var sibSetting = setting.siblings[sibKey]
-            processDependingBranching(sibSetting, setting.config.key)
+    if (!settings.updating) {
+        var value = []
+        $field.find('.emc-value').each(function() {
+            value.push(getControlValue(setting, $(this)))
         })
+        if (!setting.repeats) {
+            value = value[0]
+        }
+        // Store value in guid lookup.
+        settings.values[setting.guid].value = value
+        // Process branching logic for self and siblings.
+        if (setting.dependencies.depending.length) {
+            processDependingBranching(setting, setting.config.key)
+            Object.keys(setting.siblings).forEach(function(sibKey) {
+                var sibSetting = setting.siblings[sibKey]
+                processDependingBranching(sibSetting, setting.config.key)
+            })
+        }
     }
 }
 
@@ -307,28 +309,31 @@ function buildSubsettingBody(setting, instance) {
     $body.attr('data-emc-field', setting.config.key)
     // Header.
     var $header = getTemplate('emcSubRepeat-header')
+    $header.attr('data-emc-field', setting.config.key)
     var $f = getTemplate('emcSetting')
     setNameDescription(setting, $f)
     $f.attr('data-emc-field', setting.config.key)
     $f.attr('data-emc-instance', instance)
-    // Add subsetting instance buttons.
-    var $instanceButtons = getSettingTemplate(setting.config)
-    var count = parseInt(setting.count)
-    for (var i = 0; i < count; i++) {
-        var $btn = getTemplate('emcSubRepeat-button')
-        $btn.attr('data-emc-instance', i)
-        $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
-        $instanceButtons.append($btn)
-    }
-    if (count == 0) {
-        $instanceButtons.append(getTemplate('emcSubRepeat-empty'))
-    }
-    $f.find('.emc-setting-field').append($instanceButtons)
+    // Insert subsetting instance buttons container.
+    insertPart($f, 'emcSubRepeat')
+    // Add new instance button.
     insertPart($f, 'emcAddInstance')
+    $f.find('.emc-repeat-add').on('click', function() {
+        addSubRepeat(setting)
+    })
     // Back to parent link.
     insertPart($f, 'emcSubRepeat-parent')
-    var parentText = setting.parent ? setting.parent.config.name : settings.tabs[setting.config.tab].name
-    $f.find('.emc-subrepeat-parent-text').html(parentText)
+    if (setting.parent) {
+        $f.find('.emc-subrepeat-parent-text').html(setting.parent.config.name)
+        insertPart($f, 'emcSubRepeat-parent-instance')
+        $f.find('.emc-subrepeat-parent-instance').text(instance + 1)
+    }
+    else {
+        $f.find('.emc-subrepeat-parent-text').html(settings.tabs[setting.config.tab].name)
+    }
+    $f.find('.emc-subrepeat-parent-link').on('click', function() {
+        showSubRepeat(setting.parent, instance)
+    })
     $header.prepend($f)
     // Tabs and panels.
     var tabs = getSubTabs(setting)
@@ -367,6 +372,115 @@ function buildSubsettingBody(setting, instance) {
     }
     // Fields.
     addFields(setting.sub[''], 'emcSubPanel-' + setting.config.key)
+}
+
+/**
+ * Shows the subrepeat body or the default body when setting == null.
+ * @param {ModuleSetting} setting 
+ * @param {number} instance 
+ */
+function showSubRepeat(setting, instance) {
+    if (setting == null) {
+        debugLog('Showing root fields')
+        $modal.find('.emc-subrepeat-body').hide()
+        $modal.find('.emc-default-body').show()
+    }
+    else {
+        debugLog('Showing ' + setting.config.key + ', instance ' + instance)
+        // Set data.
+        settings.updating = true
+        var $header = $modal.find('.emc-subrepeat-header[data-emc-field="' + setting.config.key + '"]')
+        var $fields = $modal.find('.emc-subrepeat-fields[data-emc-field="' + setting.config.key + '"]')
+        // Update instance buttons.
+        var $instanceButtons = $header.find('.emc-repeat-buttons')
+        $instanceButtons.children().remove()
+        var count = parseInt(setting.count)
+        for (var i = 0; i < count; i++) {
+            var $btn = getTemplate('emcSubRepeat-button')
+            $btn.attr('data-emc-instance', i)
+            $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
+            if (i == instance) {
+                $btn.switchClass('btn-secondary', 'btn-primary', 100)
+            }
+            else {
+                $btn.on('click', function(e) {
+                    var $btn = findRepeatButton(e)
+                    var instance = Number.parseInt($btn.attr('data-emc-instance'))
+                    showSubRepeat(setting, instance)
+                })
+            }
+            $instanceButtons.append($btn)
+        }
+        if (count == 0) {
+            $instanceButtons.append(getTemplate('emcSubRepeat-empty'))
+        }
+        else {
+            insertPart($header, 'emcSubRepeat-delete')
+            var $delete = $header.find('.emc-subrepeat-delete')
+            $delete.attr('data-emc-field', setting.config.key)
+            $delete.attr('data-emc-instance', instance)
+            $delete.on('click', function() {
+                deleteSubRepeat(setting, instance)
+            })
+        }
+        // Update fields.
+
+
+        // TODO - need to set guids
+   
+
+        settings.updating = false
+        // Hide/Show modal bodies.
+        $modal.find('.emc-default-body').hide()
+        $modal.find('.emc-subrepeat-body').each(function() {
+            var $this = $(this)
+            var field = $this.attr('data-emc-field')
+            if (field == setting.config.key) {
+                $this.show()
+            }
+            else {
+                $this.hide()
+            }
+        })
+    }
+}
+
+/**
+ * 
+ * @param {ModuleSetting} setting 
+ * @param {number} instance 
+ */
+function deleteSubRepeat(setting, instance) {
+    debugLog('Deleting instance ' + instance + ' of ' + setting.config.key)
+
+    // After deleting, set to first remaining, or go to parent if none.
+}
+
+/**
+ * Adds a new instance. In case of repeating subsettings, switches to the subsetting body.
+ * @param {ModuleSetting} setting 
+ */
+function addSubRepeat(setting) {
+    debugLog('Adding instance to ' + setting.config.key)
+    if (setting.hassubs && setting.repeats) {
+        var newInstance = -1
+        showSubRepeat(setting, newInstance)
+    }
+    else {
+
+    }
+}
+
+/**
+ * Finds the ancestor button element.
+ * @param {JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>} e
+ */
+function findRepeatButton(e) {
+    var $btn = $(e.target)
+    while (!$btn.is('button')) {
+        $btn = $btn.parent()
+    }
+    return $btn
 }
 
 /**
@@ -412,7 +526,13 @@ function buildField(setting, key, instance = 0) {
                 var $btn = getTemplate('emcSubRepeat-button')
                 $btn.attr('id', id)
                 $btn.attr('data-emc-instance', i)
+                $btn.attr('data-emc-field', setting.config.key)
                 $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
+                $btn.on('click', function(e) {
+                    var $btn = findRepeatButton(e)
+                    var instance = Number.parseInt($btn.attr('data-emc-instance'))
+                    showSubRepeat(setting, instance)
+                })
                 $control.append($btn)
             }
             if (count == 0) {
@@ -452,6 +572,9 @@ function buildField(setting, key, instance = 0) {
     // Add "add more" stub for repeating settings (and subsettings).
     if (setting.repeats) {
         insertPart($f, 'emcAddInstance')
+        $f.find('.emc-repeat-add').on('click', function() {
+            addSubRepeat(setting)
+        })
     }
     return $f
 }
@@ -625,7 +748,8 @@ function finalize() {
         $('.emc-textarea').trigger('keyup')
         debugLog('Autosized after tab switch.')
     })
-
+    // Hide sub repeat bodies.
+    showSubRepeat(null, 0)
     // Hide blocking overlay and remove init-only items.
     $modal.find('.emc-default-body').show()
     $modal.find('.emc-loading').hide()
@@ -800,7 +924,8 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
         originalHash: null,
         current: null,
         tabs: null,
-        guid: guid
+        guid: guid,
+        updating: false
     }
     module = {
         prefix: prefix,
