@@ -260,6 +260,36 @@ function getControlValue(setting, $value) {
 
 //#endregion
 
+//#region Add / Delete Repeat Instances ------------------------------------------
+
+/**
+ * 
+ * @param {ModuleSetting} setting 
+ * @param {number} instance 
+ */
+function deleteSubRepeat(setting, instance) {
+    debugLog('Deleting instance ' + instance + ' of ' + setting.config.key)
+
+    // After deleting, set to first remaining, or go to parent if none.
+}
+
+/**
+ * Adds a new instance. In case of repeating subsettings, switches to the subsetting body.
+ * @param {ModuleSetting} setting 
+ */
+function addSubRepeat(setting) {
+    debugLog('Adding instance to ' + setting.config.key)
+    if (setting.hassubs && setting.repeats) {
+        var newInstance = -1
+        showSubRepeat(setting, newInstance)
+    }
+    else {
+
+    }
+}
+
+//#endregion
+
 //#region Build Settings ---------------------------------------------------------
 
 /**
@@ -439,32 +469,6 @@ function showSubRepeat(setting, instance) {
                 $this.hide()
             }
         })
-    }
-}
-
-/**
- * 
- * @param {ModuleSetting} setting 
- * @param {number} instance 
- */
-function deleteSubRepeat(setting, instance) {
-    debugLog('Deleting instance ' + instance + ' of ' + setting.config.key)
-
-    // After deleting, set to first remaining, or go to parent if none.
-}
-
-/**
- * Adds a new instance. In case of repeating subsettings, switches to the subsetting body.
- * @param {ModuleSetting} setting 
- */
-function addSubRepeat(setting) {
-    debugLog('Adding instance to ' + setting.config.key)
-    if (setting.hassubs && setting.repeats) {
-        var newInstance = -1
-        showSubRepeat(setting, newInstance)
-    }
-    else {
-
     }
 }
 
