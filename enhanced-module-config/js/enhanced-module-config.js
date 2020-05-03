@@ -199,9 +199,8 @@ function getDependencyValue(setting, key) {
  * Updates values and initiates branching logic processing.
  * @param {JQuery} $field 
  * @param {ModuleSetting} setting 
- * @param {number} instance 
  */
-function valueChanged($field, setting, instance) {
+function valueChanged($field, setting) {
     if (!settings.updating) {
         var value = []
         $field.find('.emc-value').each(function() {
@@ -212,6 +211,7 @@ function valueChanged($field, setting, instance) {
         }
         // Store value in guid lookup.
         settings.values[setting.guid].value = value
+        debugLog('Updated value for ' + setting.config.key + ': ' + value)
         // Process branching logic for self and siblings.
         if (setting.dependencies.depending.length) {
             processDependingBranching(setting, setting.config.key)
@@ -241,6 +241,26 @@ function setControlValue(setting, $value, value) {
     }
 }
 
+
+/**
+ * Clears a control.
+ * @param {ModuleSetting} setting 
+ * @param {JQuery} $value 
+ */
+function clearControlValue(setting, $value) {
+    switch(setting.type) {
+        case 'textarea': {
+            $value.val(null)
+            $value.trigger('keyup')
+        }
+        default: {
+            $value.val(null)
+        }
+    }
+    $value.trigger('change')
+    $value.focus()
+}
+
 /**
  * Gets the value of a control.
  * @param {ModuleSetting} setting 
@@ -267,25 +287,84 @@ function getControlValue(setting, $value) {
  * @param {ModuleSetting} setting 
  * @param {number} instance 
  */
-function deleteSubRepeat(setting, instance) {
+function deleteRepeatInstance(setting, instance) {
     debugLog('Deleting instance ' + instance + ' of ' + setting.config.key)
 
-    // After deleting, set to first remaining, or go to parent if none.
+    if (setting.hassubs) {
+        // After deleting, set to first remaining, or go to parent if none.
+        // TODO
+    }
+    else if (setting.repeats && setting.count > 1) {
+        // Remove
+        // TODO
+    }
+    else {
+        // Clear.
+        var $value = $('.emc-setting[data-emc-guid="' + setting.guid + '"]').find('.emc-value')
+        clearControlValue(setting, $value)
+    }
 }
 
 /**
  * Adds a new instance. In case of repeating subsettings, switches to the subsetting body.
  * @param {ModuleSetting} setting 
  */
-function addSubRepeat(setting) {
+function addRepeatInstance(setting) {
     debugLog('Adding instance to ' + setting.config.key)
     if (setting.hassubs && setting.repeats) {
         var newInstance = -1
         showSubRepeat(setting, newInstance)
     }
     else {
-
+        setting.value.push(null)
+        setting.count++
+        updateRepeatingField(setting)
     }
+}
+
+/**
+ * Updates a repeating field after an instance has been added or removed.
+ * @param {ModuleSetting} setting 
+ */
+function updateRepeatingField(setting) {
+    var $f = $modal.find('.emc-setting[data-emc-guid="' + setting.guid + '"]')
+    var $sf = $f.find('.emc-setting-field')
+    $sf.children().remove()
+    for (var i = 0; i < setting.count; i++) {
+        var $control = getSettingTemplate(setting.config)
+        var id = 'emcSetting-' + setting.config.key + '-' + uuidv4()
+        $control.find('.emc-setting-labeltarget').attr('id', id)
+        // Placeholder.
+        $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
+        // Set value.
+        var $value = $control.find('.emc-value')
+        $value.attr('data-emc-instance', i)
+        var value = settings.values[setting.guid].value[i]
+        setControlValue(setting, $value, value)
+        // Hook up events.
+        $value.on('change', function() {
+            valueChanged($f, setting)
+        })
+        $control.find('.emc-clear').on('click', function(e) {
+            var $el = $(e.target)
+            while (!$el.hasClass('emc-control')) {
+                $el = $el.parent()
+            }
+            var instance = Number.parseInt($el.find('.emc-value').attr('data-emc-instance'))
+            deleteRepeatInstance(setting, instance)
+        })
+        // Append to parent.
+        $sf.append($control)
+    }
+    // Marry up label with control.
+    var id = $f.find('.emc-setting-labeltarget').first().attr('id')
+    $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
+    $f.find('.emc-setting-label').attr('for', id)
+    // @ts-ignore
+    $sf.find('.emc-textarea').textareaAutoSize()
+    setTimeout(function() {
+         $sf.find('.emc-textarea').trigger('keyup')
+    }, 0)
 }
 
 //#endregion
@@ -349,7 +428,7 @@ function buildSubsettingBody(setting, instance) {
     // Add new instance button.
     insertPart($f, 'emcAddInstance')
     $f.find('.emc-repeat-add').on('click', function() {
-        addSubRepeat(setting)
+        addRepeatInstance(setting)
     })
     // Back to parent link.
     insertPart($f, 'emcSubRepeat-parent')
@@ -448,7 +527,7 @@ function showSubRepeat(setting, instance) {
             $delete.attr('data-emc-field', setting.config.key)
             $delete.attr('data-emc-instance', instance)
             $delete.on('click', function() {
-                deleteSubRepeat(setting, instance)
+                deleteRepeatInstance(setting, instance)
             })
         }
         // Update fields (remove, re-add).
@@ -554,12 +633,20 @@ function buildField(setting, key, instance = 0) {
                 $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
                 // Set value.
                 var $value = $control.find('.emc-value')
-                var value = setting.repeats ?
-                    (count == 0 ? null : setting.value[i]) : setting.value
+                $value.attr('data-emc-instance', i)
+                var value = setting.repeats ? setting.value[i] : setting.value
                 setControlValue(setting, $value, value)
                 // Hook up events.
                 $value.on('change', function() {
-                    valueChanged($f, setting, instance)
+                    valueChanged($f, setting)
+                })
+                $control.find('.emc-clear').on('click', function(e) {
+                    var $el = $(e.target)
+                    while (!$el.hasClass('emc-control')) {
+                        $el = $el.parent()
+                    }
+                    var instance = Number.parseInt($el.find('.emc-value').attr('data-emc-instance'))
+                    deleteRepeatInstance(setting, instance)
                 })
                 // Append to parent.
                 $sf.append($control)
@@ -574,7 +661,7 @@ function buildField(setting, key, instance = 0) {
     if (setting.repeats) {
         insertPart($f, 'emcAddInstance')
         $f.find('.emc-repeat-add').on('click', function() {
-            addSubRepeat(setting)
+            addRepeatInstance(setting)
         })
     }
     return $f

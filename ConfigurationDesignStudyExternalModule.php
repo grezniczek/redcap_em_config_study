@@ -170,6 +170,9 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
             foreach ($instance as $i) {
                 $val = $val[$i];
             }
+            if ($repeats && !$sub && $val === null) {
+                $val = array( null );
+            }
             $settings[$key] = array( 
                 "count" => $repeats ? count($val) : 1,
                 "repeats" => $repeats,

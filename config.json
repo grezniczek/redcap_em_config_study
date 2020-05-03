@@ -191,6 +191,12 @@
             ]
         },
         {
+            "key": "s0r_file",
+            "name": "A repeatable file field",
+            "type": "file",
+            "repeatable": true
+        },
+        {
             "key": "s0_subsetting",
             "type": "sub_settings",
             "repeatable": false,
@@ -411,12 +417,6 @@
             "key": "s0_file",
             "name": "A file field",
             "type": "file"
-        },
-        {
-            "key": "s0r_file",
-            "name": "A repeatable file field",
-            "type": "file",
-            "repeatable": true
         },
         {
             "key": "s0_custom",
