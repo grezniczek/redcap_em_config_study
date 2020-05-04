@@ -236,7 +236,7 @@ $ajax = array (
 
 
 <template data-emc="emcSubRepeat-header">
-    <div class="modal-body emc-subrepeat-body emc-subrepeat-header" data-emc-field>
+    <div class="modal-body emc-subrepeat-body emc-subrepeat-header" data-emc-field style="display:none;">
         <div class="emc-subrepeat-tabs">
             <div class="tab-content emc-subtabs"></div>
         </div>
@@ -261,7 +261,7 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSubRepeat-body">
-    <div class="modal-body emc-panels-body emc-subrepeat-body emc-subrepeat-fields" data-emc-field>
+    <div class="modal-body emc-panels-body emc-subrepeat-body emc-subrepeat-fields" data-emc-field style="display:none;">
         <div class="tab-content emc-subtab-container"></div>
     </div>
 </template>

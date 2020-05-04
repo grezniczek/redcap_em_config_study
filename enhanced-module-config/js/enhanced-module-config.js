@@ -241,7 +241,6 @@ function setControlValue(setting, $value, value) {
     }
 }
 
-
 /**
  * Clears a control.
  * @param {ModuleSetting} setting 
@@ -312,7 +311,12 @@ function deleteRepeatInstance(setting, instance) {
 function addRepeatInstance(setting) {
     debugLog('Adding instance to ' + setting.config.key)
     if (setting.hassubs && setting.repeats) {
-        var newInstance = -1
+        var newInstance = setting.count
+        setting.count++
+        // Add a subsettings clone and intialize.
+        setting.sub[newInstance] = JSON.parse(JSON.stringify(setting.sub['']))
+        mapSubGuids(setting, newInstance)
+        // Refresh UI.
         showSubRepeat(setting, newInstance)
     }
     else {
@@ -395,7 +399,9 @@ function setNameDescription(setting, $el) {
 function getSubTabs(setting) {
     var tabKeys = []
     Object.keys(setting.sub['']).forEach(function(ss_key) {
-        tabKeys.push(setting.sub[''][ss_key].config.tab)
+        var tabKey = setting.sub[''][ss_key].config.tab
+        tabKey = tabKey == 'module-reserved-tab' ? 'module-reserved-sub' : tabKey
+        tabKeys.push(tabKey)
     })
     /** @type {TabInfo[]} tabs */
     var tabs = []
@@ -473,7 +479,7 @@ function buildSubsettingBody(setting, instance) {
     $modal.find('.emc-modal-header').after($body)
     $modal.find('.emc-modal-header').after($header)
     // Show default panel.
-    var defaultTabId = '#emcSubTab-' + setting.config.key + '-module-reserved-sub'
+    var defaultTabId = '#emcSubTab-' + setting.config.key +  '-module-reserved-sub'
     $(defaultTabId).tab('show')
     // Only one tab? Remove tabs.
     if (tabs.length == 1) {
@@ -634,7 +640,9 @@ function buildField(setting, key, instance = 0) {
                 // Set value.
                 var $value = $control.find('.emc-value')
                 $value.attr('data-emc-instance', i)
-                var value = setting.repeats ? setting.value[i] : setting.value
+                var value = setting.repeats ? 
+                    settings.values[setting.guid].value[i] : 
+                    settings.values[setting.guid].value
                 setControlValue(setting, $value, value)
                 // Hook up events.
                 $value.on('change', function() {
@@ -867,9 +875,8 @@ function buildDialog() {
  * @param {ModuleSetting} setting 
  * @param {ModuleSetting} parent 
  * @param {Object<string, ModuleSetting>} siblings
- * @param {boolean} empty
  */
-function mapGuids(setting = null, parent = null, siblings = null, empty = false) {
+function mapGuids(setting = null, parent = null, siblings = null) {
     if (setting == null) {
         settings.values = {}
         Object.keys(settings.current).forEach(function(key) {
@@ -891,31 +898,41 @@ function mapGuids(setting = null, parent = null, siblings = null, empty = false)
             setting.config.tab = 'module-reserved-sub'
         }
         setting.guid = uuidv4()
-        if (!empty) {
-            settings.values[setting.guid] = {
-                guid: setting.guid,
-                key: setting.config.key,
-                value: setting.value,
-                hidden: false,
-                setting: setting
-            }
+        settings.values[setting.guid] = {
+            guid: setting.guid,
+            key: setting.config.key,
+            value: setting.value,
+            hidden: false,
+            setting: setting
         }
         if (setting.hassubs) {
-            Object.keys(setting.sub).forEach(function(ss_key) {
-                var subsetting = setting.sub[ss_key]
-                Object.keys(subsetting).forEach(function(key) {
-                    /** @type {Object<string, ModuleSetting>} siblings */
-                    var siblings = {}
-                    Object.keys(subsetting).forEach(function(sibKey) {
-                        if (key != sibKey) {
-                            siblings[sibKey] = subsetting[sibKey]
-                        }
-                    })
-                    mapGuids(subsetting[key], setting, siblings, ss_key == '')
-                })
-            })
+            mapSubGuids(setting)
         }
     }
+}
+
+/**
+ * Maps guids to sub settings and builds an object of values indexed by guids.
+ * Also sets parents and siblings, and substitutes default tab for subsettings.
+ * @param {ModuleSetting} setting 
+ * @param {any} instance
+ */
+function mapSubGuids(setting, instance = null) {
+    Object.keys(setting.sub).forEach(function(ss_instance) {
+        if (ss_instance == '') return
+        if (instance !== null && instance != ss_instance ) return
+        var subsetting = setting.sub[ss_instance]
+        Object.keys(subsetting).forEach(function(key) {
+            /** @type {Object<string, ModuleSetting>} siblings */
+            var siblings = {}
+            Object.keys(subsetting).forEach(function(sibKey) {
+                if (key != sibKey) {
+                    siblings[sibKey] = subsetting[sibKey]
+                }
+            })
+            mapGuids(subsetting[key], setting, siblings)
+        })
+    })
 }
 
 /** 
