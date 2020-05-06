@@ -204,7 +204,7 @@ function valueChanged($field, setting) {
     if (!settings.updating) {
         var value = []
         $field.find('.emc-value').each(function() {
-            value.push(getControlValue(setting, $(this)))
+            value.push(getValue(setting, $(this)))
         })
         if (!setting.repeats) {
             value = value[0]
@@ -224,65 +224,91 @@ function valueChanged($field, setting) {
 }
 
 /**
- * Sets the value of a control.
+ * Sets the value.
  * @param {ModuleSetting} setting 
  * @param {JQuery} $value 
  * @param {any} value 
  */
-function setControlValue(setting, $value, value) {
-    switch(setting.type) {
-        case 'checkbox': {
-            $value.prop('checked', value == true)
-        }
-
-        default: {
-            $value.val(value)
-        }
-    }
-}
-
-/**
- * Clears a control.
- * @param {ModuleSetting} setting 
- * @param {JQuery} $value 
- */
-function clearControlValue(setting, $value) {
+function setValue(setting, $value, value) {
     switch(setting.type) {
         case 'textarea': {
-            $value.val(null)
+            $value.val(value)
             $value.trigger('keyup')
+            break
+        }
+        case 'checkbox': {
+            $value.prop('checked', value == true)
+            break
         }
         default: {
-            $value.val(null)
+            $value.val(value)
+            break
         }
     }
-    $value.trigger('change')
-    $value.focus()
 }
 
 /**
- * Gets the value of a control.
+ * Gets the value.
  * @param {ModuleSetting} setting 
  * @param {JQuery} $value 
  */
-function getControlValue(setting, $value) {
+function getValue(setting, $value) {
     switch(setting.type) {
         case 'checkbox': {
             return $value.prop('checked') == true
         }
-
         default: {
             return $value.val()
         }
     }
 }
 
+/**
+ * Sets the value of a control.
+ * @param {ModuleSetting} setting 
+ * @param {number} instance
+ */
+function setControlValue(setting, instance = null) {
+    var $value = findValue(setting, instance)
+    var value = settings.values[setting.guid].value
+    if (instance !== null) {
+        value = value[instance]
+    }
+    setValue(setting, $value, value)
+}
+
+/**
+ * Sets the value of a control.
+ * @param {ModuleSetting} setting 
+ * @param {number} instance
+ */
+function getControlValue(setting, instance = null) {
+    var $value = findValue(setting, instance)
+    return getValue(setting, $value)
+}
+
+/**
+ * Finds the value element.
+ * @param {ModuleSetting} setting 
+ * @param {number} instance
+ * @returns {JQuery} 
+ */
+function findValue(setting, instance) {
+    var $setting = $('.emc-setting[data-emc-guid="' + setting.guid + '"]')
+    var $value = $setting.find('.emc-value')
+    if (instance !== null && Number.parseInt($value.attr('data-emc-instance')) != instance) {
+        $value = $value.parent().find('[data-emc-instance="' + instance + '"]')
+    }
+    return $value
+}
+
+
 //#endregion
 
 //#region Add / Delete Repeat Instances ------------------------------------------
 
 /**
- * 
+ * Deletes a specific (instance of a) control.
  * @param {ModuleSetting} setting 
  * @param {number} instance 
  */
@@ -294,14 +320,26 @@ function deleteRepeatInstance(setting, instance) {
         // TODO
     }
     else if (setting.repeats && setting.count > 1) {
-        // Remove
-        // TODO
+        // Remove.
+        settings.values[setting.guid].value.splice(instance, 1)
+        setting.count--
+        updateRepeatingField(setting)
     }
     else {
         // Clear.
-        var $value = $('.emc-setting[data-emc-guid="' + setting.guid + '"]').find('.emc-value')
-        clearControlValue(setting, $value)
+        settings.values[setting.guid].value = setting.repeats ? [ null ] : null
+        setControlValue(setting)
+        setFocus(setting, 0)
     }
+}
+
+/**
+ * Deletes a specific (instance of a) control.
+ * @param {ModuleSetting} setting 
+ * @param {number} instance 
+ */
+function setFocus(setting, instance) {
+    findValue(setting, instance).focus()
 }
 
 /**
@@ -311,6 +349,7 @@ function deleteRepeatInstance(setting, instance) {
 function addRepeatInstance(setting) {
     debugLog('Adding instance to ' + setting.config.key)
     if (setting.hassubs && setting.repeats) {
+        // Repeating sub settings.
         var newInstance = setting.count
         setting.count++
         // Add a subsettings clone and intialize.
@@ -318,11 +357,14 @@ function addRepeatInstance(setting) {
         mapSubGuids(setting, newInstance)
         // Refresh UI.
         showSubRepeat(setting, newInstance)
+        setFocus(setting, newInstance)
     }
     else {
-        setting.value.push(null)
+        // Repeating regular settings.
+        settings.values[setting.guid].value.push(null)
         setting.count++
         updateRepeatingField(setting)
+        setFocus(setting, setting.count - 1)
     }
 }
 
@@ -344,7 +386,7 @@ function updateRepeatingField(setting) {
         var $value = $control.find('.emc-value')
         $value.attr('data-emc-instance', i)
         var value = settings.values[setting.guid].value[i]
-        setControlValue(setting, $value, value)
+        setValue(setting, $value, value)
         // Hook up events.
         $value.on('change', function() {
             valueChanged($f, setting)
@@ -643,7 +685,7 @@ function buildField(setting, key, instance = 0) {
                 var value = setting.repeats ? 
                     settings.values[setting.guid].value[i] : 
                     settings.values[setting.guid].value
-                setControlValue(setting, $value, value)
+                setValue(setting, $value, value)
                 // Hook up events.
                 $value.on('change', function() {
                     valueChanged($f, setting)
