@@ -302,7 +302,6 @@ function findValue(setting, instance) {
     return $value
 }
 
-
 //#endregion
 
 //#region Add / Delete Repeat Instances ------------------------------------------
@@ -461,6 +460,8 @@ function getSubTabs(setting) {
  * @param {number} instance
  */
 function buildSubsettingBody(setting, instance) {
+    // Already constructed?
+    if ($('.emc-subrepeat-body[data-emc-field="' + setting.config.key + '"]').length) return
     // Body.
     var $body = getTemplate('emcSubRepeat-body')
     $body.attr('data-emc-field', setting.config.key)
