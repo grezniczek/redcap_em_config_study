@@ -307,16 +307,68 @@ function findValue(setting, instance) {
 //#region Add / Delete Repeat Instances ------------------------------------------
 
 /**
+ * Recursively gets all guids in a setting subtree.
+ * @param {ModuleSetting} setting 
+ * @param {string[]} guids 
+ */
+function getAllGuids(setting, guids) {
+    guids.push(setting.guid)
+    if (setting.hassubs) {
+        Object.keys(setting.sub).forEach(function(ss_instance) {
+            if (ss_instance != '') {
+                Object.keys(setting.sub[ss_instance]).forEach(function(ss_key) {
+                    var subsetting = setting.sub[ss_instance][ss_key]
+                    getAllGuids(subsetting, guids)
+                })
+            }
+        })
+    }
+}
+
+/**
  * Deletes a specific (instance of a) control.
  * @param {ModuleSetting} setting 
  * @param {number} instance 
  */
 function deleteRepeatInstance(setting, instance) {
     debugLog('Deleting instance ' + instance + ' of ' + setting.config.key)
-
     if (setting.hassubs) {
-        // After deleting, set to first remaining, or go to parent if none.
-        // TODO
+        // Walk down the sub tree and gather the guids.
+        var guids = []
+        Object.keys(setting.sub[instance]).forEach(function(ss_key) {
+            var subsetting = setting.sub[instance][ss_key]
+            getAllGuids(subsetting, guids)
+        })
+        // Delete instance and values.
+        guids.forEach(function(guid) {
+            delete settings.values[guid]
+        })
+        delete setting.sub[instance]
+        setting.count--
+        if (setting.count > 0) {
+            // Reorder instances.
+            /** @type {Object<string, Object<string,ModuleSetting>>} sub */
+            var sub = {}
+            var i = 0
+            Object.keys(setting.sub).forEach(function(old_i) {
+                if (old_i == '') {
+                    sub[old_i] = setting.sub[old_i]
+                }
+                else {
+                    sub[i.toString()] = setting.sub[old_i]
+                    i++
+                }
+            })
+            setting.sub = sub
+            // Refresh.
+            var newInstance = Math.max(0, instance - 1)
+            showSubRepeat(setting, newInstance)
+        }
+        else {
+            // Update and go to parent.
+            var parentInstance = Number.parseInt($('.emc-setting[data-emc-field="' + setting.config.key + '"]').attr('data-emc-instance'))
+            showSubRepeat(setting.parent, parentInstance)
+        }
     }
     else if (setting.repeats && setting.count > 1) {
         // Remove.
@@ -539,8 +591,31 @@ function buildSubsettingBody(setting, instance) {
 function showSubRepeat(setting, instance) {
     if (setting == null) {
         debugLog('Showing root fields')
-        $modal.find('.emc-subrepeat-body').hide()
-        $modal.find('.emc-default-body').show()
+        // Update root instance buttons - these may have changed.
+        Object.keys(settings.current).forEach(function(key) {
+            var setting = settings.current[key]
+            if (setting.hassubs && setting.repeats) {
+                var $instanceButtons = $modal.find('.emc-default-body .emc-setting[data-emc-field="' + setting.config.key + '"] .emc-repeat-buttons')
+                $instanceButtons.children().remove()
+                var count = parseInt(setting.count)
+                for (var i = 0; i < count; i++) {
+                    var $btn = getTemplate('emcSubRepeat-button')
+                    $btn.attr('data-emc-instance', i)
+                    $btn.find('.emc-subrepeat-buttonlabel').text(i + 1)
+                    $btn.on('click', function(e) {
+                        var $btn = findRepeatButton(e)
+                        var instance = parseInt($btn.attr('data-emc-instance'))
+                        showSubRepeat(setting, instance)
+                    })
+                    $instanceButtons.append($btn)
+                }
+                if (count == 0) {
+                    $instanceButtons.append(getTemplate('emcSubRepeat-empty'))
+                }
+            }
+        })
+        $modal.find('.emc-subrepeat-body').hide(settings.hideDuration)
+        $modal.find('.emc-default-body').show(settings.showDuration)
     }
     else {
         debugLog('Showing ' + setting.config.key + ', instance ' + instance)
@@ -561,7 +636,7 @@ function showSubRepeat(setting, instance) {
             else {
                 $btn.on('click', function(e) {
                     var $btn = findRepeatButton(e)
-                    var instance = Number.parseInt($btn.attr('data-emc-instance'))
+                    var instance = parseInt($btn.attr('data-emc-instance'))
                     showSubRepeat(setting, instance)
                 })
             }
@@ -586,15 +661,15 @@ function showSubRepeat(setting, instance) {
         initialBranchingLogic(setting)
         settings.updating = false
         // Hide/Show modal bodies.
-        $modal.find('.emc-default-body').hide()
+        $modal.find('.emc-default-body').hide(settings.hideDuration)
         $modal.find('.emc-subrepeat-body').each(function() {
             var $this = $(this)
             var field = $this.attr('data-emc-field')
             if (field == setting.config.key) {
-                $this.show()
+                $this.show(settings.showDuration)
             }
             else {
-                $this.hide()
+                $this.hide(settings.hideDuration)
             }
         })
     }
@@ -1073,7 +1148,9 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
         current: null,
         tabs: null,
         guid: guid,
-        updating: false
+        updating: false,
+        hideDuration: 0,
+        showDuration: 200,
     }
     module = {
         prefix: prefix,
