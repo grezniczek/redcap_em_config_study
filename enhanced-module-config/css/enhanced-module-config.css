@@ -264,6 +264,18 @@ a.emc-setting-help:hover {
     padding-left: 3rem;
 }
 
+/* Dropdown */
+.emc-dropdown .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+    color: inherit;
+    background-color: #f8f9fa;
+    font-size: 1rem;
+}
+.emc-dropdown .bootstrap-select>.dropdown-toggle.bs-placeholder, 
+.emc-dropdown .bootstrap-select>.dropdown-toggle.bs-placeholder:hover,
+.emc-dropdown .bootstrap-select>.dropdown-toggle.bs-placeholder:focus {
+    color: #212529;
+}
+
 .emc-prepend-json {
     font-size: 0.8em;
     line-height: 1em;
@@ -297,9 +309,6 @@ a.emc-subrepeat-parent-link {
     font-size: 0.9em;
 }
 
-/* .emc-subrepeat-body {
-    margin-top: 0;
-} */
 
 
 

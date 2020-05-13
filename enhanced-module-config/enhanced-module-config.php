@@ -1,10 +1,16 @@
 <?php
 
+// CSS
+$this->includeCSS("enhanced-module-config/css/enhanced-module-config.css");
+$this->includeCSS("enhanced-module-config/css/3rd-party/bootstrap-select.min.css");
+
+// JavaScript
 $this->includeScript("enhanced-module-config/js/3rd-party/object_hash.js");
 $this->includeScript("enhanced-module-config/js/3rd-party/autosize.js");
 $this->includeScript("enhanced-module-config/js/3rd-party/FileSaver.min.js");
+$this->includeScript("enhanced-module-config/js/3rd-party/bootstrap-select.min.js");
 $this->includeScript("enhanced-module-config/js/enhanced-module-config.js");
-$this->includeCSS("enhanced-module-config/css/enhanced-module-config.css");
+
 
 $debug = true;
 
@@ -167,6 +173,31 @@ $ajax = array (
     </div>
 </template>
 
+<template data-emc="emcDropdown">
+    <div class="input-group emc-control emc-dropdown">
+        <select class="form-control emc-value" data-style="btn-light" data-live-search>
+            <option selected disabled value data-tokens></option>
+        </select>
+    </div>
+</template>
+
+
+<template data-emc="emcTextarea">
+    <div class="input-group emc-control">
+        <textarea rows="1" class="form-control emc-textarea emc-repeatable emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
+        <div class="input-group-append">
+            <span class="input-group-text emc-vtop emc-group-end">
+                <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </span>
+        </div>
+        <!-- TODO: valiation -->
+    </div>
+</template>
+
+
+
 <template data-emc="emcAddInstance">
     <div class="emc-add-instance" data-emc-insert="after" data-emc-target="emc-setting-field">
         <button class="btn btn-success btn-xs emc-repeat-add" type="button">
@@ -190,19 +221,6 @@ $ajax = array (
     </div>
 </template>
 
-<template data-emc="emcTextarea">
-    <div class="input-group emc-control">
-        <textarea rows="1" class="form-control emc-textarea emc-repeatable emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
-        <div class="input-group-append">
-            <span class="input-group-text emc-vtop emc-group-end">
-                <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </span>
-        </div>
-        <!-- TODO: valiation -->
-    </div>
-</template>
 
 <template data-emc="emcTextarea-json">
     <div class="input-group-prepend" data-emc-insert="before" data-emc-target="emc-textarea">
@@ -265,7 +283,6 @@ $ajax = array (
         <div class="tab-content emc-subtab-container"></div>
     </div>
 </template>
-
 
 
 

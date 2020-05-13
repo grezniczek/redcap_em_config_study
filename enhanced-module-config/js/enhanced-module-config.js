@@ -193,7 +193,7 @@ function getDependencyValue(setting, key) {
 
 //#endregion
 
-//#region Getting/Setting Values
+//#region Getting/Setting Values -------------------------------------------------
 
 /**
  * Updates values and initiates branching logic processing.
@@ -688,6 +688,21 @@ function findRepeatButton(e) {
 }
 
 /**
+ * Initializes Bootstrap Select for a dropdown.
+ * @param {JQuery} $dropdown 
+ */
+function initializeSelect($dropdown) {
+    // Initialize Bootstrap Select.
+    var $select = $dropdown.find('select')
+    $select.selectpicker()
+    $dropdown.find('.emc-value').each(function() {
+        if (!$(this).is('select')) {
+            $(this).removeClass('emc-value')
+        }
+    })
+}
+
+/**
  * Builds a field.
  * @param {ModuleSetting} setting
  * @param {string} key
@@ -804,6 +819,27 @@ function addFields(settings, panelPrefix) {
         var $field = buildField(setting, key)
         // Append to the correct tab.
         $('#' + panelPrefix + '-' + setting.config.tab).append($field)
+        // Dropdowns must be initialized with Bootstrap Select.
+        if (setting.type == 'dropdown') {
+            initializeSelect($field)
+        }
+   
+    })
+}
+
+/**
+ * Sets up a dropdown form element.
+ * @param {JQuery} $dropdown 
+ * @param {SettingConfig} config 
+ */
+function prepareDropdown($dropdown, config) {
+    var $select = $dropdown.find('select')
+    $select.children().remove()
+    config.choices.forEach(function(choice) {
+        var $option = $('<option></option>')
+        $option.text(choice.name)
+        $option.attr('value', choice.value)
+        $select.append($option)
     })
 }
 
@@ -826,6 +862,11 @@ function getSettingTemplate(config) {
             if (config.type == 'email') {
                 insertPart($tpl, 'emcTextbox-email')
             }
+            return $tpl
+        }
+        case 'dropdown': {
+            var $tpl = getTemplate('emcDropdown')
+            prepareDropdown($tpl, config)
             return $tpl
         }
         case 'textarea': 
@@ -1133,6 +1174,19 @@ function debugLog() {
 
 //#endregion
 
+//#region Save Settings ----------------------------------------------------------
+
+// TODO - build a data structure that can be sent to the EM framework
+// TODO - dirty tracking and visualization
+
+//#endregion
+
+//#region Export / Import --------------------------------------------------------
+
+// TODO - implement
+
+//#endregion
+
 //#region Public -----------------------------------------------------------------
 
 /**
@@ -1140,6 +1194,9 @@ function debugLog() {
  * This is exposed in the globale ExternalModules object.
  */
 EM.showEnhancedConfig = function (prefix, pid = null) {
+    // Setup Bootstrap Select.
+    // @ts-ignore
+    $.fn.selectpicker.Constructor.BootstrapVersion = '4'
     // Store arguments and get additional data.
     var guid = uuidv4()
     settings = {

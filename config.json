@@ -339,10 +339,9 @@
         },
         {
             "key": "s0_dropdown",
-            "name": "A required custom dropdown field with 4 choices, defaulting to 'Choice 1'",
+            "name": "A required custom dropdown field with 4 choices and blank",
             "type": "dropdown",
             "required": true,
-            "default": "1",
             "choices": [
                 { "value": "", "name": "" },
                 { "value": "1", "name": "Choice 1" },
