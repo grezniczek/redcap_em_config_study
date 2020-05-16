@@ -7,6 +7,9 @@ use Exception;
  */
 class Crypto {
 
+    const BLOB_KEY = "CRYPTO-BLOBKEY";
+    const HMAC_KEY = "CRYPTO-HMACKEY";
+
     private $cipher = "AES-256-CBC";
     private $blobKey = null;
     private $hmacKey = null;
