@@ -1,4 +1,5 @@
 // @ts-check
+
 // Enhanced Module Configuration
 ;(function() {
 
@@ -240,6 +241,15 @@ function setValue(setting, $value, value) {
             $value.prop('checked', value == true)
             break
         }
+        case 'file': {
+            // Can only ever set to empty string.
+            $value.val('')
+            // @ts-ignore
+            bsCustomFileInput.destroy()
+            // @ts-ignore
+            bsCustomFileInput.init()
+            break
+        }
         default: {
             $value.val(value)
             break
@@ -379,7 +389,8 @@ function deleteRepeatInstance(setting, instance) {
     else {
         // Clear.
         settings.values[setting.guid].value = setting.repeats ? [ null ] : null
-        setControlValue(setting)
+        var instance = setting.repeats ? 0 : null
+        setControlValue(setting, instance)
         setFocus(setting, 0)
     }
 }
@@ -426,42 +437,58 @@ function addRepeatInstance(setting) {
 function updateRepeatingField(setting) {
     var $f = $modal.find('.emc-setting[data-emc-guid="' + setting.guid + '"]')
     var $sf = $f.find('.emc-setting-field')
-    $sf.children().remove()
+    var $cache = $('<div></div>').append($sf.children())
     for (var i = 0; i < setting.count; i++) {
-        var $control = getSettingTemplate(setting.config)
-        var id = 'emcSetting-' + setting.config.key + '-' + uuidv4()
-        $control.find('.emc-setting-labeltarget').attr('id', id)
-        // Placeholder.
-        $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
-        // Set value.
-        var $value = $control.find('.emc-value')
-        $value.attr('data-emc-instance', i)
         var value = settings.values[setting.guid].value[i]
-        setValue(setting, $value, value)
-        // Hook up events.
-        $value.on('change', function() {
-            valueChanged($f, setting)
-        })
-        $control.find('.emc-clear').on('click', function(e) {
-            var $el = $(e.target)
-            while (!$el.hasClass('emc-control')) {
-                $el = $el.parent()
+        if (value) {
+            // Must be in cache - restore.
+            for (var j = 1; j <= $cache.children().length; j++) {
+                var $child = $cache.find('.emc-control:nth-child(' + j + ')')
+                var $value = $child.find('.emc-value')
+                var cacheValue = getValue(setting, $value)
+                if (cacheValue === value) {
+                    // Update instance and add.
+                    $value.attr('data-emc-instance', i)
+                    $sf.append($child)
+                    break
+                }
             }
-            var instance = Number.parseInt($el.find('.emc-value').attr('data-emc-instance'))
-            deleteRepeatInstance(setting, instance)
-        })
-        // Append to parent.
-        $sf.append($control)
+        }
+        else {
+            // Add new
+            var $control = getSettingTemplate(setting.config)
+            var id = 'emcSetting-' + setting.config.key + '-' + uuidv4()
+            $control.find('.emc-setting-labeltarget').attr('id', id)
+            // Placeholder.
+            $control.find('input[type="text"]').attr('placeholder', setting.config.placeholder)
+            // Set value.
+            var $value = $control.find('.emc-value')
+            $value.attr('data-emc-instance', i)
+            setValue(setting, $value, value)
+            // Hook up events.
+            $value.on('change', function() {
+                valueChanged($f, setting)
+            })
+            $control.find('.emc-clear').on('click', function(e) {
+                var $el = $(e.target)
+                while (!$el.hasClass('emc-control')) {
+                    $el = $el.parent()
+                }
+                var instance = Number.parseInt($el.find('.emc-value').attr('data-emc-instance'))
+                deleteRepeatInstance(setting, instance)
+            })
+            // Append to parent.
+            $sf.append($control)
+        }
     }
+    // Cleanup cache.
+    $cache.children().remove()
+    $cache = null
     // Marry up label with control.
     var id = $f.find('.emc-setting-labeltarget').first().attr('id')
     $sf.find('[aria-labelled-by]').attr('aria-labelled-by', id)
     $f.find('.emc-setting-label').attr('for', id)
-    // @ts-ignore
-    $sf.find('.emc-textarea').textareaAutoSize()
-    setTimeout(function() {
-         $sf.find('.emc-textarea').trigger('keyup')
-    }, 0)
+    initializeField(setting, $f)
 }
 
 //#endregion
@@ -689,17 +716,27 @@ function findRepeatButton(e) {
 
 /**
  * Initializes Bootstrap Select for a dropdown.
- * @param {JQuery} $dropdown 
+ * @param {JQuery} $field 
  */
-function initializeSelect($dropdown) {
+function initializeSelect($field) {
     // Initialize Bootstrap Select.
-    var $select = $dropdown.find('select')
+    var $select = $field.find('select')
     $select.selectpicker()
-    $dropdown.find('.emc-value').each(function() {
+    $field.find('.emc-value').each(function() {
         if (!$(this).is('select')) {
             $(this).removeClass('emc-value')
         }
     })
+}
+
+/**
+ * Initializes Bootstrap Custom File fields.
+ */
+function initializeFile() {
+    // @ts-ignore
+    bsCustomFileInput.destroy()
+    // @ts-ignore
+    bsCustomFileInput.init()
 }
 
 /**
@@ -819,12 +856,32 @@ function addFields(settings, panelPrefix) {
         var $field = buildField(setting, key)
         // Append to the correct tab.
         $('#' + panelPrefix + '-' + setting.config.tab).append($field)
-        // Dropdowns must be initialized with Bootstrap Select.
-        if (setting.type == 'dropdown') {
-            initializeSelect($field)
-        }
-   
+        // Some fields must be initialized.
+        initializeField(setting, $field)
     })
+}
+
+/**
+ * Initializes certain types of fields.
+ * @param {ModuleSetting} setting 
+ * @param {JQuery} $field 
+ */
+function initializeField(setting, $field) {
+    switch (setting.type) {
+        case 'dropdown':
+            initializeSelect($field)
+            return
+        case 'file':
+            initializeFile()
+            return
+        case 'textarea':
+            // @ts-ignore
+            $field.find('.emc-textarea').textareaAutoSize()
+            setTimeout(function() {
+                $field.find('.emc-textarea').trigger('keyup')
+            }, 0)
+            return
+    }
 }
 
 /**
@@ -878,6 +935,10 @@ function getSettingTemplate(config) {
             if (config.type == 'json') {
                 insertPart($tpl, 'emcTextarea-json')
             }
+            return $tpl
+        }
+        case 'file': {
+            var $tpl = getTemplate('emcFilebrowser')
             return $tpl
         }
         case 'sub_settings': {
@@ -997,7 +1058,6 @@ function finalize() {
     setTimeout(function() {
          $('.emc-textarea').trigger('keyup')
     }, 0)
-
     // Autosize on tab shown.
     $('.emc-tab-link').on('shown.bs.tab', function() {
         $('.emc-textarea').trigger('keyup')

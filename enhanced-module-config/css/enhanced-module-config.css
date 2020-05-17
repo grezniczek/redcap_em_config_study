@@ -276,6 +276,16 @@ a.emc-setting-help:hover {
     color: #212529;
 }
 
+/* Filebrowser */
+.emc-control-filebrowser {
+    margin-bottom: 0.8em;
+}
+.emc-control-filebrowser .input-group-append {
+    height: calc(1.5em + .75rem + 2px);
+}
+
+
+
 .emc-prepend-json {
     font-size: 0.8em;
     line-height: 1em;

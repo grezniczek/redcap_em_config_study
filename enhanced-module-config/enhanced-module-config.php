@@ -9,6 +9,7 @@ $this->includeScript("enhanced-module-config/js/3rd-party/object_hash.js");
 $this->includeScript("enhanced-module-config/js/3rd-party/autosize.js");
 $this->includeScript("enhanced-module-config/js/3rd-party/FileSaver.min.js");
 $this->includeScript("enhanced-module-config/js/3rd-party/bootstrap-select.min.js");
+$this->includeScript("enhanced-module-config/js/3rd-party/bs-custom-file-input.min.js");
 $this->includeScript("enhanced-module-config/js/enhanced-module-config.js");
 
 
@@ -152,13 +153,6 @@ $ajax = array (
     <div style="color:red;">Not implemented.</div>
 </template>
 
-<template data-emc="emcSwitch">
-    <div class="custom-control custom-switch switch-lg emc-switch-control emc-control">
-        <input type="checkbox" class="custom-control-input emc-setting-labeltarget emc-value" id="">
-        <label class="custom-control-label emc-setting-label" for=""></label>
-    </div>
-</template>
-
 <template data-emc="emcTextbox">
     <div class="input-group emc-control">
         <input type="text" class="form-control emc-input emc-repeatable emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="">
@@ -173,15 +167,6 @@ $ajax = array (
     </div>
 </template>
 
-<template data-emc="emcDropdown">
-    <div class="input-group emc-control emc-dropdown">
-        <select class="form-control emc-value" data-style="btn-light" data-live-search>
-            <option selected disabled value data-tokens></option>
-        </select>
-    </div>
-</template>
-
-
 <template data-emc="emcTextarea">
     <div class="input-group emc-control">
         <textarea rows="1" class="form-control emc-textarea emc-repeatable emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
@@ -193,6 +178,37 @@ $ajax = array (
             </span>
         </div>
         <!-- TODO: valiation -->
+    </div>
+</template>
+
+<template data-emc="emcSwitch">
+    <div class="custom-control custom-switch switch-lg emc-switch-control emc-control">
+        <input type="checkbox" class="custom-control-input emc-setting-labeltarget emc-value" id="">
+        <label class="custom-control-label emc-setting-label" for=""></label>
+    </div>
+</template>
+
+<template data-emc="emcDropdown">
+    <div class="input-group emc-control emc-dropdown">
+        <select class="form-control emc-value" data-style="btn-light" data-live-search>
+            <option selected disabled value data-tokens></option>
+        </select>
+    </div>
+</template>
+
+<template data-emc="emcFilebrowser">
+    <div class="input-group input-group-sm emc-control emc-control-filebrowser">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input emc-value" id="">
+            <label class="custom-file-label" for="" data-browse="<?=$this->tt("emc_filebrowser_browse")?>"><?=$this->tt("emc_filebrowser_choosefile")?></label>
+        </div>
+        <div class="input-group-append">
+            <span class="input-group-text emc-group-end">
+                <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </span>
+        </div>
     </div>
 </template>
 
