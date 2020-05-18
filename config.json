@@ -57,9 +57,25 @@
         {
             "name": "SubTab 2",
             "key": "sb"
+        },
+        {
+            "name": "Special",
+            "help-text": "This shows the more 'advanced' field types.",
+            "key": "special"
         }
     ],
     "system-settings": [
+        {
+            "key": "s0_file",
+            "name": "A file field",
+            "type": "file"
+        },
+        {
+            "key": "s0r_file",
+            "name": "A repeatable file field",
+            "type": "file",
+            "repeatable": true
+        },
         {
             "key": "s0r_subsetting",
             "type": "sub_settings",
@@ -189,12 +205,6 @@
                     }
                 }
             ]
-        },
-        {
-            "key": "s0r_file",
-            "name": "A repeatable file field",
-            "type": "file",
-            "repeatable": true
         },
         {
             "key": "s0_subsetting",
@@ -335,7 +345,8 @@
             "key": "s0_userlist",
             "name": "A user-list field (apparently not working as System Settings)",
             "description": "In system context, this is super user, so all users are valid, should support scope (project, admins, suspended, ...)",
-            "type": "user-list"
+            "type": "user-list",
+            "tab": "special"
         },
         {
             "key": "s0_dropdown",
@@ -379,12 +390,14 @@
             "key": "s0_button",
             "name": "A button field, which seems to require a url, otherwise we get a JS error ...",
             "type": "button",
-            "url": "html/config-dialog.html"
+            "url": "html/config-dialog.html",
+            "tab": "special"
         },
         {
             "key": "s0_projectid",
             "name": "A project-id field",
-            "type": "project-id"
+            "type": "project-id",
+            "tab": "special"
         },
         {
             "key": "s0_colorpicker",
@@ -413,16 +426,12 @@
             "tab": "a"
         },
         {
-            "key": "s0_file",
-            "name": "A file field",
-            "type": "file"
-        },
-        {
             "key": "s0_custom",
             "name": "A custom field. This is pretty much undocumented (only in example)",
             "type": "custom",
             "source": "js/custom-field.js",
-            "functionName": "CustomField.initialize"
+            "functionName": "CustomField.initialize",
+            "tab": "special"
         }
     ],
     "project-settings": [

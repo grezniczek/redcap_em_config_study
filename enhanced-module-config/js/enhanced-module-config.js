@@ -6,9 +6,10 @@
 //#region Init & "global" variables ----------------------------------------------
 
 // @ts-ignore
-if (typeof window.ExternalModules == 'undefined') {
+var EM = window.ExternalModules
+if (typeof EM == 'undefined') {
     /** @type {ExternalModules} */
-    var EM = {}
+    EM = {}
     // @ts-ignore
     window.ExternalModules = EM
 }
