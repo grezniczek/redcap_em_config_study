@@ -88,6 +88,7 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
 
 
         // TODO: REMOVE - This fixes reserved system settings to have "system-reserved-tab" as tab key.
+        // This tab should be added in the Framework code to these settings.
         foreach (array(
             ExternalModules::KEY_LANGUAGE_SYSTEM,
             ExternalModules::KEY_LANGUAGE_PROJECT,
@@ -206,10 +207,56 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
                 }
                 $settings[$key]["config"] = $c;
                 $settings[$key]["type"] = $c["type"];
-                
+                // File info.
+                if ($c["type"] == "file") {
+                    if ($repeats) {
+                        foreach ($val as $this_val) {
+                            $settings[$key]["fileinfo"][] = self::getFileInfo($this_val);
+                        }
+                    }
+                    else {
+                        $settings[$key]["fileinfo"] = self::getFileInfo($val);
+                    }
+                }
             }
         } 
     }
+
+    /**
+     * Gets file information.
+     * [
+     *   "edoc_id" => id,
+     *   "mime_type" => "..." 
+     *   "doc_name" => "...",
+     *   "doc_size" => size in bytes,
+     *   "file_extension" => "...",
+     *   "stored_date" => "Y-m-d H:i:s" 
+     * ]
+     * @param int $edoc_id
+     * @return array
+     */
+    private static function getFileInfo($edoc_id) {
+        $info = array(
+            "doc_id" => null,
+            "mime_type" => null,
+            "doc_name" => null,
+            "doc_size" => null,
+            "file_extension" => null,
+            "stored_date" => null,
+        );
+        if (is_numeric($edoc_id)) {
+            $sql = "SELECT * FROM redcap_edocs_metadata WHERE `doc_id` = ".db_escape($edoc_id);
+            $q = db_query($sql);
+            if (db_num_rows($q) == 1) {
+                $row = db_fetch_assoc($q);
+                foreach (array_keys($info) as $key) {
+                    $info[$key] = $row[$key];
+                }
+            } 
+        }
+        return $info;
+    }
+
 
     /**
      * Gets the non-repeating, non-subsettings sibling fields in the first level of the given (sub)settings array.
