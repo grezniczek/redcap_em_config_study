@@ -16,7 +16,6 @@
     --inactive-help-color: gray;
     --help-color: #007bff;
     --help-color-hover: red;
-    --init-error-text: darkred;
 }
 
 /* Loading */
@@ -33,7 +32,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    color: gray;
+    color: #800000;
 }
 .emc-initerror {
     text-align: center;
@@ -41,7 +40,7 @@
 }
 .emc-initerror p {
     font-size: 1.5rem;
-    color: val(--init-error-text);
+    color: #800000;
 }
 
 .emc-modal-wrapper {
@@ -139,7 +138,7 @@ a.emc-tab-link:hover {
     margin-top: 3rem;
     justify-content: center;
     align-items: center;
-    color: var(--init-error-text);
+    color: #800000;
     font-style: italic;
     font-size: 1.2rem;
 }
