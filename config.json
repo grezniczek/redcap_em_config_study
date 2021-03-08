@@ -1,7 +1,7 @@
 {
-    "name": "Configuration Design Study",
-    "namespace": "DE\\RUB\\ConfigurationDesignStudyExternalModule",
-    "description": "This is a preliminary design study to help discussion of how to improve capability and user experience of the REDCap External Module configuration system. See <a href=\"https://github.com/grezniczek/redcap_em_config_study\">GitHub</a> for more details.",
+    "name": "Enhanced Configuration Dialog",
+    "namespace": "DE\\RUB\\EnhancedConfigurationDialogExternalModule",
+    "description": "Provides an enhanced configuration dialog for External Module settings. See <a href=\"https://github.com/grezniczek/redcap_em_config_study\">GitHub</a> for more details.",
     "documentation": "README.md",
     "authors": [
         {
@@ -19,14 +19,14 @@
         "project": [],
         "control-center": [
             {
-                "name": "Enhanced Configuration <b>Demo</b>",
+                "name": "Configuration Design Study",
                 "key": "demo",
                 "icon": "fas fa-drafting-compass",
-                "url": "html/config-dialog.html",
+                "url": "static-demo/config-dialog.html",
                 "show-header-and-footer": true
             },
             {
-                "name": "Configuration Design Study",
+                "name": "Enhanced Module Config",
                 "key": "config",
                 "icon": "fas fa-cogs",
                 "url": "/////.php",
@@ -65,6 +65,11 @@
         }
     ],
     "system-settings": [
+        {
+            "key": "show-immediately",
+            "name": "Show the dialog automatically",
+            "type": "checkbox"
+        },
         {
             "key": "s0_file",
             "name": "A file field",

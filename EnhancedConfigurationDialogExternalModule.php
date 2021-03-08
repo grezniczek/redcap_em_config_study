@@ -1,21 +1,21 @@
-<?php namespace DE\RUB\ConfigurationDesignStudyExternalModule;
+<?php namespace DE\RUB\EnhancedConfigurationDialogExternalModule;
 
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
 
-require_once __DIR__ . "/enhanced-module-config/classes/Crypto.php";
+require_once __DIR__ . "/classes/Crypto.php";
 
 /**
  * ExternalModule class for Configuration Design Study.
  */
-class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
+class EnhancedConfigurationDialogExternalModule extends AbstractExternalModule {
 
 
     function redcap_module_link_check_display($project_id, $link) {
         if ($link["key"] == "demo") return $link;
         if ($link["key"] == "config") {
             if (self::IsSystemExternalModulesManager()) {
-                $link["url"] = "javascript:ExternalModules.showEnhancedConfig(\"{$this->PREFIX}\"); //";
+                $link["url"] = "javascript:ExternalModules.showEnhancedConfig('{$this->PREFIX}'); //";
                 return $link;
             }
             return null;
@@ -25,7 +25,10 @@ class ConfigurationDesignStudyExternalModule extends AbstractExternalModule {
     function redcap_every_page_top ($project_id) {
         if (self::IsProjectExternalModulesManager() || self::IsSystemExternalModulesManager()) {
             // Inject HTML and JS for new config dialog.
-            include (__DIR__."/enhanced-module-config/enhanced-module-config.php");
+            include (__DIR__."/enhanced-module-config.php");
+            if ($this->getSystemSetting("show-immediately") == true) {
+                print "<script>$(function() { ExternalModules.showEnhancedConfig('{$this->PREFIX}', null) }); </script>";
+            }
         }
     }
 

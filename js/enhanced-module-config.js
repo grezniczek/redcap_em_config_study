@@ -1304,14 +1304,4 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
 
 //#endregion
 
-
-// TODO: Remove - this is for development only!
-$(function() {
-    if (EM.PID) {
-        EM.showEnhancedConfig('global_piping', 40)
-    }
-    else {
-        EM.showEnhancedConfig('redcap_em_config_study', null)
-    }
-})
 })();

@@ -1,16 +1,16 @@
 <?php
 
 // CSS
-$this->includeCSS("enhanced-module-config/css/enhanced-module-config.css");
-$this->includeCSS("enhanced-module-config/css/3rd-party/bootstrap-select.min.css");
+$this->includeCSS("css/enhanced-module-config.css");
+$this->includeCSS("css/3rd-party/bootstrap-select.min.css");
 
 // JavaScript
-$this->includeScript("enhanced-module-config/js/3rd-party/object_hash.js");
-$this->includeScript("enhanced-module-config/js/3rd-party/autosize.js");
-$this->includeScript("enhanced-module-config/js/3rd-party/FileSaver.min.js");
-$this->includeScript("enhanced-module-config/js/3rd-party/bootstrap-select.min.js");
-$this->includeScript("enhanced-module-config/js/3rd-party/bs-custom-file-input.min.js");
-$this->includeScript("enhanced-module-config/js/enhanced-module-config.js");
+$this->includeScript("js/3rd-party/object_hash.js");
+$this->includeScript("js/3rd-party/autosize.js");
+$this->includeScript("js/3rd-party/FileSaver.min.js");
+$this->includeScript("js/3rd-party/bootstrap-select.min.js");
+$this->includeScript("js/3rd-party/bs-custom-file-input.min.js");
+$this->includeScript("js/enhanced-module-config.js");
 
 
 $debug = true;
@@ -20,7 +20,7 @@ $emc_pid = $Proj->project_id;
 $emc_projectName = $Proj->project["app_title"];
 
 // Ajax Setup.
-$crypto = \DE\RUB\ConfigurationDesignStudyExternalModule\Crypto::init();
+$crypto = \DE\RUB\EnhancedConfigurationDialogExternalModule\Crypto::init();
 $verificationPayload = $crypto->encrypt(array (
     "type" => $emc_pid === null ? "system-settings" : "project-settings",
     "userid" => $GLOBALS["userid"],
@@ -29,8 +29,8 @@ $verificationPayload = $crypto->encrypt(array (
 ));
 $ajax = array (
     "verification" => $verificationPayload,
-    "get" => $this->framework->getUrl("enhanced-module-config/ajax/get-settings.php"),
-    "save" => $this->framework->getUrl("enhanced-module-config/ajax/save-settings.php")
+    "get" => $this->framework->getUrl("ajax/get-settings.php"),
+    "save" => $this->framework->getUrl("ajax/save-settings.php")
 );
 
 ?>

@@ -1,0 +1,141 @@
+body {
+    padding: 10px;
+}
+
+@media (min-width: 1200px) {
+    .modal-xxl {
+        max-width: 1140px;
+    }
+    @media (min-width: 1700px) {
+        .modal-xl {
+            max-width: 1140px;
+        }
+        .modal-xxl {
+            max-width: 1680px;
+        }
+    }
+}
+
+
+#configStudy .form-group {
+    margin-bottom: 0;
+}
+#configStudy .modal-header {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+}
+
+#configStudy .modal-body {
+    padding-top: 0.5rem;
+}
+
+#configStudy .project-info {
+    font-size: 1rem;
+}
+
+
+div#configStudy .settings-label {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+div#configStudy .settings-label label {
+    margin: 0;
+}
+div#configStudy .settings-description {
+    margin-top: -0.1rem;
+    margin-bottom: 0;
+    font-size: 0.8rem;
+}
+div#configStudy .settings-field {
+    margin-top: 0.5rem;
+    margin-bottom: 0.3rem;
+}
+div#configStudy .settings-help {
+    float: right;
+}
+
+
+.modal-help {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.modal-help .modal-header {
+    padding-top: 5px;
+    padding-bottom: 8px;
+}
+.modal-help .close {
+    font-weight: 500;
+    width: auto;
+    height: auto;
+}
+.close:focus {
+    outline: none;
+}
+
+.repeatable-list {
+    margin-top: 0.5em;
+    margin-bottom: 0.3em;
+}
+.repeatable-container {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.repeatable-side {
+    background-color: #eeeeee;
+    width: 1.9rem;
+    text-align: center;
+    vertical-align: top;
+    padding-top: 0.3rem;
+}
+
+.repeatable-item {
+    padding-left: 0.5rem;
+}
+
+.subsettings-label {
+    margin-top: 0.2rem;
+    margin-bottom: 0;
+    font-weight: bold;
+}
+.subsettings-label label {
+    margin: 0;
+}
+
+
+.import-export {
+    position: absolute; 
+    left: 1em;
+}
+
+.single-repeatable-side {
+    background-color: #eeeeee;
+    width: 1.9rem;
+    text-align: center;
+}
+.single-repeatable-add {
+    font-size: 1.5rem;
+}
+.subsettings-edit-crumbs {
+    background-color: #eeeeee;
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+}
+.subsettings-edit {
+    margin: 0.5rem;
+}
+
+.system-history-container {
+    margin-top: 1.5rem;
+}
+.system-history-container table {
+    margin-bottom: 0;
+}
+
+#system-history-list {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+}
+

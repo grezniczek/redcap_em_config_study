@@ -1,4 +1,4 @@
-<?php namespace DE\RUB\ConfigurationDesignStudyExternalModule;
+<?php namespace DE\RUB\EnhancedConfigurationDialogExternalModule;
 
 use Exception;
 
