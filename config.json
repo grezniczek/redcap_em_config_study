@@ -16,7 +16,15 @@
     ],
     "enable-every-page-hooks-on-system-pages": true,
     "links": {
-        "project": [],
+        "project": [
+            {
+                "name": "Enhanced Module Config",
+                "key": "config",
+                "icon": "fas fa-cogs",
+                "url": "/////.php",
+                "show-header-and-footer": true
+            }
+        ],
         "control-center": [
             {
                 "name": "Configuration Design Study",

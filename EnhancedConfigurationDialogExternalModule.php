@@ -18,6 +18,10 @@ class EnhancedConfigurationDialogExternalModule extends AbstractExternalModule {
                 $link["url"] = "javascript:ExternalModules.showEnhancedConfig('{$this->PREFIX}'); //";
                 return $link;
             }
+            else if (self::IsProjectExternalModulesManager()) {
+                $link["url"] = "javascript:ExternalModules.showEnhancedConfig('{$this->PREFIX}'); //";
+                return $link;
+            }
             return null;
         }
     }

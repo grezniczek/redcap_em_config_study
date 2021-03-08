@@ -17,6 +17,8 @@ This module will add two links to the 'Control Center &gt; External Modules' sec
 1. _Configuration Design Study:_ This will open a static HTML page with the original design study.
 1. _Enhanced Module Config:_ The `config.json` of this module will be displayed in the **Enhanced Configuration Dialog**. This can be set to show automatically in the module settings.
 
+Furthermore, in Projects that have this module enabled, the _Enhanced Module Config_ link will be shown in the "External Modules" section of the main menu when on the "External Modules - Project Module Manager" page.
+
 ## Features
 
 Some are already implemented, some are not.
