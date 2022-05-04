@@ -411,7 +411,7 @@ class ConfigurationDialogExternalModule extends AbstractExternalModule {
     }
 
     private static function moduleSettings_setDepending(&$setting, $depending) {
-        $setting["dependencies"]["depending"] = array_keys($depending[$setting["config"]["key"]]) ?: array();
+        $setting["dependencies"]["depending"] = array_keys($depending[$setting["config"]["key"]] ?? []);
         if ($setting["hassubs"]) {
             foreach ($setting["sub"] as &$subsettings) {
                 foreach ($subsettings as $_ => &$subsetting) {
