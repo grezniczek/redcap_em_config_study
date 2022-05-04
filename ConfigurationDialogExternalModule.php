@@ -30,9 +30,8 @@ class ConfigurationDialogExternalModule extends AbstractExternalModule {
         if (self::IsProjectExternalModulesManager() || self::IsSystemExternalModulesManager()) {
             // Inject HTML and JS for new config dialog.
             include (__DIR__."/enhanced-module-config.php");
-            if ($this->getSystemSetting("show-immediately") == true) {
-                print "<script>$(function() { ExternalModules.showEnhancedConfig('{$this->PREFIX}', null) }); </script>";
-            }
+            $pid_arg = $project_id ? $project_id : "null";
+            print "<script>$(function() { ExternalModules.addEnhancedConfigButtons($pid_arg); });</script>";
         }
     }
 
@@ -81,11 +80,13 @@ class ConfigurationDialogExternalModule extends AbstractExternalModule {
 
 
     public static function IsSystemExternalModulesManager() {
-        return (strpos(PAGE, "ExternalModules/manager/control_center.php") !== false) || (strpos(PAGE, "external_modules/manager/control_center.php") !== false);
+        $page = PAGE_FULL;
+        return (strpos($page, "ExternalModules/manager/control_center.php") !== false) || (strpos($page, "external_modules/manager/control_center.php") !== false);
     }
 
     public static function IsProjectExternalModulesManager() {
-        return (strpos(PAGE, "ExternalModules/manager/project.php") !== false) || (strpos(PAGE, "external_modules/manager/project.php") !== false);
+        $page = PAGE_FULL;
+        return (strpos($page, "ExternalModules/manager/project.php") !== false) || (strpos($page, "external_modules/manager/project.php") !== false);
     }
 
 

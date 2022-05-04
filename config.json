@@ -74,11 +74,6 @@
     ],
     "system-settings": [
         {
-            "key": "show-immediately",
-            "name": "Show the dialog automatically",
-            "type": "checkbox"
-        },
-        {
             "key": "s0_file",
             "name": "A file field",
             "type": "file"

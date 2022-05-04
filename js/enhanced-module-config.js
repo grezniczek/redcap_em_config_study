@@ -976,7 +976,7 @@ function getTemplate(name) {
     return $(document.querySelector('template[data-emc=' + name + ']').content.firstElementChild.cloneNode(true))
 }
 
-//#endregion (Build Settings)
+//#endregion
 
 //#region Create Dialog ----------------------------------------------------------
 
@@ -1300,6 +1300,19 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
     $modal.modal('show')
     // Get settings and build.
     getSettings(prefix, guid, buildDialog, initError)
+}
+
+EM.addEnhancedConfigButtons = function(pid) {
+    $('tr[data-module]').each(function() {
+        const $this = $(this)
+        const prefix = $this.attr('data-module')
+        const version = $this.attr('data-version')
+        const $btn = $('<button><i>Configure<b>+</b<</i></button>')
+        $btn.on('click', function() {
+            EM.showEnhancedConfig(prefix, pid)
+        })
+        $this.find('button.external-modules-configure-button').before($btn)
+    })
 }
 
 //#endregion
