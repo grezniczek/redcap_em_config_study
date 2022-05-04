@@ -22,7 +22,7 @@ class emcGetSettingsAjax { static function process($m) {
     );
 
     // Check verification.
-    $crypto = \DE\RUB\EnhancedConfigurationDialogExternalModule\Crypto::init();
+    $crypto = \DE\RUB\ConfigurationDialogExternalModule\Crypto::init();
     $verification = $crypto->decrypt($data["verification"]);
     $verified = $verification && $verification["pid"] == $GLOBALS["Proj"]->project_id && $verification["userid"] == $GLOBALS["userid"];
     if ($verified) {

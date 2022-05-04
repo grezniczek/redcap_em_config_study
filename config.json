@@ -1,6 +1,6 @@
 {
     "name": "Enhanced Configuration Dialog",
-    "namespace": "DE\\RUB\\EnhancedConfigurationDialogExternalModule",
+    "namespace": "DE\\RUB\\ConfigurationDialogExternalModule",
     "description": "Provides an enhanced configuration dialog for External Module settings. See <a href=\"https://github.com/grezniczek/redcap_em_config_study\">GitHub</a> for more details.",
     "documentation": "README.md",
     "authors": [

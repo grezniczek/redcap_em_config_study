@@ -20,7 +20,7 @@ $emc_pid = $Proj->project_id;
 $emc_projectName = $Proj->project["app_title"];
 
 // Ajax Setup.
-$crypto = \DE\RUB\EnhancedConfigurationDialogExternalModule\Crypto::init();
+$crypto = \DE\RUB\ConfigurationDialogExternalModule\Crypto::init();
 $verificationPayload = $crypto->encrypt(array (
     "type" => $emc_pid === null ? "system-settings" : "project-settings",
     "userid" => $GLOBALS["userid"],

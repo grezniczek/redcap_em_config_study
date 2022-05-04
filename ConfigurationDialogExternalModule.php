@@ -1,4 +1,4 @@
-<?php namespace DE\RUB\EnhancedConfigurationDialogExternalModule;
+<?php namespace DE\RUB\ConfigurationDialogExternalModule;
 
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
@@ -8,7 +8,7 @@ require_once __DIR__ . "/classes/Crypto.php";
 /**
  * ExternalModule class for Configuration Design Study.
  */
-class EnhancedConfigurationDialogExternalModule extends AbstractExternalModule {
+class ConfigurationDialogExternalModule extends AbstractExternalModule {
 
 
     function redcap_module_link_check_display($project_id, $link) {
