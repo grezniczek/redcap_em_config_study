@@ -16,13 +16,13 @@ $this->includeScript("js/enhanced-module-config.js");
 $debug = true;
 
 global $Proj;
-$emc_pid = $Proj->project_id;
-$emc_projectName = $Proj->project["app_title"];
+$emc_pid = $Proj ? $Proj->project_id : null;
+$emc_projectName = $Proj ? $Proj->project["app_title"] : null;
 
 // Ajax Setup.
-$crypto = \DE\RUB\ConfigurationDialogExternalModule\Crypto::init();
+$crypto = \Crypto::init();
 $verificationPayload = $crypto->encrypt(array (
-    "type" => $emc_pid === null ? "system-settings" : "project-settings",
+    "type" => $emc_pid == null ? "system-settings" : "project-settings",
     "userid" => $GLOBALS["userid"],
     "pid" => $emc_pid,
     "timestamp" => time()

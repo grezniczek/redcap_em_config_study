@@ -3,8 +3,6 @@
 use ExternalModules\AbstractExternalModule;
 use ExternalModules\ExternalModules;
 
-require_once __DIR__ . "/classes/Crypto.php";
-
 /**
  * ExternalModule class for Configuration Design Study.
  */
