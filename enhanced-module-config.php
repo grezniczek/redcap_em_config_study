@@ -61,7 +61,7 @@ $ajax = array (
 
 
 <template data-emc="emcModal">
-    <div id="emcModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="emcTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div id="emcModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="emcTitle" aria-hidden="true" data-backdrop="static" data-bs-backdrop="static" data-keyboard="false" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header emc-modal-header">
@@ -80,7 +80,7 @@ $ajax = array (
                         </div>
                         <?php endif; ?>
                     </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="<?=$this->tt("emc_close")?>">
+                    <button type="button" class="close" data-bs-dismiss="modal" data-dismiss="modal" aria-label="<?=$this->tt("emc_close")?>">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -96,7 +96,7 @@ $ajax = array (
                         <div class="modal-body emc-modal-body emc-initerror">
                             <div>
                                 <p><?=$this->tt("emc_init_failed")?></p>
-                                <button type="button" data-dismiss="modal" class="btn btn-primary btn-md"><?=$this->tt("emc_close")?></button>
+                                <button type="button" data-bs-dismiss="modal" data-dismiss="modal" class="btn btn-primary btn-md"><?=$this->tt("emc_close")?></button>
                             </div>
                         </div>
                     </div>
@@ -122,7 +122,7 @@ $ajax = array (
                                     <i class="fas fa-trash"></i> Clear all
                                 </button>
                                 </div>
-                            <button type="button" data-dismiss="modal" data-emc-action="cancel" class="btn btn-secondary btn-sm">
+                            <button type="button" data-bs-dismiss="modal" data-dismiss="modal" data-emc-action="cancel" class="btn btn-secondary btn-sm">
                                 Cancel
                             </button>
                             <button type="button" data-emc-action="save" class="btn btn-primary btn-sm">
