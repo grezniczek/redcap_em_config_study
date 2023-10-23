@@ -116,14 +116,14 @@ a.active .emc-tab-help:hover {
     color: var(--help-color-hover);
 }
 a.emc-tab-link {
-    color: var(--blue);
+    color: var(--bs-blue);
 }
 a.active.emc-tab-link {
     font-weight: bolder;
-    color: var(--gray-dark);
+    color: var(--bs-gray-dark);
 }
 a.emc-tab-link:hover {
-    color: var(--red);
+    color: var(--bs-red);
 }
 .tab-content.emc-tab-container,
 .tab-content.emc-subtab-container {
@@ -198,7 +198,7 @@ a.emc-setting-help:hover {
     align-items: start;
 }
 .emc-clear:hover {
-    color: var(--red);
+    color: var(--bs-red);
 }
 .emc-textarea {
     min-height: 38px;
@@ -247,8 +247,8 @@ a.emc-setting-help:hover {
     min-width: 4.25em;
 }
 .emc-subrepeat-button:hover {
-    background-color: var(--primary);
-    border-color: var(--primary);
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 .emc-subrepeat-buttonlabel {
     padding-left: 0.5em;
