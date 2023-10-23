@@ -38,7 +38,7 @@ $ajax = array (
 <!-- EMC Templates -->
 <template data-emc="emcTabItem">
     <li class="nav-item">
-        <a class="nav-link emc-tab-link" data-toggle="tab" href="" role="tab" aria-controls="" aria-selected="">
+        <a class="nav-link emc-tab-link" data-toggle="tab" data-bs-toggle="tab" href="" role="tab" aria-controls="" aria-selected="">
             <span class="emc-tab-link-text"></span>
             <i data-emc-tab-help class="emc-tab-help fas fa-question-circle fa-sm"></i>
         </a>
