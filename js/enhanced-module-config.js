@@ -722,7 +722,6 @@ function findRepeatButton(e) {
 function initializeSelect($field) {
     // Initialize Bootstrap Select.
     var $select = $field.find('select')
-    $select.selectpicker()
     $field.find('.emc-value').each(function() {
         if (!$(this).is('select')) {
             $(this).removeClass('emc-value')
@@ -1255,9 +1254,6 @@ function debugLog() {
  * This is exposed in the globale ExternalModules object.
  */
 EM.showEnhancedConfig = function (prefix, pid = null) {
-    // Setup Bootstrap Select.
-    // @ts-ignore
-    $.fn.selectpicker.Constructor.BootstrapVersion = '4'
     // Store arguments and get additional data.
     var guid = uuidv4()
     settings = {

@@ -2,13 +2,11 @@
 
 // CSS
 $this->includeCSS("css/enhanced-module-config.css");
-$this->includeCSS("css/3rd-party/bootstrap-select.min.css");
 
 // JavaScript
 $this->includeScript("js/3rd-party/object_hash.js");
 $this->includeScript("js/3rd-party/autosize.js");
 $this->includeScript("js/3rd-party/FileSaver.min.js");
-$this->includeScript("js/3rd-party/bootstrap-select.min.js");
 $this->includeScript("js/3rd-party/bs-custom-file-input.min.js");
 $this->includeScript("js/enhanced-module-config.js");
 
@@ -190,7 +188,7 @@ $ajax = array (
 
 <template data-emc="emcDropdown">
     <div class="input-group emc-control emc-dropdown">
-        <select class="form-control emc-value" data-style="btn-light" data-live-search>
+        <select class="form-select emc-value" data-style="btn-light" data-live-search>
             <option selected disabled value data-tokens></option>
         </select>
     </div>
