@@ -263,6 +263,16 @@ a.emc-setting-help:hover {
     padding-left: 3rem;
 }
 
+.emc-switch-control.form-switch.form-switch-lg {
+    margin-bottom: 1rem;
+}
+
+.emc-switch-control.form-switch.form-switch-lg .form-check-input {
+    height: 1.1rem;
+    width: calc(1.2rem + 0.75rem);
+    border-radius: 1.2rem;
+}
+
 /* Dropdown */
 .emc-dropdown .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
     color: inherit;

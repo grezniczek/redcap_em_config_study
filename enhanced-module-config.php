@@ -180,9 +180,9 @@ $ajax = array (
 </template>
 
 <template data-emc="emcSwitch">
-    <div class="custom-control custom-switch switch-lg emc-switch-control emc-control">
-        <input type="checkbox" class="custom-control-input emc-setting-labeltarget emc-value" id="">
-        <label class="custom-control-label emc-setting-label" for=""></label>
+    <div class="form-check form-switch form-switch-lg emc-switch-control emc-control">
+        <input type="checkbox" class="form-check-input emc-setting-labeltarget emc-value" role="switch" id="">
+        <label class="form-check-label emc-setting-label" for=""></label>
     </div>
 </template>
 
