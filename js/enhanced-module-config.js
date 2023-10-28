@@ -247,6 +247,7 @@ function setValue(setting, $value, value) {
             break
         }
         case 'checkboxes': {
+            value = Array.isArray(value) ? value : [ value ]
             $value.each((idx, choice) => $(choice).prop('checked', value.includes(choice.value)))
         }
         case 'file': {
