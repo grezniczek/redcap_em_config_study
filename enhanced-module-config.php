@@ -199,20 +199,14 @@ $ajax = array (
 
 <template data-emc="emcFilebrowser">
     <div class="input-group input-group-sm emc-control emc-control-filebrowser">
-        <div class="custom-file">
-            <input type="file" class="custom-file-input emc-value" id="">
-            <label class="custom-file-label" for="" data-browse="<?=$this->tt("emc_filebrowser_browse")?>"><?=$this->tt("emc_filebrowser_choosefile")?></label>
-        </div>
-        <div class="input-group-append">
-            <span class="input-group-text emc-group-end">
-                <button type="button" class="close emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </span>
-        </div>
+        <input type="file" class="form-control emc-value emc-setting-labeltarget" id="">
+        <label class="input-group-text emc-setting-label" for=""><?=$this->tt("emc_filebrowser_browse")?></label>
+        <button type="button" class="btn btn-light emc-clear" aria-label="<?=$this->tt("emc_clear")?>">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <!-- <label class="input-group-text" for="" data-browse="<?=$this->tt("emc_filebrowser_browse")?>"><?=$this->tt("emc_filebrowser_choosefile")?></label> -->
     </div>
 </template>
-
 
 
 <template data-emc="emcAddInstance">

@@ -292,6 +292,22 @@ a.emc-setting-help:hover {
 .emc-control-filebrowser .input-group-append {
     height: calc(1.5em + .75rem + 2px);
 }
+.emc-control-filebrowser input[type=file] {
+    margin-left: -2px;
+}
+.emc-control-filebrowser input[type=file]::-webkit-file-upload-button,
+.emc-control-filebrowser input[type=file]::file-selector-button {
+    display: none;
+}
+.emc-control-filebrowser label {
+    background-color: var(--bs-light);
+    margin-bottom: 0;
+    margin-top: 0;
+    cursor: pointer;
+}
+.emc-control-filebrowser .btn {
+    border: var(--bs-border-width) solid var(--bs-border-color);
+}
 
 
 
