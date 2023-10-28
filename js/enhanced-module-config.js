@@ -242,6 +242,10 @@ function setValue(setting, $value, value) {
             $value.prop('checked', value == true)
             break
         }
+        case 'radio': {
+            $value.each((idx, choice) => $(choice).prop('checked', choice.value == value))
+            break
+        }
         case 'file': {
             // Can only ever set to empty string.
             $value.val('')
@@ -905,6 +909,31 @@ function prepareDropdown($dropdown, config) {
 }
 
 /**
+ * Sets up a radio button form element.
+ * @param {JQuery} $radio
+ * @param {SettingConfig} config 
+ */
+function prepareRadio($radio, config) {
+    console.log($radio, config);
+    $radio.children().remove()
+    config.choices.forEach(function(choice) {
+        var checked = config.default == choice.value ? 'checked' : ''
+        var $inputDiv = $('<div class="form-check"></div>')
+        var $input = $('<input class="emc-value form-check-input" type="radio" ' + checked + '></input>')
+        var $label = $('<label class="form-check-label"></label>')
+        var id = 'emcSetting-' + config.key + '-' + uuidv4()
+        $input.attr('name', config.key)
+        $input.attr('value', choice.value)
+        $input.attr('id', id)
+        $label.text(choice.name)
+        $label.attr('for', id)
+        $inputDiv.append($input)
+        $inputDiv.append($label)
+        $radio.append($inputDiv)
+    })
+}
+
+/**
  * Gets a template by type.
  * @param {SettingConfig} config The type of the setting (as in config.json).
  * @returns {JQuery} The jQuery representation of the template's content.
@@ -947,6 +976,11 @@ function getSettingTemplate(config) {
         }
         case 'sub_settings': {
             var $tpl = getTemplate('emcSubRepeat')
+            return $tpl
+        }
+        case 'radio': {
+            var $tpl = getTemplate('emcRadio')
+            prepareRadio($tpl, config)
             return $tpl
         }
     }

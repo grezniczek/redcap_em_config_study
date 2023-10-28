@@ -208,6 +208,9 @@ $ajax = array (
     </div>
 </template>
 
+<template data-emc="emcRadio">
+    <div class="emc-control emc-form-check"></div>
+</template>
 
 <template data-emc="emcAddInstance">
     <div class="emc-add-instance" data-emc-insert="after" data-emc-target="emc-setting-field">
