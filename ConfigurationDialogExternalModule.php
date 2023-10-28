@@ -181,13 +181,13 @@ class ConfigurationDialogExternalModule extends AbstractExternalModule {
                 $val = array( null );
             }
             $settings[$key] = array( 
-                "count" => $repeats ? count($val) : 1,
+                "count" => $repeats ? count($val ?? []) : 1,
                 "repeats" => $repeats,
                 "hassubs" => $sub
             );
             if ($sub && $repeats) {
                 $settings[$key]["sub"] = array();
-                foreach (array_keys($val) as $curInstance) {
+                foreach (array_keys($val ?? []) as $curInstance) {
                     $settings[$key]["sub"][$curInstance] = array();
                     array_push($instance, $curInstance);
                     self::moduleSettings_build($settings[$key]["sub"][$curInstance], $instance, $c["sub_settings"], $values, $augment);
