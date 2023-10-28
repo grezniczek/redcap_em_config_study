@@ -716,12 +716,16 @@ function findRepeatButton(e) {
 }
 
 /**
- * Initializes Bootstrap Select for a dropdown.
+ * Initializes Select2 for a dropdown.
  * @param {JQuery} $field 
  */
 function initializeSelect($field) {
-    // Initialize Bootstrap Select.
+    // Initialize Select2.
     var $select = $field.find('select')
+    $select.select2({
+        dropdownParent: $modal,
+        theme: 'bootstrap-5'
+    })
     $field.find('.emc-value').each(function() {
         if (!$(this).is('select')) {
             $(this).removeClass('emc-value')
