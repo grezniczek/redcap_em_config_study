@@ -914,12 +914,10 @@ function prepareDropdown($dropdown, config) {
  * @param {SettingConfig} config 
  */
 function prepareRadio($radio, config) {
-    console.log($radio, config);
     $radio.children().remove()
     config.choices.forEach(function(choice) {
-        var checked = config.default == choice.value ? 'checked' : ''
         var $inputDiv = $('<div class="form-check"></div>')
-        var $input = $('<input class="emc-value form-check-input" type="radio" ' + checked + '></input>')
+        var $input = $('<input class="emc-value form-check-input" type="radio"></input>')
         var $label = $('<label class="form-check-label"></label>')
         var id = 'emcSetting-' + config.key + '-' + uuidv4()
         $input.attr('name', config.key)
