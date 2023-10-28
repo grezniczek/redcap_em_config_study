@@ -212,6 +212,10 @@ $ajax = array (
     <div class="emc-control emc-form-check"></div>
 </template>
 
+<template data-emc="emcCheckboxes">
+    <div class="emc-control emc-form-check"></div>
+</template>
+
 <template data-emc="emcAddInstance">
     <div class="emc-add-instance" data-emc-insert="after" data-emc-target="emc-setting-field">
         <button class="btn btn-success btn-xs emc-repeat-add" type="button">

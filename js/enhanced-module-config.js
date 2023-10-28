@@ -246,6 +246,9 @@ function setValue(setting, $value, value) {
             $value.each((idx, choice) => $(choice).prop('checked', choice.value == value))
             break
         }
+        case 'checkboxes': {
+            $value.each((idx, choice) => $(choice).prop('checked', value.includes(choice.value)))
+        }
         case 'file': {
             // Can only ever set to empty string.
             $value.val('')
@@ -932,6 +935,29 @@ function prepareRadio($radio, config) {
 }
 
 /**
+ * Sets up a checkbox form element.
+ * @param {JQuery} $checkbox
+ * @param {SettingConfig} config 
+ */
+function prepareCheckboxes($checkboxes, config) {
+    $checkboxes.children().remove()
+    config.choices.forEach(function(choice) {
+        var $inputDiv = $('<div class="form-check"></div>')
+        var $input = $('<input class="emc-value form-check-input" type="checkbox"></input>')
+        var $label = $('<label class="form-check-label"></label>')
+        var id = 'emcSetting-' + config.key + '-' + uuidv4()
+        $input.attr('name', config.key)
+        $input.attr('value', choice.value)
+        $input.attr('id', id)
+        $label.text(choice.name)
+        $label.attr('for', id)
+        $inputDiv.append($input)
+        $inputDiv.append($label)
+        $checkboxes.append($inputDiv)
+    })
+}
+
+/**
  * Gets a template by type.
  * @param {SettingConfig} config The type of the setting (as in config.json).
  * @returns {JQuery} The jQuery representation of the template's content.
@@ -979,6 +1005,11 @@ function getSettingTemplate(config) {
         case 'radio': {
             var $tpl = getTemplate('emcRadio')
             prepareRadio($tpl, config)
+            return $tpl
+        }
+        case 'checkboxes': {
+            var $tpl = getTemplate('emcCheckboxes')
+            prepareCheckboxes($tpl, config)
             return $tpl
         }
     }
