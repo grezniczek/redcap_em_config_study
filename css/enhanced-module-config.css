@@ -310,6 +310,42 @@ a.emc-setting-help:hover {
 }
 
 
+/* Coloris Colorpicker */
+button.clr-close,
+button.clr-clear,
+button.clr-cancel {
+    border-radius: 0.25rem;
+}
+button.clr-clear {
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+    margin-right: auto;
+}
+button.clr-clear:hover {
+    background-color: #bb2d3b;
+    border-color: #b02a37;
+}
+button.clr-close {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+}
+button.clr-close:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+button.clr-cancel {
+    background-color: var(--bs-secondary);
+    border-color: var(--bs-secondary);
+    order: 2;
+    height: 24px;
+    padding: 0 20px;
+    border: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 400;
+}
+
 
 .emc-prepend-json {
     font-size: 0.8em;

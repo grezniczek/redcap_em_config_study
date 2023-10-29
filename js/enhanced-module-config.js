@@ -249,6 +249,7 @@ function setValue(setting, $value, value) {
         case 'checkboxes': {
             value = Array.isArray(value) ? value : [ value ]
             $value.each((idx, choice) => $(choice).prop('checked', value.includes(choice.value)))
+            break
         }
         case 'file': {
             // Can only ever set to empty string.
@@ -275,6 +276,14 @@ function getValue(setting, $value) {
     switch(setting.type) {
         case 'checkbox': {
             return $value.prop('checked') == true
+        }
+        case 'radio': {
+            return $value.find('input').filter(':checked').val()
+        }
+        case 'checkboxes': {
+            return $value.find('input')
+                .filter(':checked')
+                .map((idx, checkbox) => checkbox.value).toArray()
         }
         default: {
             return $value.val()
@@ -742,6 +751,30 @@ function initializeSelect($field) {
 }
 
 /**
+ * Initializes Radio buttons.
+ * @param {JQuery} $field
+ */
+function initializeRadio($field) {
+    $field.find('.emc-value').each(function() {
+        if (!$(this).hasClass('emc-form-check')) {
+            $(this).removeClass('emc-value')
+        }
+    })
+}
+
+/**
+ * Initializes Checkboxes.
+ * @param {JQuery} $field
+ */
+function initializeCheckboxes($field) {
+    $field.find('.emc-value').each(function() {
+        if (!$(this).hasClass('emc-form-check')) {
+            $(this).removeClass('emc-value')
+        }
+    })
+}
+
+/**
  * Initializes Bootstrap Custom File fields.
  */
 function initializeFile() {
@@ -749,6 +782,24 @@ function initializeFile() {
     bsCustomFileInput.destroy()
     // @ts-ignore
     bsCustomFileInput.init()
+}
+
+/**
+ * Initializes Coloris color pickers.
+ */
+function initializeColorpicker() {
+    Coloris({
+        parent: '#' + $modal.prop('id'),
+        el: '.emc-colorpicker',
+        theme: 'large',
+        themeMode: 'light',
+        clearButton: true,
+        clearLabel: 'Clear',
+        closeButton: true,
+        closeLabel: 'Save',
+    })
+    $('div#clr-picker button.clr-cancel').remove();
+    $('div#clr-picker button#clr-clear').after('<button type="button" class="clr-cancel btn btn-secondary" id="clr-cancel" onclick="Coloris.close(true);">Cancel</button>')
 }
 
 /**
@@ -893,6 +944,12 @@ function initializeField(setting, $field) {
                 $field.find('.emc-textarea').trigger('keyup')
             }, 0)
             return
+        case 'radio':
+            initializeRadio($field)
+            return
+        case 'checkboxes':
+            initializeCheckboxes($field)
+            return
     }
 }
 
@@ -948,7 +1005,7 @@ function prepareCheckboxes($checkboxes, config) {
         var $label = $('<label class="form-check-label"></label>')
         var id = 'emcSetting-' + config.key + '-' + uuidv4()
         $input.attr('name', config.key)
-        $input.attr('value', choice.value)
+        $input.val(choice.value)
         $input.attr('id', id)
         $label.text(choice.name)
         $label.attr('for', id)
@@ -1011,6 +1068,10 @@ function getSettingTemplate(config) {
         case 'checkboxes': {
             var $tpl = getTemplate('emcCheckboxes')
             prepareCheckboxes($tpl, config)
+            return $tpl
+        }
+        case 'color-picker': {
+            var $tpl = getTemplate('emcColorpicker')
             return $tpl
         }
     }
@@ -1120,6 +1181,8 @@ function setInitialTab() {
  * Adds final touches and removes the spinner.
  */
 function finalize() {
+    // Initialize color pickers
+    initializeColorpicker()
     // Initialize textarea autosizing
     // @ts-ignore
     $('.emc-textarea').textareaAutoSize()
