@@ -803,6 +803,70 @@ function initializeColorpicker() {
 }
 
 /**
+ * Initializes richtext fields
+ */
+function initializeRichtext() {
+    setTimeout(function() {
+        $modal.find('.emc-richtext').each(function() {
+            var $textarea = $(this)
+            var id = $textarea.attr('id')
+            if (!id) {
+                return;
+            }
+
+            tinymce.init({
+                entity_encoding: "raw",
+                default_link_target: '_blank',
+                selector: "#" + id,
+                branding: false,
+                statusbar: true,
+                menubar: true,
+                elementpath: false,
+                plugins: [
+                    'paste autolink lists link searchreplace code fullscreen table directionality hr'
+                ],
+                toolbar1: 'formatselect | hr | bold italic underline link | fontsizeselect | ' +
+                    'alignleft aligncenter alignright alignjustify | undo redo',
+                toolbar2: 'bullist numlist | outdent indent | table tableprops tablecellprops | ' +
+                    'forecolor backcolor | searchreplace code removeformat | fullscreen',
+                contextmenu: "copy paste | link inserttable | cell row column deletetable",
+                relative_urls: false,
+                convert_urls: false,
+                convert_fonts_to_spans: true,
+                extended_valid_elements: 'i[class]',
+                paste_word_valid_elements: "b,strong,i,em,h1,h2,u,p,ol,ul,li,a[href],span,color," +
+                    "font-size,font-color,font-family,mark,table,tr,td",
+                paste_retain_style_properties: "all",
+                paste_postprocess: function (plugin, args) {
+                    args.node.innerHTML = cleanHTML(args.node.innerHTML);
+                },
+                remove_linebreaks: true,
+                language: 'en'
+            })
+            .then(function (editors) {
+                var richtext = editors[0]
+                richtext.setContent($textarea.val())
+                richtext.on('change', function () {
+                    $textarea.val(this.getContent())
+                    $textarea.trigger('change')
+                })
+            })
+        })
+    }, 0)
+}
+
+/**
+ * Destroys richtext fields
+ */
+function destroyRichtext() {
+    tinymce.editors.forEach((editor) => {
+        if ($(editor.targetElm).hasClass('emc-richtext')) {
+            editor.destroy()
+        }
+    })
+}
+
+/**
  * Builds a field.
  * @param {ModuleSetting} setting
  * @param {string} key
@@ -1052,6 +1116,10 @@ function getSettingTemplate(config) {
             }
             return $tpl
         }
+        case 'rich-text': {
+            var $tpl = getTemplate('emcRichtext')
+            return $tpl
+        }
         case 'file': {
             var $tpl = getTemplate('emcFilebrowser')
             return $tpl
@@ -1202,6 +1270,7 @@ function finalize() {
     $modal.find('.emc-overlay').fadeOut(200, function() {
         $modal.find('.emc-modal-wrapper').children().appendTo($modal.find('.modal-content'))
         $modal.find('.emc-initonly').remove()
+        initializeRichtext()
     })
 }
 
@@ -1421,6 +1490,7 @@ EM.showEnhancedConfig = function (prefix, pid = null) {
     $modal.on('hidden.bs.modal', function () {
         // Destroy on closing. We always rebuild.
         debugLog('Destroyed modal ' + $modal.attr('data-emc-guid'))
+        destroyRichtext()
         $modal.remove()
     })
     // Show the modal.

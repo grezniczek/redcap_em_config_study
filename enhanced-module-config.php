@@ -184,6 +184,12 @@ $ajax = array (
     </div>
 </template>
 
+<template data-emc="emcRichtext">
+    <div class="emc-control">
+        <textarea class="form-control emc-richtext emc-repeatable emc-setting-labeltarget emc-value" aria-labelledby="" id=""></textarea>
+    </div>
+</template>
+
 <template data-emc="emcSwitch">
     <div class="form-check form-switch form-switch-lg emc-switch-control emc-control">
         <input type="checkbox" class="form-check-input emc-setting-labeltarget emc-value" role="switch" id="">
