@@ -736,13 +736,15 @@ function findRepeatButton(e) {
  * Initializes Select2 for a dropdown.
  * @param {JQuery} $field 
  */
-function initializeSelect($field) {
+function initializeSelect(setting, $field) {
     // Initialize Select2.
     var $select = $field.find('select')
-    $select.select2({
-        dropdownParent: $modal,
-        theme: 'bootstrap-5'
-    })
+    if (setting.config.autocomplete) {
+        $select.select2({
+            dropdownParent: $modal,
+            theme: 'bootstrap-5'
+        })
+    }
     $field.find('.emc-value').each(function() {
         if (!$(this).is('select')) {
             $(this).removeClass('emc-value')
@@ -996,7 +998,7 @@ function addFields(settings, panelPrefix) {
 function initializeField(setting, $field) {
     switch (setting.type) {
         case 'dropdown':
-            initializeSelect($field)
+            initializeSelect(setting, $field)
             return
         case 'file':
             initializeFile()
