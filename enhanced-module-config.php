@@ -4,7 +4,6 @@
 $this->includeCSS("css/enhanced-module-config.css");
 $this->includeCSS("css/3rd-party/select2.min.css");
 $this->includeCSS("css/3rd-party/select2-bootstrap-5-theme.min.css");
-$this->includeCSS("css/3rd-party/coloris.min.css");
 
 // JavaScript
 $this->includeScript("js/3rd-party/object_hash.js");
@@ -12,7 +11,6 @@ $this->includeScript("js/3rd-party/autosize.js");
 $this->includeScript("js/3rd-party/FileSaver.min.js");
 $this->includeScript("js/3rd-party/select2.full.min.js");
 $this->includeScript("js/3rd-party/bs-custom-file-input.min.js");
-$this->includeScript("js/3rd-party/coloris.min.js");
 $this->includeScript("js/enhanced-module-config.js");
 
 
@@ -225,8 +223,8 @@ $ajax = array (
 </template>
 
 <template data-emc="emcColorpicker">
-    <div class="input-group emc-control">
-        <input type="text" class="form-control emc-input emc-colorpicker emc-repeatable emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="" data-coloris>
+    <div class="emc-control">
+        <input type="color-picker" class="emc-input emc-colorpicker emc-repeatable emc-setting-labeltarget emc-value" placeholder="" aria-labelledby="" id="">
     </div>
 </template>
 

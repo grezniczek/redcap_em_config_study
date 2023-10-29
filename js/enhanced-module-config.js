@@ -787,21 +787,22 @@ function initializeFile() {
 }
 
 /**
- * Initializes Coloris color pickers.
+ * Initializes color picker.
+ * @param {JQuery} $field
  */
-function initializeColorpicker() {
-    Coloris({
-        parent: '#' + $modal.prop('id'),
-        el: '.emc-colorpicker',
-        theme: 'large',
-        themeMode: 'light',
-        clearButton: true,
-        clearLabel: 'Clear',
-        closeButton: true,
-        closeLabel: 'Save',
+function initializeColorpicker($field) {
+    var $input = $field.find('input[type="color-picker"]')
+    $input.spectrum({
+        showAlpha: false,
+        allowEmpty: true,
+        preferredFormat: 'hex',
+        chooseText: 'Save',
+        cancelText: 'Cancel'
     })
-    $('div#clr-picker button.clr-cancel').remove();
-    $('div#clr-picker button#clr-clear').after('<button type="button" class="clr-cancel btn btn-secondary" id="clr-cancel" onclick="Coloris.close(true);">Cancel</button>')
+    $input.show();
+    $input.on('change', function() {
+        $input.spectrum("set", $input.val());
+    })
 }
 
 /**
@@ -1015,6 +1016,9 @@ function initializeField(setting, $field) {
             return
         case 'checkboxes':
             initializeCheckboxes($field)
+            return
+        case 'color-picker':
+            initializeColorpicker($field)
             return
     }
 }
@@ -1251,8 +1255,6 @@ function setInitialTab() {
  * Adds final touches and removes the spinner.
  */
 function finalize() {
-    // Initialize color pickers
-    initializeColorpicker()
     // Initialize textarea autosizing
     // @ts-ignore
     $('.emc-textarea').textareaAutoSize()
